@@ -494,7 +494,7 @@ public class AvatarPanel extends JPanel{
 
         blinking = true;
 
-        blinkRemaining = 0.13;
+        blinkRemaining = 0.20;
 
         nextBlinkIn = randomBlinkDelay();
 
@@ -584,7 +584,7 @@ public class AvatarPanel extends JPanel{
     private double randomBlinkDelay() {
 
         return 2.2
-                + random.nextDouble() * 3.8;
+                + random.nextDouble() * 1.8;
     }
 
     /*
