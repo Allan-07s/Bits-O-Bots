@@ -880,17 +880,7 @@ public class AvatarPanel extends JPanel{
         );
 
         /*
-         * CUERPO PRINCIPAL
-         */
-        g2.drawImage(
-                bodyHappy,
-                0,
-                0,
-                null
-        );
-
-        /*
-         * BRAZO DERECHO SALUDANDO
+         * BRAZO DERECHO SALUDANDO (Allan was here)
          */
         double waveAngle
                 = Math.sin(
@@ -905,6 +895,16 @@ public class AvatarPanel extends JPanel{
                 rightShoulderX,
                 rightShoulderY,
                 waveAngle
+        );
+        
+        /*
+         * CUERPO PRINCIPAL
+         */
+        g2.drawImage(
+                bodyHappy,
+                0,
+                0,
+                null
         );
     }
 
