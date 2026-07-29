@@ -5,6 +5,7 @@
 package Quizz;
 
 import Avatar.AvatarPanel;
+import com.formdev.flatlaf.intellijthemes.FlatGradiantoDeepOceanIJTheme;
 import java.awt.BorderLayout;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 import java.awt.Color;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -80,130 +83,130 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
     private void cargarListaPreguntas() {
         // Pregunta 1
         listaPreguntas.add(new Preguntas(
-            "1. PREGUNTA",
+            "1. ¿Qué tipo de creación tecnológica te gustaría desarollar?",
 
-            "Respuesta Info.",
-            "/img_quizz/Pregunta1-I.png",
-            "Informática",
-
-            "Respuesta Rob.",
+            "Diseñar máquinas móviles capaces de desplazarse y responder a su entorno.",
             "/img_quizz/Pregunta1-R.png",
-            "Robótica"
+            "Robótica",
+
+            "Crear experiencias digitales, como videojuegos.",
+            "/img_quizz/Pregunta1-I.png",
+            "Informática"
             ));
 
         // Pregunta 2
         listaPreguntas.add(new Preguntas(
-            "2. PREGUNTA",
+            "2. ¿Qué forma de resolver problemas tecnológicos te interesa más?",
 
-            "Respuesta Info.",
+            "Crear instrucciones y soluciones mediante programación.",
             "/img_quizz/Pregunta2-I.png",
             "Informática",
 
-            "Respuesta Rob.",
+            "Integrar componentes electrónicos para hacer funcionar un sistema.",
             "/img_quizz/Pregunta2-R.png",
             "Robótica"
         ));
 
         // Pregunta 3
         listaPreguntas.add(new Preguntas(
-            "3. PREGUNTA",
+            "3. ¿En cuál actividad tecnológica te gustaría concentrarte?",
 
-            "Respuesta Info.",
-            "/img_quizz/Pregunta3-I.png",
-            "Informática",
-
-            "Respuesta Rob.",
+            "Conectar componentes y comprobar el funcionamiento de un circuito.",
             "/img_quizz/Pregunta3-R.png",
-            "Robótica"
+            "Robótica",
+
+            "Analizar y desarrollar soluciones utilizando una computadora.",
+            "/img_quizz/Pregunta3-I.png",
+            "Informática"
         ));
 
         // Pregunta 4
         listaPreguntas.add(new Preguntas(
-            "4. PREGUNTA",
+            "4. ¿Qué equipo te gustaría aprender a diagnosticar y reparar?",
 
-            "Respuesta Info.",
-            "/img_quizz/Pregunta4-I.png",
-            "Informática",
-
-            "Respuesta Rob.",
+            "Un robot y sus piezas mecánicas y electrónicas.",
             "/img_quizz/Pregunta4-R.png",
-            "Robótica"
+            "Robótica",
+                
+            "Una computadora y sus componentes internos.",
+            "/img_quizz/Pregunta4-I.png",
+            "Informática"    
         ));
             
         // Pregunta 5
         listaPreguntas.add(new Preguntas(
-            "5. PREGUNTA",
+            "5. ¿Qué funcionamiento te interesa comprender mejor?",
 
-            "Respuesta Info.",
-            "/img_quizz/Pregunta5-I.png",
+            "Cómo se comunican y comparten información diferentes dispositivos.",
+            "/img_quizz/Pregunta5-I.jpeg",
             "Informática",
 
-            "Respuesta Rob.",
+            "Cómo un mecanismo recibe órdenes y realiza movimientos.",
             "/img_quizz/Pregunta5-R.png",
             "Robótica"
         ));
         
         // Pregunta 6
         listaPreguntas.add(new Preguntas(
-            "6. PREGUNTA",
+            "6. ¿Qué tipo de sistemas te gustaría configurar?",
 
-            "Respuesta Info.",
+            "Una red para conectar computadoras y compartir recursos.",
             "/img_quizz/Pregunta6-I.png",
             "Informática",
 
-            "Respuesta Rob.",
+            "Un sistema automático que utilice sensores para controlar el riego.",
             "/img_quizz/Pregunta6-R.png",
             "Robótica"
         ));
 
         // Pregunta 7
         listaPreguntas.add(new Preguntas(
-            "7. PREGUNTA",
+            "7. ¿Qué tipo de sistema te gustaría aprender a controlar?",
 
-            "Respuesta Info.",
-            "/img_quizz/Pregunta7-I.png",
-            "Informática",
-
-            "Respuesta Rob.",
+            "Controlar dispositivos que se desplazan en el espacio físico.",
             "/img_quizz/Pregunta7-R.png",
-            "Robótica"
+            "Robótica",
+
+            "Explorar y crear entornos digitales inmersivos.",
+            "/img_quizz/Pregunta7-I.png",
+            "Informática"
         ));
 
         // Pregunta 8
         listaPreguntas.add(new Preguntas(
-            "8. PREGUNTA",
+            "8. ¿Qué propósito tecnológico te interesa más?",
 
-            "Respuesta Info.",
+            "Proteger información y sistemas frente a amenazas digitales.",
             "/img_quizz/Pregunta8-I.png",
             "Informática",
 
-            "Respuesta Rob.",
+            "Crear dispositivos que apoyen o recuperen el movimiento humano.",
             "/img_quizz/Pregunta8-R.png",
             "Robótica"
         ));
 
         // Pregunta 9
         listaPreguntas.add(new Preguntas(
-            "9. PREGUNTA",
+            "9. ¿Qué proceso tecnológico te gustaría comprender?",
 
-            "Respuesta Info.",
-            "/img_quizz/Pregunta9-I.png",
-            "Informática",
-
-            "Respuesta Rob.",
+            "Cómo un sistema detecta la presencia de una persona y activa un mecanismo.",
             "/img_quizz/Pregunta9-R.png",
-            "Robótica"
+            "Robótica",
+
+            "Cómo un dispositivo captura imágenes y las convierte en información digital.",
+            "/img_quizz/Pregunta9-I.png",
+            "Informática"
         ));
             
         // Pregunta 10
         listaPreguntas.add(new Preguntas(
-            "10. PREGUNTA",
+            "10. ¿Qué principio tecnológico te causa más curiosidad?",
 
-            "Respuesta Info.",
+            "Cómo las computadoras representan y procesan información mediante código binario.",
             "/img_quizz/Pregunta10-I.png",
             "Informática",
 
-            "Respuesta Rob.",
+            "Cómo los engranajes transmiten movimiento y fuerza entre diferentes piezas.",
             "/img_quizz/Pregunta10-R.png",
             "Robótica"
         ));
@@ -578,6 +581,20 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+        try {
+            UIManager.setLookAndFeel(new FlatGradiantoDeepOceanIJTheme());
+            UIManager.put("Button.arc", 12);
+            UIManager.put("Component.arc", 12);
+            UIManager.put("JPanel.arc", 12);
+            
+            UIManager.put("OptionPane.yesButtonText", "Sí");
+            UIManager.put("OptionPane.noButtonText", "No");
+            UIManager.put("OptionPane.cancelButtonText", "Cancelar");
+            UIManager.put("OptionPane.okButtonText", "Aceptar");
+        } catch (UnsupportedLookAndFeelException ex) {
+            System.getLogger(Quizz_Vocacional.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Quizz_Vocacional().setVisible(true));
     }
