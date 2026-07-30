@@ -580,20 +580,6 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
-        try {
-            UIManager.setLookAndFeel(new FlatGradiantoDeepOceanIJTheme());
-            UIManager.put("Button.arc", 12);
-            UIManager.put("Component.arc", 12);
-            UIManager.put("JPanel.arc", 12);
-            
-            UIManager.put("OptionPane.yesButtonText", "Sí");
-            UIManager.put("OptionPane.noButtonText", "No");
-            UIManager.put("OptionPane.cancelButtonText", "Cancelar");
-            UIManager.put("OptionPane.okButtonText", "Aceptar");
-        } catch (UnsupportedLookAndFeelException ex) {
-            System.getLogger(Quizz_Vocacional.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Quizz_Vocacional().setVisible(true));
