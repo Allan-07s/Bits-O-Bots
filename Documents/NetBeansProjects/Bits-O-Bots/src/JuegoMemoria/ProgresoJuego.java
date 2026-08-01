@@ -1,6 +1,9 @@
+package JuegoMemoria;
+
 public class ProgresoJuego {
 
     private final String jugador;
+    private final String seccion;
     private final Runnable accionVolverPrincipal;
 
     private final int[] puntosPorNivel = new int[3];
@@ -13,12 +16,10 @@ public class ProgresoJuego {
 
     private boolean rankingGuardado;
 
-    public ProgresoJuego(String jugador) {
-        this(jugador, null);
-    }
 
     public ProgresoJuego(
             String jugador,
+            String seccion,
             Runnable accionVolverPrincipal
     ) {
 
@@ -26,9 +27,9 @@ public class ProgresoJuego {
                 ? "Jugador"
                 : jugador.trim();
 
-        this.jugador = nombreLimpio.isEmpty()
-                ? "Jugador"
-                : nombreLimpio;
+        this.jugador = jugador;
+        
+        this.seccion = seccion;
 
         this.accionVolverPrincipal = accionVolverPrincipal;
     }
@@ -67,6 +68,10 @@ public class ProgresoJuego {
 
     public String getJugador() {
         return jugador;
+    }
+    
+    public String getSeccion() {
+        return seccion;
     }
 
     public int getPuntosNivel(int nivel) {

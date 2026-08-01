@@ -1,3 +1,5 @@
+package JuegoMemoria;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -225,6 +227,7 @@ public class PantallaFinal extends JFrame {
 
             ProgresoJuego nuevo = new ProgresoJuego(
                     progreso.getJugador(),
+                    progreso.getSeccion(),
                     progreso.getAccionVolverPrincipal()
             );
 
@@ -240,6 +243,7 @@ public class PantallaFinal extends JFrame {
 
             new MenuJuego(
                     progreso.getJugador(),
+                    progreso.getSeccion(),
                     progreso.getAccionVolverPrincipal()
             ).setVisible(true);
 

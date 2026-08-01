@@ -1,3 +1,5 @@
+package JuegoMemoria;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -1653,6 +1655,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
         new MenuJuego(
                 progreso.getJugador(),
+                progreso.getSeccion(),
                 progreso.getAccionVolverPrincipal()
         ).setVisible(true);
 

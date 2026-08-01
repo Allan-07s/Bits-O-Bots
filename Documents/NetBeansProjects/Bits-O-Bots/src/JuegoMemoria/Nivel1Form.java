@@ -1,3 +1,5 @@
+package JuegoMemoria;
+
 public class Nivel1Form extends JuegoMemoriaBase {
 
     private static final String[] NOMBRES = {

@@ -1,3 +1,5 @@
+package JuegoMemoria;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,12 +14,13 @@ import javax.swing.SwingConstants;
 public class MenuJuego extends JFrame {
 
     private final String jugador;
+    private final String seccion;
     private final Runnable accionVolverPrincipal;
 
     private BotonIconoMusica btnMusica;
 
     public MenuJuego(String jugador) {
-        this(jugador, null);
+        this(jugador, "Sin Seccion", null);
     }
 
     /*
@@ -28,28 +31,50 @@ public class MenuJuego extends JFrame {
      *     new MenuPrincipal().setVisible(true);
      * }).setVisible(true);
      */
+    public MenuJuego(String jugador, String seccion) {
+
+         this(
+            jugador,
+            seccion,
+            null
+    );
+    }
+    
     public MenuJuego(
-            String jugador,
-            Runnable accionVolverPrincipal
-    ) {
+        String jugador,
+        String seccion,
+        Runnable accionVolverPrincipal
+        )
+    {
 
         String nombreLimpio = jugador == null
-                ? "Jugador"
-                : jugador.trim();
+            ? "Jugador"
+            : jugador.trim();
 
-        this.jugador = nombreLimpio.isEmpty()
-                ? "Jugador"
-                : nombreLimpio;
+        if (nombreLimpio.isEmpty()) {
+            nombreLimpio = "Jugador";
+        }
 
-        this.accionVolverPrincipal = accionVolverPrincipal;
+        String seccionLimpia = seccion == null
+            ? "Sin sección"
+            : seccion.trim();
+
+        if (seccionLimpia.isEmpty()) {
+           seccionLimpia = "Sin sección";
+        }
+
+        this.jugador = nombreLimpio;
+        this.seccion = seccionLimpia;
+        this.accionVolverPrincipal
+            = accionVolverPrincipal;
 
         configurarVentana();
         construirInterfaz();
 
         GestorMusica.reproducirFondo(
-                "/audio/musica_menu.wav"
+            "/audio/musica_menu.wav"
         );
-    }
+}
 
     private void configurarVentana() {
 
@@ -87,6 +112,7 @@ public class MenuJuego extends JFrame {
 
         JLabel lblJugador = new JLabel(
                 "Jugador: " + jugador
+                
         );
 
         lblJugador.setFont(
@@ -278,6 +304,7 @@ public class MenuJuego extends JFrame {
 
         ProgresoJuego progreso = new ProgresoJuego(
                 jugador,
+                seccion,
                 accionVolverPrincipal
         );
 

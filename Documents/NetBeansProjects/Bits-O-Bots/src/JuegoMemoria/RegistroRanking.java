@@ -1,3 +1,5 @@
+package JuegoMemoria;
+
 public class RegistroRanking {
 
     private final String jugador;
