@@ -13,15 +13,11 @@ import javax.swing.SwingConstants;
 
 public class MenuJuego extends JFrame {
 
-    private final String jugador;
-    private final String seccion;
+    private final String jugadorC;
+    private final String seccionC;
     private final Runnable accionVolverPrincipal;
 
     private BotonIconoMusica btnMusica;
-
-    public MenuJuego(String jugador) {
-        this(jugador, "Sin Seccion", null);
-    }
 
     /*
      * Este constructor permite volver al menú principal real.
@@ -32,12 +28,7 @@ public class MenuJuego extends JFrame {
      * }).setVisible(true);
      */
     public MenuJuego(String jugador, String seccion) {
-
-         this(
-            jugador,
-            seccion,
-            null
-    );
+        this(jugador, seccion, null);
     }
     
     public MenuJuego(
@@ -63,10 +54,9 @@ public class MenuJuego extends JFrame {
            seccionLimpia = "Sin sección";
         }
 
-        this.jugador = nombreLimpio;
-        this.seccion = seccionLimpia;
-        this.accionVolverPrincipal
-            = accionVolverPrincipal;
+        this.jugadorC = nombreLimpio;
+        this.seccionC = seccionLimpia;
+        this.accionVolverPrincipal = accionVolverPrincipal;
 
         configurarVentana();
         construirInterfaz();
@@ -111,7 +101,7 @@ public class MenuJuego extends JFrame {
         barraSuperior.setOpaque(false);
 
         JLabel lblJugador = new JLabel(
-                "Jugador: " + jugador
+                "Jugador: " + jugadorC
                 
         );
 
@@ -303,8 +293,8 @@ public class MenuJuego extends JFrame {
     private void iniciarJuego() {
 
         ProgresoJuego progreso = new ProgresoJuego(
-                jugador,
-                seccion,
+                jugadorC,
+                seccionC,
                 accionVolverPrincipal
         );
 

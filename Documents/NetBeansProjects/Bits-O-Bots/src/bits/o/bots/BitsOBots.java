@@ -4,11 +4,6 @@
  */
 package bits.o.bots;
 
-import Menu.Login;
-import java.awt.BorderLayout;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
 /**
  *
  * @author allan
@@ -20,29 +15,6 @@ public class BitsOBots {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        SwingUtilities.invokeLater(() -> {
-
-            JFrame ventana = new JFrame(
-                    "Bits-O-Bots"
-            );
-
-            ventana.setDefaultCloseOperation(
-                    JFrame.EXIT_ON_CLOSE
-            );
-
-            ventana.setLayout(
-                    new BorderLayout()
-            );
-
-            ventana.add(
-                    new Login(),
-                    BorderLayout.CENTER
-            );
-
-            ventana.pack();
-            ventana.setLocationRelativeTo(null);
-            ventana.setVisible(true);
-        });
     }
     
 }

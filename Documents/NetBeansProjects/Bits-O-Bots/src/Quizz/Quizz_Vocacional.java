@@ -5,7 +5,6 @@
 package Quizz;
 
 import Avatar.AvatarPanel;
-import com.formdev.flatlaf.intellijthemes.FlatGradiantoDeepOceanIJTheme;
 import java.awt.BorderLayout;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 import java.awt.Color;
@@ -14,14 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
  * @author alvar
  */
 public class Quizz_Vocacional extends javax.swing.JFrame {
+    
+    private final String jugadorC;
+    private final String seccionC;
     
     private List<Preguntas> listaPreguntas = new ArrayList<>();
     private int indiceActual = 0;
@@ -32,10 +32,15 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
 
     /**
      * Creates new form Quizz_Vocacional
+     * @param jugador
+     * @param seccion
      */
     
-    public Quizz_Vocacional() {
+    public Quizz_Vocacional(String jugador, String seccion) {
         initComponents();
+        
+        jugadorC = jugador;
+        seccionC = seccion;
         
         jpbProgreso.setUI(new BasicProgressBarUI());
         jpbProgreso.setForeground(new Color(59, 130, 246));
@@ -582,7 +587,7 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
         //</editor-fold>
         
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Quizz_Vocacional().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new Quizz_Vocacional(null, null).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

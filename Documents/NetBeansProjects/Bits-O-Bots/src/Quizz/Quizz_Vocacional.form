@@ -134,15 +134,10 @@
                       <Component id="jScrollPane1" min="-2" pref="80" max="-2" attributes="0"/>
                       <EmptySpace pref="94" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="jpInfor" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="jpRo" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="jpInfor" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jpRo" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace min="60" pref="60" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

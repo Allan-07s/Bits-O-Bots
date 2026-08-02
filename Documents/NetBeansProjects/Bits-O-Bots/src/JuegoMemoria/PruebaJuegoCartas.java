@@ -26,7 +26,7 @@ public class PruebaJuegoCartas {
              * sustituye "Jugador de prueba" por el nombre que ya tengas
              * registrado.
              */
-            new MenuJuego("Jugador de prueba").setVisible(true);
+            new MenuJuego("Jugador", "Noveno").setVisible(true);
         });
     }
 }
