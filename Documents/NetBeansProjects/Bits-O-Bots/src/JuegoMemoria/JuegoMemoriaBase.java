@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.net.URL;
@@ -26,6 +27,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.BoxLayout;
+import javax.swing.Box;
+
+
 
 public abstract class JuegoMemoriaBase extends JFrame {
 
@@ -136,82 +141,593 @@ public abstract class JuegoMemoriaBase extends JFrame {
         iniciarNivelAutomaticamente();
     }
 
+    
+    
+    
+    
+    
     private void configurarVentana() {
 
         setTitle(
                 "Memory Tech - Nivel " + numeroNivel
         );
 
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setLocationRelativeTo(null);
+        
+        setUndecorated(true);
+
+    /*
+     * Pantalla completa.
+     */
+      setExtendedState(JFrame.MAXIMIZED_BOTH);
+      setDefaultCloseOperation(
+      JFrame.DO_NOTHING_ON_CLOSE
+    );
+
+        
         setResizable(true);
 
     }
 
+    
+    private JLabel crearLabelValor(
+        String texto
+) {
+
+    JLabel label = new JLabel(
+            texto,
+            SwingConstants.CENTER
+    );
+
+    label.setFont(
+            new Font(
+                    "Segoe UI",
+                    Font.BOLD,
+                    24
+            )
+    );
+
+    label.setForeground(
+            Color.WHITE
+    );
+
+    return label;
+}
+    
+    
+    private JPanel crearTarjetaEstadistica(
+        String titulo,
+        JLabel labelValor
+) {
+
+    PanelRedondeado tarjeta
+            = new PanelRedondeado(
+                    22,
+                    new Color(19, 48, 111, 230),
+                    new Color(92, 147, 255, 175)
+            );
+
+    tarjeta.setLayout(
+            new BorderLayout(0, 3)
+    );
+
+    tarjeta.setBorder(
+            BorderFactory.createEmptyBorder(
+                    8,
+                    12,
+                    8,
+                    12
+            )
+    );
+
+    JLabel lblTituloDato = new JLabel(
+            titulo,
+            SwingConstants.CENTER
+    );
+
+    lblTituloDato.setFont(
+            new Font(
+                    "Segoe UI",
+                    Font.BOLD,
+                    13
+            )
+    );
+
+    lblTituloDato.setForeground(
+            new Color(222, 233, 255)
+    );
+
+    tarjeta.add(
+            lblTituloDato,
+            BorderLayout.NORTH
+    );
+
+    tarjeta.add(
+            labelValor,
+            BorderLayout.CENTER
+    );
+
+    return tarjeta;
+}
+    
+    
+    
+    
+    
+    
+    
+    private void actualizarMarcadores() {
+
+    lblMovimientos.setText(
+            String.valueOf(movimientos)
+    );
+
+    lblPuntosNivel.setText(
+            puntosNivel + " pts"
+    );
+
+    /*
+     * Puntos guardados de niveles anteriores
+     * más los del nivel actual.
+     */
+    int totalActual
+            = progreso.getPuntosTotales()
+            + puntosNivel;
+
+    lblPuntosTotal.setText(
+            totalActual + " pts"
+    );
+
+    lblTiempo.setText(
+            formatearTiempo(segundos)
+    );
+}
+    
+    
+    
+    
+    
+    
+    private String formatearTiempo(
+        int segundosTotales
+) {
+
+    int minutos = segundosTotales / 60;
+    int segundosRestantes
+            = segundosTotales % 60;
+
+    return String.format(
+            "%02d:%02d",
+            minutos,
+            segundosRestantes
+    );
+}
+    
+    
+    
+    
+    
+    
     private void construirInterfaz() {
 
-        PanelDegradado fondo = new PanelDegradado(
-                new Color(20, 27, 58),
-                new Color(76, 47, 126)
-        );
+    /*
+     * Fondo general azul y morado.
+     */
+    PanelDegradado fondo = new PanelDegradado(
+            new Color(21, 35, 87),
+            new Color(57, 37, 111)
+    );
 
-        fondo.setLayout(new BorderLayout(10, 10));
-        fondo.setBorder(
-                BorderFactory.createEmptyBorder(
-                        13,
-                        19,
-                        16,
-                        19
-                )
-        );
+    fondo.setLayout(
+            new BorderLayout(14, 14)
+    );
 
-        setContentPane(fondo);
+    fondo.setBorder(
+            BorderFactory.createEmptyBorder(
+                    12,
+                    20,
+                    18,
+                    20
+            )
+    );
 
-        fondo.add(
-                crearEncabezado(),
-                BorderLayout.NORTH
-        );
+    setContentPane(fondo);
 
-        panelCartas = new JPanel(null);
-        panelCartas.setOpaque(false);
+    // =====================================================
+    // TÍTULO SUPERIOR
+    // =====================================================
 
-        contenedorCartas = new JPanel(
-                new FlowLayout(
-                        FlowLayout.CENTER,
-                        0,
-                        8
-                )
-        );
+    JLabel lblTitulo = new JLabel(
+            "NIVEL "
+            + numeroNivel
+            + " · MEMORIA TECNOLÓGICA",
+            SwingConstants.CENTER
+    );
 
-        contenedorCartas.setOpaque(false);
-        contenedorCartas.add(panelCartas);
+    lblTitulo.setFont(
+            new Font(
+                    "Segoe UI",
+                    Font.BOLD,
+                    22
+            )
+    );
 
-        fondo.add(
-                contenedorCartas,
-                BorderLayout.CENTER
-        );
+    lblTitulo.setForeground(
+            Color.WHITE
+    );
 
-        lblMensaje = new JLabel(
-                "Preparando nivel...",
-                SwingConstants.CENTER
-        );
+    PanelRedondeado panelTitulo
+            = new PanelRedondeado(
+                    25,
+                    new Color(25, 53, 112, 235),
+                    new Color(117, 161, 255, 150)
+            );
 
-        lblMensaje.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        17
-                )
-        );
+    panelTitulo.setLayout(
+            new BorderLayout()
+    );
 
-        lblMensaje.setForeground(Color.WHITE);
-        lblMensaje.setPreferredSize(
-                new Dimension(810, 45)
-        );
+    panelTitulo.setBorder(
+            BorderFactory.createEmptyBorder(
+                    8,
+                    25,
+                    8,
+                    25
+            )
+    );
 
-        fondo.add(lblMensaje, BorderLayout.SOUTH);
-    }
+    panelTitulo.add(
+            lblTitulo,
+            BorderLayout.CENTER
+    );
 
+    JPanel contenedorTitulo = new JPanel(
+            new GridBagLayout()
+    );
+
+    contenedorTitulo.setOpaque(false);
+    contenedorTitulo.add(panelTitulo);
+
+    fondo.add(
+            contenedorTitulo,
+            BorderLayout.NORTH
+    );
+
+    // =====================================================
+    // CONTENEDOR PRINCIPAL
+    // =====================================================
+
+    PanelRedondeado panelPrincipal
+            = new PanelRedondeado(
+                    32,
+                    new Color(10, 35, 88, 225),
+                    new Color(124, 167, 255, 150)
+            );
+
+    panelPrincipal.setLayout(
+            new BorderLayout(18, 18)
+    );
+
+    panelPrincipal.setBorder(
+            BorderFactory.createEmptyBorder(
+                    18,
+                    22,
+                    20,
+                    22
+            )
+    );
+
+    fondo.add(
+            panelPrincipal,
+            BorderLayout.CENTER
+    );
+
+    // =====================================================
+    // CUATRO TARJETAS DE ESTADÍSTICAS
+    // =====================================================
+
+    JPanel barraEstadisticas = new JPanel(
+            new GridLayout(
+                    1,
+                    5,
+                    14,
+                    0
+            )
+    );
+
+    barraEstadisticas.setOpaque(false);
+
+    lblMovimientos = crearLabelValor("0");
+    lblPuntosNivel = crearLabelValor("0 pts");
+    lblPuntosTotal = crearLabelValor("0 pts");
+    lblTiempo = crearLabelValor("00:00");
+
+    barraEstadisticas.add(
+            crearTarjetaEstadistica(
+                    "MOVIMIENTOS",
+                    lblMovimientos
+            )
+    );
+
+    barraEstadisticas.add(
+            crearTarjetaEstadistica(
+                    "NIVEL " + numeroNivel,
+                    lblPuntosNivel
+            )
+    );
+
+    barraEstadisticas.add(
+            crearTarjetaEstadistica(
+                    "TOTAL",
+                    lblPuntosTotal
+            )
+    );
+
+    barraEstadisticas.add(
+            crearTarjetaEstadistica(
+                    "TIEMPO",
+                    lblTiempo
+            )
+    );
+
+    /*
+     * Botón de música.
+     */
+    BotonIconoMusica btnMusica
+            = new BotonIconoMusica();
+
+    btnMusica.setPreferredSize(
+            new Dimension(68, 68)
+    );
+
+    btnMusica.addActionListener(e -> {
+
+        GestorMusica.alternarSilencio();
+        btnMusica.repaint();
+    });
+
+    JPanel panelMusica = new JPanel(
+            new GridBagLayout()
+    );
+
+    panelMusica.setOpaque(false);
+    panelMusica.add(btnMusica);
+
+    barraEstadisticas.add(panelMusica);
+
+    panelPrincipal.add(
+            barraEstadisticas,
+            BorderLayout.NORTH
+    );
+
+    // =====================================================
+    // TABLERO Y AVATAR
+    // =====================================================
+
+    JPanel contenidoCentral = new JPanel(
+            new BorderLayout(25, 0)
+    );
+
+    contenidoCentral.setOpaque(false);
+
+    /*
+     * Medidas exactas del tablero.
+     */
+    int anchoTablero
+            = MARGEN * 2
+            + columnas * ANCHO_CARTA
+            + (columnas - 1) * ESPACIO;
+
+    int altoTablero
+            = MARGEN * 2
+            + filas * ALTO_CARTA
+            + (filas - 1) * ESPACIO;
+
+    panelTablero = new JPanel(null);
+
+    panelTablero.setOpaque(false);
+
+    panelTablero.setPreferredSize(
+            new Dimension(
+                    anchoTablero,
+                    altoTablero
+            )
+    );
+
+    JPanel centrarTablero = new JPanel(
+            new GridBagLayout()
+    );
+
+    centrarTablero.setOpaque(false);
+    centrarTablero.add(panelTablero);
+
+    contenidoCentral.add(
+            centrarTablero,
+            BorderLayout.CENTER
+    );
+
+    // =====================================================
+    // PANEL DERECHO PARA EL ROBOT
+    // =====================================================
+
+    PanelRedondeado panelDerecho
+            = new PanelRedondeado(
+                    28,
+                    new Color(255, 255, 255, 16),
+                    new Color(118, 162, 255, 90)
+            );
+
+    panelDerecho.setPreferredSize(
+            new Dimension(290, 500)
+    );
+
+    panelDerecho.setLayout(
+            new BoxLayout(
+                    panelDerecho,
+                    BoxLayout.Y_AXIS
+            )
+    );
+
+    panelDerecho.setBorder(
+            BorderFactory.createEmptyBorder(
+                    16,
+                    18,
+                    16,
+                    18
+            )
+    );
+
+    /*
+     * Burbuja de texto encima del robot.
+     */
+    PanelRedondeado burbujaMensaje
+            = new PanelRedondeado(
+                    24,
+                    new Color(250, 251, 255, 245),
+                    new Color(180, 196, 235)
+            );
+
+    burbujaMensaje.setLayout(
+            new BorderLayout()
+    );
+
+    burbujaMensaje.setMaximumSize(
+            new Dimension(245, 100)
+    );
+
+    burbujaMensaje.setPreferredSize(
+            new Dimension(245, 100)
+    );
+
+    lblMensaje = new JLabel(
+            "<html><div style='text-align:center;'>"
+            + "¡Encuentra todas las parejas!"
+            + "</div></html>",
+            SwingConstants.CENTER
+    );
+
+    lblMensaje.setFont(
+            new Font(
+                    "Segoe UI",
+                    Font.BOLD,
+                    17
+            )
+    );
+
+    lblMensaje.setForeground(
+            new Color(31, 42, 77)
+    );
+
+    burbujaMensaje.add(
+            lblMensaje,
+            BorderLayout.CENTER
+    );
+
+    burbujaMensaje.setAlignmentX(
+            Component.CENTER_ALIGNMENT
+    );
+
+    panelDerecho.add(burbujaMensaje);
+    panelDerecho.add(
+            Box.createVerticalStrut(10)
+    );
+
+    /*
+     * Espacio reservado para el AvatarPanel.
+     */
+    panelAvatar = new JPanel(
+            new BorderLayout()
+    );
+
+    panelAvatar.setOpaque(false);
+
+    panelAvatar.setPreferredSize(
+            new Dimension(250, 290)
+    );
+
+    panelAvatar.setMaximumSize(
+            new Dimension(250, 290)
+    );
+
+    panelAvatar.setAlignmentX(
+            Component.CENTER_ALIGNMENT
+    );
+
+    avatar = new AvatarPanel();
+
+    panelAvatar.add(
+            avatar,
+            BorderLayout.CENTER
+    );
+
+    /*
+     * Se crea y se inicia una sola vez.
+     * No lo coloques dentro de paintComponent().
+     */
+    avatar.startAnimation();
+
+    panelDerecho.add(panelAvatar);
+    panelDerecho.add(
+            Box.createVerticalStrut(12)
+    );
+
+    /*
+     * Botón para abandonar y volver.
+     */
+    BotonRedondeado btnVolver
+            = new BotonRedondeado(
+                    "← VOLVER AL MENÚ",
+                    new Color(30, 61, 126),
+                    new Color(48, 84, 164)
+            );
+
+    btnVolver.setFont(
+            new Font(
+                    "Segoe UI",
+                    Font.BOLD,
+                    15
+            )
+    );
+
+    btnVolver.setPreferredSize(
+            new Dimension(230, 52)
+    );
+
+    btnVolver.setMaximumSize(
+            new Dimension(230, 52)
+    );
+
+    btnVolver.setAlignmentX(
+            Component.CENTER_ALIGNMENT
+    );
+
+    btnVolver.addActionListener(e -> {
+        abandonarPartida();
+    });
+
+    panelDerecho.add(btnVolver);
+
+    contenidoCentral.add(
+            panelDerecho,
+            BorderLayout.EAST
+    );
+
+    panelPrincipal.add(
+            contenidoCentral,
+            BorderLayout.CENTER
+    );
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     private JPanel crearEncabezado() {
 
         JPanel superior = new JPanel(
@@ -361,6 +877,11 @@ public abstract class JuegoMemoriaBase extends JFrame {
         return superior;
     }
 
+    
+    
+    
+    
+    
     private JLabel crearEtiquetaDato(String texto) {
 
         JLabel etiqueta = new JLabel(
@@ -391,6 +912,9 @@ public abstract class JuegoMemoriaBase extends JFrame {
         movimientos = 0;
         puntosNivel = 0;
         segundos = 0;
+        
+        actualizarMarcadores();
+        
         partidaFinalizada = false;
         bloqueado = true;
 
@@ -467,7 +991,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
                 i++
         ) {
 
-            BotonCarta carta = new BotonCarta(27);
+            BotonCarta carta = new BotonCarta(18);
             carta.setColorBorde(COLOR_BORDE);
 
             int fila = i / columnas;
@@ -1085,6 +1609,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
                         segundaCarta = posicion;
                         movimientos++;
+                        actualizarMarcadores();
 
                         lblMovimientos.setText(
                                 "Movimientos: "
@@ -1208,6 +1733,8 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
             parejasEncontradas++;
             puntosNivel += 100;
+            
+            actualizarMarcadores();
 
             lblPuntosNivel.setText(
                     "Nivel: " + puntosNivel + " pts"
@@ -1524,6 +2051,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
                     }
 
                     segundos++;
+                    actualizarMarcadores();
 
                     lblTiempo.setText(
                             "Tiempo: "
@@ -1543,16 +2071,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
         }
     }
 
-    private String formatearTiempo(
-            int totalSegundos
-    ) {
-
-        return String.format(
-                "%02d:%02d",
-                totalSegundos / 60,
-                totalSegundos % 60
-        );
-    }
+   
 
     private void finalizarNivel(
             int partidaActual
