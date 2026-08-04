@@ -8,7 +8,7 @@ public class Nivel2Form extends JuegoMemoriaBase {
         "Procesador",
         "Fuente de poder",
         "Servomotor",
-        "Rueda robótica",
+        "Modulo Bluetooth",
         "Protoboard",
         "Arduino"
     };
@@ -19,11 +19,22 @@ public class Nivel2Form extends JuegoMemoriaBase {
         "/img/n2_procesador.PNG",
         "/img/n2_fuente_poder.PNG",
         "/img/n2_servomotor.PNG",
-        "/img/n2_rueda_robotica.PNG",
+        "/img/n2_modulo_b.PNG",
         "/img/n2_protoboard.PNG",
         "/img/n2_arduino.PNG"
     };
 
+    private static final String[] CATEGORIAS = {
+        "INFORMATICA",
+        "INFORMATICA",
+        "INFORMATICA",
+        "INFORMATICA",
+        "ROBOTICA",
+        "ROBOTICA",
+        "ROBOTICA",
+        "ROBOTICA"
+    };
+    
     public Nivel2Form(ProgresoJuego progreso) {
 
         super(
@@ -34,7 +45,8 @@ public class Nivel2Form extends JuegoMemoriaBase {
                 4,
                 10,
                 NOMBRES,
-                IMAGENES
+                IMAGENES,
+                CATEGORIAS
         );
     }
 }

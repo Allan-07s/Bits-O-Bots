@@ -1,7 +1,10 @@
 package JuegoMemoria;
 
+
+import Avatar.AvatarPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -26,10 +29,10 @@ import javax.swing.Timer;
 
 public abstract class JuegoMemoriaBase extends JFrame {
 
-    private static final int ANCHO_CARTA = 112;
-    private static final int ALTO_CARTA = 112;
+    private static final int ANCHO_CARTA = 90;
+    private static final int ALTO_CARTA = 135;
     private static final int ESPACIO = 10;
-    private static final int MARGEN = 18;
+    private static final int MARGEN = 16;
 
     private static final int TIEMPO_OBSERVACION = 1500;
     private static final int PAUSA_FINAL = 500;
@@ -56,8 +59,10 @@ public abstract class JuegoMemoriaBase extends JFrame {
     private final ImageIcon[] imagenesFrente;
     private final String[] nombresCartas;
     private final String[] rutasImagenes;
+    private final String[] categoriasCartas;
 
-    private ImageIcon imagenReverso;
+    private ImageIcon reversoInformatica;
+    private ImageIcon reversoRobotica;
 
     private BotonCarta[] cartas;
     private int[] valores;
@@ -78,11 +83,16 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
     private final Random aleatorio = new Random();
 
-    private JLabel lblMovimientos;
+    private JPanel panelTablero;
+    private JPanel panelAvatar;
+
+    private JLabel lblMovimientos; 
     private JLabel lblPuntosNivel;
     private JLabel lblPuntosTotal;
     private JLabel lblTiempo;
     private JLabel lblMensaje;
+
+    private AvatarPanel avatar;
 
     private JPanel panelCartas;
     private JPanel contenedorCartas;
@@ -97,7 +107,8 @@ public abstract class JuegoMemoriaBase extends JFrame {
             int columnas,
             int totalIntercambios,
             String[] nombresCartas,
-            String[] rutasImagenes
+            String[] rutasImagenes,
+            String[] categoriasCartas
     ) {
 
         this.progreso = progreso;
@@ -108,19 +119,10 @@ public abstract class JuegoMemoriaBase extends JFrame {
         this.columnas = columnas;
         this.totalIntercambios = totalIntercambios;
 
-        if (
-                nombresCartas == null
-                || rutasImagenes == null
-                || nombresCartas.length != this.cantidadParejas
-                || rutasImagenes.length != this.cantidadParejas
-        ) {
-            throw new IllegalArgumentException(
-                    "Cada nivel debe tener un nombre y una imagen por pareja."
-            );
-        }
+        this.nombresCartas = nombresCartas;
+        this.rutasImagenes = rutasImagenes;
+        this.categoriasCartas = categoriasCartas;
 
-        this.nombresCartas = nombresCartas.clone();
-        this.rutasImagenes = rutasImagenes.clone();
         this.imagenesFrente = new ImageIcon[this.cantidadParejas];
 
         configurarVentana();
@@ -505,25 +507,47 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
     private void cargarImagenes() {
 
-        imagenReverso = cargarIcono(
-                "/img/reverso.JPG",
-                96,
-                96
+        int anchoImagen = ANCHO_CARTA - 8;
+        int altoImagen = ALTO_CARTA - 8;
+        
+        reversoInformatica = cargarIcono(
+            "/img/reverso_informatica.PNG",
+            anchoImagen,
+            altoImagen
         );
-
+        
+        reversoRobotica = cargarIcono(
+            "/img/reverso_robotica.PNG",
+            anchoImagen,
+            altoImagen
+        );
+        
         for (
-                int i = 0;
-                i < imagenesFrente.length;
-                i++
+            int i = 0;
+            i < rutasImagenes.length;
+            i++
         ) {
-            imagenesFrente[i] = cargarIcono(
-                    rutasImagenes[i],
-                    96,
-                    96
+
+        imagenesFrente[i] = cargarIcono(
+                rutasImagenes[i],
+                anchoImagen,
+                altoImagen
             );
         }
     }
 
+    private javax.swing.ImageIcon obtenerReverso( int posicion)
+    { 
+        int indiceComponente = valores[posicion] - 1;
+        String categoria = categoriasCartas[indiceComponente];
+        
+        if ("ROBOTICA".equalsIgnoreCase(categoria)
+                ) { 
+            return reversoRobotica;
+        }
+        
+        return reversoInformatica;
+    }  
     private ImageIcon cargarIcono(
             String ruta,
             int anchoMaximo,
@@ -1456,9 +1480,12 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
         cartas[posicion].setColorBorde(COLOR_BORDE);
 
-        if (imagenReverso != null) {
+        ImageIcon reverso = obtenerReverso(posicion);
+        
+        if (reverso != null) {
 
-            cartas[posicion].setIcon(imagenReverso);
+            cartas[posicion].setIcon(reverso);
+            
             cartas[posicion].setText("");
 
         } else {
