@@ -302,16 +302,8 @@ public abstract class JuegoMemoriaBase extends JFrame {
     );
 }
     
-    
-    
-    
-    
-    
     private void construirInterfaz() {
-
-    /*
-     * Fondo general azul y morado.
-     */
+        
     PanelDegradado fondo = new PanelDegradado(
             new Color(21, 35, 87),
             new Color(57, 37, 111)
@@ -331,10 +323,6 @@ public abstract class JuegoMemoriaBase extends JFrame {
     );
 
     setContentPane(fondo);
-
-    // =====================================================
-    // TÍTULO SUPERIOR
-    // =====================================================
 
     JLabel lblTitulo = new JLabel(
             "NIVEL "
@@ -391,10 +379,6 @@ public abstract class JuegoMemoriaBase extends JFrame {
             contenedorTitulo,
             BorderLayout.NORTH
     );
-
-    // =====================================================
-    // CONTENEDOR PRINCIPAL
-    // =====================================================
 
     PanelRedondeado panelPrincipal
             = new PanelRedondeado(
@@ -513,42 +497,39 @@ public abstract class JuegoMemoriaBase extends JFrame {
      * Medidas exactas del tablero.
      */
     int anchoTablero
-            = MARGEN * 2
-            + columnas * ANCHO_CARTA
-            + (columnas - 1) * ESPACIO;
+        = MARGEN * 2
+        + columnas * ANCHO_CARTA
+        + (columnas - 1) * ESPACIO;
 
     int altoTablero
-            = MARGEN * 2
-            + filas * ALTO_CARTA
-            + (filas - 1) * ESPACIO;
+        = MARGEN * 2
+        + filas * ALTO_CARTA
+        + (filas - 1) * ESPACIO;
 
-    panelTablero = new JPanel(null);
+        panelCartas = new JPanel(null);
+        panelCartas.setOpaque(false);
 
-    panelTablero.setOpaque(false);
+        panelCartas.setPreferredSize(
+        new Dimension(
+                anchoTablero,
+                altoTablero
+        )
+);
 
-    panelTablero.setPreferredSize(
-            new Dimension(
-                    anchoTablero,
-                    altoTablero
-            )
+        panelTablero = panelCartas;
+
+        contenedorCartas = new JPanel(
+        new java.awt.GridBagLayout()
     );
 
-    JPanel centrarTablero = new JPanel(
-            new GridBagLayout()
-    );
-
-    centrarTablero.setOpaque(false);
-    centrarTablero.add(panelTablero);
+        contenedorCartas.setOpaque(false);
+        contenedorCartas.add(panelCartas);
 
     contenidoCentral.add(
-            centrarTablero,
-            BorderLayout.CENTER
+        contenedorCartas,
+        BorderLayout.CENTER
     );
-
-    // =====================================================
-    // PANEL DERECHO PARA EL ROBOT
-    // =====================================================
-
+    
     PanelRedondeado panelDerecho
             = new PanelRedondeado(
                     28,
@@ -715,18 +696,17 @@ public abstract class JuegoMemoriaBase extends JFrame {
             contenidoCentral,
             BorderLayout.CENTER
     );
+    
+    panelCartas = new JPanel(null);
+    panelCartas.setOpaque(false);
+
+
+    panelTablero = panelCartas;
+    
+    
 }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+ 
     
     private JPanel crearEncabezado() {
 
