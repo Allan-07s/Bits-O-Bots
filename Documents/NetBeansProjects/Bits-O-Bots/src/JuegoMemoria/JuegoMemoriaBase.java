@@ -34,10 +34,10 @@ import javax.swing.Box;
 
 public abstract class JuegoMemoriaBase extends JFrame {
 
-    private static final int ANCHO_CARTA = 90;
-    private static final int ALTO_CARTA = 135;
-    private static final int ESPACIO = 10;
-    private static final int MARGEN = 16;
+    private static final int ANCHO_CARTA = 86;
+    private static final int ALTO_CARTA = 112;
+    private static final int ESPACIO = 9;
+    private static final int MARGEN = 14;
 
     private static final int TIEMPO_OBSERVACION = 1500;
     private static final int PAUSA_FINAL = 500;
@@ -519,7 +519,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
         panelTablero = panelCartas;
 
         contenedorCartas = new JPanel(
-        new java.awt.GridBagLayout()
+        new GridBagLayout()
     );
 
         contenedorCartas.setOpaque(false);
@@ -696,13 +696,6 @@ public abstract class JuegoMemoriaBase extends JFrame {
             contenidoCentral,
             BorderLayout.CENTER
     );
-    
-    panelCartas = new JPanel(null);
-    panelCartas.setOpaque(false);
-
-
-    panelTablero = panelCartas;
-    
     
 }
     
@@ -1591,11 +1584,6 @@ public abstract class JuegoMemoriaBase extends JFrame {
                         movimientos++;
                         actualizarMarcadores();
 
-                        lblMovimientos.setText(
-                                "Movimientos: "
-                                + movimientos
-                        );
-
                         comprobarPareja(
                                 partidaActual
                         );
@@ -1715,17 +1703,6 @@ public abstract class JuegoMemoriaBase extends JFrame {
             puntosNivel += 100;
             
             actualizarMarcadores();
-
-            lblPuntosNivel.setText(
-                    "Nivel: " + puntosNivel + " pts"
-            );
-
-            lblPuntosTotal.setText(
-                    "Total: "
-                    + (progreso.getPuntosTotales()
-                    + puntosNivel)
-                    + " pts"
-            );
 
             String nombre = nombresCartas[
                     valores[cartaA] - 1
@@ -2032,11 +2009,6 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
                     segundos++;
                     actualizarMarcadores();
-
-                    lblTiempo.setText(
-                            "Tiempo: "
-                            + formatearTiempo(segundos)
-                    );
                 }
         );
 
@@ -2081,15 +2053,9 @@ public abstract class JuegoMemoriaBase extends JFrame {
                 segundos
         );
 
-        lblPuntosNivel.setText(
-                "Nivel: " + puntosNivel + " pts"
-        );
+        
 
-        lblPuntosTotal.setText(
-                "Total: "
-                + progreso.getPuntosTotales()
-                + " pts"
-        );
+
 
         lblMensaje.setText(
                 "¡Nivel completado!"
