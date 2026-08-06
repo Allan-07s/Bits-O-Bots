@@ -1,5 +1,6 @@
 package JuegoMemoria;
 
+import Tipografias.Fuentes;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -106,12 +107,11 @@ public class MenuJuego extends JFrame {
         );
 
         lblJugador.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        15
-                )
-        );
+                 Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+);
 
         lblJugador.setForeground(
                 new Color(232, 233, 248)
@@ -184,12 +184,11 @@ public class MenuJuego extends JFrame {
         );
 
         lblTitulo.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        43
-                )
-        );
+                 Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+);
 
         lblTitulo.setForeground(Color.WHITE);
 
@@ -199,12 +198,11 @@ public class MenuJuego extends JFrame {
         );
 
         lblSubtitulo.setFont(
-                new Font(
-                        "Arial",
-                        Font.PLAIN,
-                        16
-                )
-        );
+                 Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+);
 
         lblSubtitulo.setForeground(
                 new Color(223, 224, 242)
@@ -241,20 +239,18 @@ public class MenuJuego extends JFrame {
                 );
 
         btnJugar.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        20
-                )
-        );
+                Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+    );
 
         btnSalir.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        18
-                )
-        );
+                 Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+     );  
 
         btnJugar.addActionListener(e -> iniciarJuego());
         btnSalir.addActionListener(e -> salirDelJuego());
@@ -271,7 +267,7 @@ public class MenuJuego extends JFrame {
         );
 
         JLabel lblPie = new JLabel(
-                "Nivel 1: 6 parejas  •  Nivel 2: 8 parejas  •  Nivel 3: 10 parejas",
+                "",
                 SwingConstants.CENTER
         );
 

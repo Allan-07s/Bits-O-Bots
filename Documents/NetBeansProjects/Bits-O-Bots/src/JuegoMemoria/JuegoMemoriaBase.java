@@ -1,6 +1,5 @@
 package JuegoMemoria;
-
-
+import Tipografias.Fuentes;
 import Avatar.AvatarPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -179,12 +178,11 @@ public abstract class JuegoMemoriaBase extends JFrame {
     );
 
     label.setFont(
-            new Font(
-                    "Segoe UI",
-                    Font.BOLD,
-                    24
-            )
-    );
+           Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+);
 
     label.setForeground(
             Color.WHITE
@@ -225,12 +223,12 @@ public abstract class JuegoMemoriaBase extends JFrame {
     );
 
     lblTituloDato.setFont(
-            new Font(
-                    "Segoe UI",
-                    Font.BOLD,
-                    13
-            )
-    );
+             Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+);
+
 
     lblTituloDato.setForeground(
             new Color(222, 233, 255)
@@ -332,12 +330,11 @@ public abstract class JuegoMemoriaBase extends JFrame {
     );
 
     lblTitulo.setFont(
-            new Font(
-                    "Segoe UI",
-                    Font.BOLD,
-                    22
-            )
-    );
+            Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+);
 
     lblTitulo.setForeground(
             Color.WHITE
@@ -587,12 +584,11 @@ public abstract class JuegoMemoriaBase extends JFrame {
     );
 
     lblMensaje.setFont(
-            new Font(
-                    "Segoe UI",
-                    Font.BOLD,
-                    17
-            )
-    );
+             Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                13f
+        )
+);
 
     lblMensaje.setForeground(
             new Color(31, 42, 77)
@@ -656,18 +652,17 @@ public abstract class JuegoMemoriaBase extends JFrame {
      */
     BotonRedondeado btnVolver
             = new BotonRedondeado(
-                    "← VOLVER AL MENÚ",
+                    " VOLVER AL MENÚ",
                     new Color(30, 61, 126),
                     new Color(48, 84, 164)
             );
 
     btnVolver.setFont(
-            new Font(
-                    "Segoe UI",
-                    Font.BOLD,
-                    15
-            )
-    );
+             Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                15f
+        )
+);
 
     btnVolver.setPreferredSize(
             new Dimension(230, 52)
@@ -720,12 +715,11 @@ public abstract class JuegoMemoriaBase extends JFrame {
         );
 
         lblJugador.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        15
-                )
-        );
+                Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                15f
+        )
+);
 
         lblJugador.setForeground(
                 new Color(226, 228, 244)
@@ -739,12 +733,11 @@ public abstract class JuegoMemoriaBase extends JFrame {
         );
 
         lblNivel.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        25
-                )
-        );
+                Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+);
 
         lblNivel.setForeground(Color.WHITE);
 
@@ -778,12 +771,11 @@ public abstract class JuegoMemoriaBase extends JFrame {
                 );
 
         btnAbandonar.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        13
-                )
-        );
+                Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+);
 
         btnAbandonar.setPreferredSize(
                 new Dimension(120, 45)
@@ -863,12 +855,11 @@ public abstract class JuegoMemoriaBase extends JFrame {
         );
 
         etiqueta.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        15
-                )
-        );
+                Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                15f
+        )
+);
 
         etiqueta.setForeground(Color.WHITE);
         return etiqueta;

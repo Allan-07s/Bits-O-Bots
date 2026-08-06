@@ -1,5 +1,6 @@
 package JuegoMemoria;
 
+import Tipografias.Fuentes;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -142,12 +143,11 @@ public class NivelCompletadoForm extends JFrame {
         );
 
         lblTitulo.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        32
-                )
-        );
+                 Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                32f
+        )
+);
 
         lblTitulo.setForeground(
                 Color.WHITE
@@ -188,12 +188,11 @@ public class NivelCompletadoForm extends JFrame {
         );
 
         lblPuntos.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        43
-                )
-        );
+                 Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                43f
+        )
+);
 
         lblPuntos.setForeground(
                 new Color(255, 222, 103)
@@ -236,12 +235,11 @@ public class NivelCompletadoForm extends JFrame {
                 );
 
         btnContinuar.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        17
-                )
-        );
+                 Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                17f
+        )
+);
 
         btnContinuar.setPreferredSize(
                 new Dimension(400, 58)
