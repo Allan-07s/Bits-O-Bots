@@ -1,8 +1,10 @@
 package JuegoMemoria;
 
+import Avatar.AvatarPanel;
 import Tipografias.Fuentes;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import javax.swing.BorderFactory;
@@ -10,7 +12,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-
+import java.awt.GridBagLayout;
+import java.awt.GridBagLayout;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 public class NivelCompletadoForm extends JFrame {
 
     private final ProgresoJuego progreso;
@@ -29,15 +34,22 @@ public class NivelCompletadoForm extends JFrame {
         this.progreso = progreso;
         this.numeroNivel = numeroNivel;
 
-        setTitle("Memory Tech - Nivel completado");
+        setTitle("Bits o Bots - Nivel completado");
 
-        // Ventana más pequeña porque ahora tiene menos información
-        setSize(590, 480);
+         setUndecorated(true);
 
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
+    /*
+     * Pantalla completa.
+     */
+      setExtendedState(JFrame.MAXIMIZED_BOTH);
+      setDefaultCloseOperation(
+      JFrame.DO_NOTHING_ON_CLOSE
+    );
 
+        
+        setResizable(true);
+
+    
         construirInterfaz(puntosNivel);
     }
 
@@ -65,6 +77,14 @@ public class NivelCompletadoForm extends JFrame {
         );
 
         setContentPane(fondo);
+        
+        
+        
+        
+        
+        
+        
+        
 
         // =================================================
         // BARRA SUPERIOR
@@ -145,7 +165,7 @@ public class NivelCompletadoForm extends JFrame {
         lblTitulo.setFont(
                  Fuentes.cargar(
                 "Pixel Digivolve.otf",
-                32f
+                50f
         )
 );
 
@@ -158,56 +178,284 @@ public class NivelCompletadoForm extends JFrame {
                 BorderLayout.NORTH
         );
 
-        // =================================================
-        // PUNTOS
-        // =================================================
+        
+        
+        
+        
+        
+        
+   
 
-        PanelRedondeado panelPuntos
-                = new PanelRedondeado(
-                        30,
-                        new Color(18, 24, 55, 145),
-                        new Color(255, 255, 255, 42)
-                );
+      // =================================================
+// CONTENIDO CENTRAL: PUNTOS + AVATAR
+// =================================================
 
-        panelPuntos.setLayout(
-                new BorderLayout()
-        );
-
-        panelPuntos.setBorder(
-                BorderFactory.createEmptyBorder(
-                        28,
-                        20,
-                        28,
-                        20
-                )
-        );
-
-        JLabel lblPuntos = new JLabel(
-                puntosNivel + " PUNTOS",
-                SwingConstants.CENTER
-        );
-
-        lblPuntos.setFont(
-                 Fuentes.cargar(
-                "Pixel Digivolve.otf",
-                43f
+JPanel contenidoCentral = new JPanel(
+        new BorderLayout(
+                30,
+                0
         )
 );
 
-        lblPuntos.setForeground(
-                new Color(255, 222, 103)
+contenidoCentral.setOpaque(false);
+
+// =================================================
+// CUADRO DE PUNTOS
+// =================================================
+
+PanelRedondeado panelPuntos
+        = new PanelRedondeado(
+                30,
+                new Color(18, 24, 55, 145),
+                new Color(255, 255, 255, 42)
         );
 
-        panelPuntos.add(
-                lblPuntos,
-                BorderLayout.CENTER
+panelPuntos.setLayout(
+        new BorderLayout()
+);
+
+/*
+ * TAMAÑO DEL CUADRO DE PUNTOS.
+ *
+ * 650 = ancho
+ * 320 = alto
+ */
+Dimension tamanoPanelPuntos = new Dimension(
+        650,
+        320
+);
+
+panelPuntos.setPreferredSize(tamanoPanelPuntos);
+panelPuntos.setMinimumSize(tamanoPanelPuntos);
+panelPuntos.setMaximumSize(tamanoPanelPuntos);
+
+panelPuntos.setBorder(
+        BorderFactory.createEmptyBorder(
+                28,
+                20,
+                28,
+                20
+        )
+);
+
+JLabel lblPuntos = new JLabel(
+        puntosNivel + " PUNTOS",
+        SwingConstants.CENTER
+);
+
+lblPuntos.setFont(
+        Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                50f
+        )
+);
+
+lblPuntos.setForeground(
+        new Color(255, 222, 103)
+);
+
+panelPuntos.add(
+        lblPuntos,
+        BorderLayout.CENTER
+);
+
+/*
+ * Centra el cuadro de puntos sin estirarlo.
+ */
+JPanel contenedorPuntos = new JPanel(
+        new GridBagLayout()
+);
+
+contenedorPuntos.setOpaque(false);
+contenedorPuntos.add(panelPuntos);
+
+contenidoCentral.add(
+        contenedorPuntos,
+        BorderLayout.CENTER
+);
+
+// =================================================
+// PANEL DERECHO: MENSAJE + AVATAR
+// =================================================
+
+JPanel panelAsistente = new JPanel();
+
+panelAsistente.setLayout(
+        new BoxLayout(
+                panelAsistente,
+                BoxLayout.Y_AXIS
+        )
+);
+
+panelAsistente.setOpaque(false);
+
+/*
+ * TAMAÑO DE TODA LA ZONA DERECHA.
+ */
+Dimension tamanoAsistente = new Dimension(
+        380,
+        450
+);
+
+panelAsistente.setPreferredSize(tamanoAsistente);
+panelAsistente.setMinimumSize(tamanoAsistente);
+panelAsistente.setMaximumSize(tamanoAsistente);
+
+// =================================================
+// BURBUJA DEL MENSAJE
+// =================================================
+
+PanelRedondeado burbujaMensaje
+        = new PanelRedondeado(
+                28,
+                new Color(248, 250, 255, 245),
+                new Color(160, 177, 230)
         );
 
-        tarjeta.add(
-                panelPuntos,
-                BorderLayout.CENTER
-        );
+Dimension tamanoBurbuja = new Dimension(
+        345,
+        125
+);
 
+burbujaMensaje.setPreferredSize(tamanoBurbuja);
+burbujaMensaje.setMinimumSize(tamanoBurbuja);
+burbujaMensaje.setMaximumSize(tamanoBurbuja);
+
+burbujaMensaje.setAlignmentX(
+        Component.CENTER_ALIGNMENT
+);
+
+burbujaMensaje.setLayout(
+        new BorderLayout()
+);
+
+burbujaMensaje.setBorder(
+        BorderFactory.createEmptyBorder(
+                15,
+                18,
+                15,
+                18
+        )
+);
+
+JLabel lblMensajeRobot = new JLabel(
+        "<html>"
+        + "<div style='text-align:center;'>"
+        + "¡NIVEL "
+        + numeroNivel
+        + " COMPLETADO!"
+        + "<br>"
+        + "¡Excelente trabajo!"
+        + "</div>"
+        + "</html>",
+        SwingConstants.CENTER
+);
+
+lblMensajeRobot.setFont(
+          Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+);
+
+lblMensajeRobot.setForeground(
+        new Color(30, 40, 85)
+);
+
+burbujaMensaje.add(
+        lblMensajeRobot,
+        BorderLayout.CENTER
+);
+
+// =================================================
+// AVATAR
+// =================================================
+
+JPanel panelAvatar = new JPanel(
+        new BorderLayout()
+);
+
+panelAvatar.setOpaque(false);
+
+Dimension tamanoPanelAvatar = new Dimension(
+        345,
+        270
+);
+
+panelAvatar.setPreferredSize(tamanoPanelAvatar);
+panelAvatar.setMinimumSize(tamanoPanelAvatar);
+panelAvatar.setMaximumSize(tamanoPanelAvatar);
+
+panelAvatar.setAlignmentX(
+        Component.CENTER_ALIGNMENT
+);
+
+/*
+ * Crear el robot.
+ */
+AvatarPanel avatar = new AvatarPanel();
+
+Dimension tamanoAvatar = new Dimension(
+        325,
+        295
+);
+
+avatar.setPreferredSize(tamanoAvatar);
+avatar.setMinimumSize(tamanoAvatar);
+avatar.setMaximumSize(tamanoAvatar);
+
+/*
+ * SOUTH coloca el robot hacia la parte
+ * inferior de su panel.
+ */
+panelAvatar.add(
+        avatar,
+        BorderLayout.SOUTH
+);
+
+avatar.startAnimation();
+
+// =================================================
+// ORDENAR LA ZONA DERECHA
+// =================================================
+
+panelAsistente.add(
+        Box.createVerticalGlue()
+);
+
+panelAsistente.add(
+        burbujaMensaje
+);
+
+panelAsistente.add(
+        Box.createVerticalStrut(10)
+);
+
+panelAsistente.add(
+        panelAvatar
+);
+
+panelAsistente.add(
+        Box.createVerticalGlue()
+);
+
+/*
+ * Agregar el robot al lado derecho.
+ */
+contenidoCentral.add(
+        panelAsistente,
+        BorderLayout.EAST
+);
+
+/*
+ * Agregar puntos y avatar al centro
+ * de la tarjeta principal.
+ */
+tarjeta.add(
+        contenidoCentral,
+        BorderLayout.CENTER
+);
+        
         // =================================================
         // BOTÓN PARA CONTINUAR
         // =================================================
@@ -241,25 +489,76 @@ public class NivelCompletadoForm extends JFrame {
         )
 );
 
-        btnContinuar.setPreferredSize(
-                new Dimension(400, 58)
-        );
+   
 
-        btnContinuar.addActionListener(e -> {
+      btnContinuar.setForeground(
+        Color.WHITE
+);
 
-            abrirSiguientePantalla();
-        });
+/*
+ * MEDIDAS DEL BOTÓN CONTINUAR
+ *
+ * Primer número = ancho.
+ * Segundo número = alto.
+ */
+     Dimension tamanoContinuar = new Dimension(
+        470,
+        72
+);
 
-        tarjeta.add(
-                btnContinuar,
-                BorderLayout.SOUTH
-        );
+    btnContinuar.setPreferredSize(tamanoContinuar);
+    btnContinuar.setMinimumSize(tamanoContinuar);
+    btnContinuar.setMaximumSize(tamanoContinuar);
 
-        fondo.add(
-                tarjeta,
-                BorderLayout.CENTER
-        );
-    }
+    btnContinuar.addActionListener(e -> {
+
+    abrirSiguientePantalla();
+});
+
+/*
+ * Panel auxiliar para centrar el botón
+ * y evitar que ocupe todo el ancho.
+ */
+    JPanel contenedorBoton = new JPanel(
+        new GridBagLayout()
+    );
+
+    contenedorBoton.setOpaque(false);
+
+/*
+ * Espacio arriba del botón.
+ */
+    contenedorBoton.setBorder(
+        BorderFactory.createEmptyBorder(
+                15,
+                0,
+                0,
+                0
+        )
+);
+
+
+
+
+
+    contenedorBoton.add(btnContinuar);
+
+    tarjeta.add(
+        contenedorBoton,
+        BorderLayout.SOUTH
+);
+
+    fondo.add(
+        tarjeta,
+        BorderLayout.CENTER
+);
+
+    fondo.revalidate();
+    fondo.repaint();
+    
+}
+    
+    
 
     private void abrirSiguientePantalla() {
 

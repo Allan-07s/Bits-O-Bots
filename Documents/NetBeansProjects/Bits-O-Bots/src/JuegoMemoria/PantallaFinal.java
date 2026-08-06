@@ -24,7 +24,6 @@ public class PantallaFinal extends JFrame {
         setSize(780, 690);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
 
         construirInterfaz();
 
