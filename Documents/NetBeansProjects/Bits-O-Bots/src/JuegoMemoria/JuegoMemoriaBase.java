@@ -33,14 +33,14 @@ import javax.swing.Box;
 
 public abstract class JuegoMemoriaBase extends JFrame {
 
-    private static final int ANCHO_CARTA = 86;
-    private static final int ALTO_CARTA = 112;
-    private static final int ESPACIO = 9;
-    private static final int MARGEN = 14;
+    private static final int ANCHO_CARTA = 135;
+    private static final int ALTO_CARTA = 180;
+    private static final int ESPACIO = 18;
+    private static final int MARGEN = 22;
 
     private static final int TIEMPO_OBSERVACION = 1500;
     private static final int PAUSA_FINAL = 500;
-    private static final int TIEMPO_INCORRECTAS = 210;
+    private static final int TIEMPO_INCORRECTAS = 850;
 
     private static final int PASOS_MOVIMIENTO = 17;
     private static final int VELOCIDAD_MOVIMIENTO = 7;
@@ -59,7 +59,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
     private final int filas;
     private final int columnas;
     private final int totalIntercambios;
-    private static final boolean MODO_PRUEBA = false;
+    private static final boolean MODO_PRUEBA = true;
 
     private final ImageIcon[] imagenesFrente;
     private final String[] nombresCartas;
@@ -80,6 +80,14 @@ public abstract class JuegoMemoriaBase extends JFrame {
     private int movimientos;
     private int puntosNivel;
     private int segundos;
+    
+    private static final int ANCHO_PANEL_DERECHO = 360;
+    private static final int ALTO_PANEL_DERECHO = 500;
+
+    private static final int ANCHO_AVATAR = 350;
+    private static final int ALTO_AVATAR = 370;
+
+    private static final int ANCHO_BOTON_DERECHO = ANCHO_PANEL_DERECHO - 60;
 
     private boolean bloqueado = true;
     private boolean partidaFinalizada;
@@ -103,6 +111,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
     private JPanel contenedorCartas;
 
     private Timer cronometro;
+    private Timer timerTexto;
 
     protected JuegoMemoriaBase(
             ProgresoJuego progreso,
@@ -305,6 +314,9 @@ public abstract class JuegoMemoriaBase extends JFrame {
     
     
     
+    
+    
+    
     private void construirInterfaz() {
         
     PanelDegradado fondo = new PanelDegradado(
@@ -465,12 +477,12 @@ btnSalir.setForeground(Color.WHITE);
  * MEDIDAS DE CADA BOTÓN
  */
 Dimension tamanoJugar = new Dimension(
-        100, // ancho
+        50, // ancho
         64   // alto
 );
 
 Dimension tamanoSalir = new Dimension(
-        100, // ancho
+        50, // ancho
         56   // alto
 );
 
@@ -513,7 +525,7 @@ botones.add(
 botones.add(btnJugar);
 
 botones.add(
-        Box.createVerticalStrut(18)
+        Box.createVerticalStrut(5)
 );
 
 botones.add(btnSalir);
@@ -650,9 +662,18 @@ botones.add(
                     new Color(118, 162, 255, 90)
             );
 
-    panelDerecho.setPreferredSize(
-            new Dimension(330, 500)
-    );
+    Dimension tamanoPanelDerecho = new Dimension(
+        ANCHO_PANEL_DERECHO,
+        ALTO_PANEL_DERECHO
+);
+
+panelDerecho.setPreferredSize(
+        tamanoPanelDerecho
+);
+
+panelDerecho.setMinimumSize(
+        tamanoPanelDerecho
+);
 
     panelDerecho.setLayout(
             new BoxLayout(
@@ -661,6 +682,8 @@ botones.add(
             )
     );
 
+    
+    
     panelDerecho.setBorder(
             BorderFactory.createEmptyBorder(
                     16,
@@ -673,24 +696,37 @@ botones.add(
     /*
      * Burbuja de texto encima del robot.
      */
-    PanelRedondeado burbujaMensaje
-            = new PanelRedondeado(
-                    24,
-                    new Color(250, 251, 255, 245),
-                    new Color(180, 196, 235)
-            );
+    BurbujaMensaje burbujaMensaje
+        = new BurbujaMensaje(
+                new Color(250, 251, 255, 245),
+                new Color(180, 196, 235)
+        );
 
+    burbujaMensaje.setTamanoPunta(
+        35, // ancho de la punta
+        25  // alto de la punta
+);
+    
     burbujaMensaje.setLayout(
             new BorderLayout()
     );
 
-    burbujaMensaje.setMaximumSize(
-            new Dimension(245, 100)
-    );
+    Dimension tamanoBurbuja = new Dimension(
+        ANCHO_PANEL_DERECHO - 50,
+        100
+);
 
-    burbujaMensaje.setPreferredSize(
-            new Dimension(245, 100)
-    );
+burbujaMensaje.setPreferredSize(
+        tamanoBurbuja
+);
+
+burbujaMensaje.setMinimumSize(
+        tamanoBurbuja
+);
+
+burbujaMensaje.setMaximumSize(
+        tamanoBurbuja
+);
 
     lblMensaje = new JLabel(
             "<html><div style='text-align:center;'>"
@@ -724,44 +760,102 @@ botones.add(
             Box.createVerticalStrut(10)
     );
 
-    /*
-     * Espacio reservado para el AvatarPanel.
-     */
-    panelAvatar = new JPanel(
-            new BorderLayout()
-    );
+   /*
+ * =====================================================
+ * ZONA DEL AVATAR
+ * =====================================================
+ */
 
-    panelAvatar.setOpaque(false);
+/*
+ * GridBagLayout centra al AvatarPanel
+ * horizontal y verticalmente.
+ */
+panelAvatar = new JPanel(
+        new GridBagLayout()
+);
 
-    panelAvatar.setPreferredSize(
-            new Dimension(250, 290)
-    );
+panelAvatar.setOpaque(false);
 
-    panelAvatar.setMaximumSize(
-            new Dimension(250, 290)
-    );
+/*
+ * El panel reservado para el avatar
+ * aprovecha casi todo el ancho disponible.
+ */
+Dimension tamanoPanelAvatar = new Dimension(
+        ANCHO_PANEL_DERECHO - 10,
+        ALTO_AVATAR + 10
+);
 
-    panelAvatar.setAlignmentX(
-            Component.CENTER_ALIGNMENT
-    );
+panelAvatar.setPreferredSize(
+        tamanoPanelAvatar
+);
 
-    avatar = new AvatarPanel();
+panelAvatar.setMinimumSize(
+        tamanoPanelAvatar
+);
 
-    panelAvatar.add(
-            avatar,
-            BorderLayout.CENTER
-    );
+panelAvatar.setMaximumSize(
+        tamanoPanelAvatar
+);
 
-    /*
-     * Se crea y se inicia una sola vez.
-     * No lo coloques dentro de paintComponent().
-     */
-    avatar.startAnimation();
+panelAvatar.setAlignmentX(
+        Component.CENTER_ALIGNMENT
+);
 
-    panelDerecho.add(panelAvatar);
-    panelDerecho.add(
-            Box.createVerticalStrut(12)
-    );
+/*
+ * Crear el avatar.
+ */
+avatar = new AvatarPanel();
+
+Dimension tamanoAvatar = new Dimension(
+        ANCHO_AVATAR,
+        ALTO_AVATAR
+);
+
+avatar.setPreferredSize(
+        tamanoAvatar
+);
+
+avatar.setMinimumSize(
+        tamanoAvatar
+);
+
+avatar.setMaximumSize(
+        tamanoAvatar
+);
+
+/*
+ * Como panelAvatar utiliza GridBagLayout,
+ * el avatar queda centrado automáticamente.
+ */
+panelAvatar.add(avatar);
+
+avatar.startAnimation();
+
+/*
+ * Primer espacio flexible.
+ * Ocupa el espacio entre la burbuja y el avatar.
+ */
+panelDerecho.add(
+        Box.createVerticalGlue()
+);
+
+/*
+ * Avatar centrado.
+ */
+panelDerecho.add(
+        panelAvatar
+);
+
+/*
+ * Segundo espacio flexible.
+ * Ocupa el espacio entre el avatar y los botones.
+ *
+ * Como hay un Glue arriba y otro abajo,
+ * el avatar queda centrado en altura.
+ */
+panelDerecho.add(
+        Box.createVerticalGlue()
+);
 
     /*
      * Botón para abandonar y volver.
@@ -851,7 +945,7 @@ if (MODO_PRUEBA) {
     );
 
     panelDerecho.add(
-            Box.createVerticalStrut(8)
+            Box.createVerticalStrut(14)
     );
 }
 
@@ -1040,39 +1134,96 @@ if (MODO_PRUEBA) {
         return etiqueta;
     }
 
-    private void iniciarNivelAutomaticamente() {
+    private void escribirTextoAnimado(
+        String texto,
+        int velocidadMs
+) {
 
-        numeroPartida++;
-        int partidaActual = numeroPartida;
-
-        primeraCarta = -1;
-        segundaCarta = -1;
-        parejasEncontradas = 0;
-        movimientos = 0;
-        puntosNivel = 0;
-        segundos = 0;
-        
-        actualizarMarcadores();
-        
-        partidaFinalizada = false;
-        bloqueado = true;
-
-        crearValores();
-        crearTablero();
-
-        lblMensaje.setText(
-                "¡Memoriza todas las cartas!"
-        );
-
-        SwingUtilities.invokeLater(() -> {
-
-            if (partidaActual != numeroPartida) {
-                return;
-            }
-
-            iniciarPresentacion(partidaActual);
-        });
+    /*
+     * Detiene cualquier mensaje anterior.
+     * Así nunca escriben dos Timer al mismo tiempo.
+     */
+    if (timerTexto != null) {
+        timerTexto.stop();
+        timerTexto = null;
     }
+
+    lblMensaje.setText("");
+
+    /*
+     * Guarda a qué partida pertenece este mensaje.
+     */
+    final int partidaDelTexto = numeroPartida;
+    final int[] indice = {0};
+
+    timerTexto = new Timer(
+            velocidadMs,
+            e -> {
+
+                /*
+                 * Si cambió el nivel o la partida,
+                 * detenemos este mensaje.
+                 */
+                if (partidaDelTexto != numeroPartida) {
+
+                    ((Timer) e.getSource()).stop();
+                    return;
+                }
+
+                if (indice[0] < texto.length()) {
+
+                    indice[0]++;
+
+                    /*
+                     * Usar substring es más seguro que
+                     * concatenar el contenido del JLabel.
+                     */
+                    lblMensaje.setText(
+                            texto.substring(
+                                    0,
+                                    indice[0]
+                            )
+                    );
+
+                } else {
+
+                    ((Timer) e.getSource()).stop();
+                    timerTexto = null;
+                }
+            }
+    );
+
+    timerTexto.start();
+}
+
+    
+    private void iniciarNivelAutomaticamente() { 
+    numeroPartida++; 
+    int partidaActual = numeroPartida; 
+    primeraCarta = -1; 
+    segundaCarta = -1; 
+    parejasEncontradas = 0; 
+    movimientos = 0; 
+    puntosNivel = 0; 
+    segundos = 0; 
+    actualizarMarcadores(); 
+    partidaFinalizada = false; 
+    bloqueado = true; 
+    crearValores(); 
+    crearTablero(); 
+    
+    // CAMBIO AQUÍ: Llamamos al nuevo método animado en lugar del .setText directo
+    // 50 es la velocidad en milisegundos entre cada letra (puedes bajarlo a 30 si va muy lento)
+    escribirTextoAnimado("¡Memoriza todas las cartas!", 10); 
+    
+    SwingUtilities.invokeLater(() -> { 
+        if (partidaActual != numeroPartida) { 
+            return; 
+        } 
+        iniciarPresentacion(partidaActual); 
+    }); 
+}
+
 
     private void crearValores() {
 
@@ -1345,9 +1496,7 @@ if (MODO_PRUEBA) {
                                     return;
                                 }
 
-                                lblMensaje.setText(
-                                        "¡Sigue el movimiento de las cartas!"
-                                );
+                                escribirTextoAnimado("¡Sigue el movimiento de las cartas!", 50); 
 
                                 animarIntercambios(
                                         partidaActual,
@@ -1456,9 +1605,7 @@ if (MODO_PRUEBA) {
 
         if (numeroIntercambio >= totalIntercambios) {
 
-            lblMensaje.setText(
-                    "Memoriza el orden final..."
-            );
+            escribirTextoAnimado("Memoriza el orden final...", 50); 
 
             Timer pausa = new Timer(
                     PAUSA_FINAL,
@@ -1477,9 +1624,7 @@ if (MODO_PRUEBA) {
 
                                     bloqueado = false;
 
-                                    lblMensaje.setText(
-                                            "¡Comienza! Encuentra todas las parejas"
-                                    );
+                                    escribirTextoAnimado("Encuentra todas las parejas", 50); 
 
                                     iniciarCronometro(
                                             partidaActual
@@ -1975,9 +2120,7 @@ if (MODO_PRUEBA) {
                                                 == numeroPartida
                                         ) {
 
-                                            lblMensaje.setText(
-                                                    "Continúa buscando las parejas"
-                                            );
+                                            escribirTextoAnimado("Continúa buscando las parejas", 50); 
                                         }
                                     }
                             );
@@ -1997,10 +2140,8 @@ if (MODO_PRUEBA) {
             "/audio/incorrecto.wav"
             );
             
-            lblMensaje.setText(
-                    "Estas cartas no coinciden"
-            );
-
+            escribirTextoAnimado("Estas cartas no coinciden", 50); 
+            
             Timer tiempo = new Timer(
                     TIEMPO_INCORRECTAS,
                     e -> {
@@ -2036,9 +2177,8 @@ if (MODO_PRUEBA) {
                 segundaCarta = -1;
                 bloqueado = false;
 
-                lblMensaje.setText(
-                        "Intenta encontrar otra pareja"
-                );
+                escribirTextoAnimado("Intenta encontrar otra pareja", 50); 
+                
             }
         };
 
@@ -2281,12 +2421,8 @@ if (MODO_PRUEBA) {
 
         
 
-
-
-        lblMensaje.setText(
-                "¡Nivel completado!"
-        );
-
+        escribirTextoAnimado("¡Nivel cmpletado!", 50); 
+        
         GestorMusica.reproducirEfecto(
                 "/audio/victoria.wav"
         );

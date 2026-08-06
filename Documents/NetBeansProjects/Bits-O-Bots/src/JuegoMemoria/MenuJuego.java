@@ -11,6 +11,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import java.awt.Component;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 
 public class MenuJuego extends JFrame {
 
@@ -186,14 +189,14 @@ public class MenuJuego extends JFrame {
         centro.setOpaque(false);
 
         JLabel lblTitulo = new JLabel(
-                "JUEGO DE CARTAS",
+                "BITS O BOTS",
                 SwingConstants.CENTER
         );
 
         lblTitulo.setFont(
                  Fuentes.cargar(
                 "Pixel Digivolve.otf",
-                22f
+                40f
         )
 );
 
@@ -207,7 +210,7 @@ public class MenuJuego extends JFrame {
         lblSubtitulo.setFont(
                  Fuentes.cargar(
                 "Pixel Digivolve.otf",
-                22f
+                40f
         )
 );
 
@@ -225,47 +228,142 @@ public class MenuJuego extends JFrame {
 
         centro.add(textos, BorderLayout.NORTH);
 
-        JPanel botones = new JPanel(
-                new GridLayout(2, 1, 0, 16)
+        /*
+ * =====================================================
+ * PANEL DE LOS BOTONES JUGAR Y SALIR
+ * =====================================================
+ */
+JPanel botones = new JPanel();
+
+botones.setLayout(
+        new BoxLayout(
+                botones,
+                BoxLayout.Y_AXIS
+        )
+);
+
+botones.setOpaque(false);
+
+/*
+ * =====================================================
+ * BOTÓN JUGAR
+ * =====================================================
+ */
+BotonRedondeado btnJugar
+        = new BotonRedondeado(
+                "JUGAR",
+                new Color(83, 102, 233),
+                new Color(105, 124, 255)
         );
 
-        botones.setOpaque(false);
-
-        BotonRedondeado btnJugar
-                = new BotonRedondeado(
-                        "JUGAR",
-                        new Color(83, 102, 233),
-                        new Color(105, 124, 255)
-                );
-
-        BotonRedondeado btnSalir
-                = new BotonRedondeado(
-                        "SALIR",
-                        new Color(188, 65, 91),
-                        new Color(220, 79, 105)
-                );
-
-        btnJugar.setFont(
-                Fuentes.cargar(
+btnJugar.setFont(
+        Fuentes.cargar(
                 "Pixel Digivolve.otf",
                 22f
         )
-    );
+);
 
-        btnSalir.setFont(
-                 Fuentes.cargar(
+btnJugar.setForeground(Color.WHITE);
+
+/*
+ * Primer número: ancho.
+ * Segundo número: alto.
+ */
+Dimension tamanoJugar = new Dimension(
+        800,
+        160
+);
+
+btnJugar.setPreferredSize(tamanoJugar);
+btnJugar.setMinimumSize(tamanoJugar);
+btnJugar.setMaximumSize(tamanoJugar);
+
+btnJugar.setAlignmentX(
+        Component.CENTER_ALIGNMENT
+);
+
+btnJugar.addActionListener(e -> {
+    iniciarJuego();
+});
+
+/*
+ * =====================================================
+ * BOTÓN SALIR
+ * =====================================================
+ */
+BotonRedondeado btnSalir
+        = new BotonRedondeado(
+                "SALIR",
+                new Color(188, 65, 91),
+                new Color(220, 79, 105)
+        );
+
+btnSalir.setFont(
+        Fuentes.cargar(
                 "Pixel Digivolve.otf",
                 22f
         )
-     );  
+);
 
-        btnJugar.addActionListener(e -> iniciarJuego());
-        btnSalir.addActionListener(e -> salirDelJuego());
+btnSalir.setForeground(Color.WHITE);
 
-        botones.add(btnJugar);
-        botones.add(btnSalir);
+Dimension tamanoSalir = new Dimension(
+        800,
+        160
+);
 
-        centro.add(botones, BorderLayout.CENTER);
+btnSalir.setPreferredSize(tamanoSalir);
+btnSalir.setMinimumSize(tamanoSalir);
+btnSalir.setMaximumSize(tamanoSalir);
+
+btnSalir.setAlignmentX(
+        Component.CENTER_ALIGNMENT
+);
+
+btnSalir.addActionListener(e -> {
+    salirDelJuego();
+});
+
+/*
+ * =====================================================
+ * AGREGAR Y CENTRAR LOS BOTONES
+ * =====================================================
+ */
+
+/*
+ * Ocupa el espacio superior disponible.
+ */
+botones.add(
+        Box.createVerticalGlue()
+);
+
+botones.add(btnJugar);
+
+/*
+ * Separación entre JUGAR y SALIR.
+ */
+botones.add(
+        Box.createVerticalStrut(25)
+);
+
+botones.add(btnSalir);
+
+/*
+ * Ocupa el espacio inferior disponible.
+ * Al tener Glue arriba y abajo, los botones
+ * quedan centrados verticalmente.
+ */
+botones.add(
+        Box.createVerticalGlue()
+);
+
+/*
+ * Colocar los botones en la zona central.
+ */
+centro.add(
+        botones,
+        BorderLayout.CENTER
+);
         panelPrincipal.add(centro, BorderLayout.CENTER);
 
         fondo.add(
