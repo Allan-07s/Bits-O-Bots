@@ -60,7 +60,7 @@ public class NivelCompletadoForm extends JFrame {
         // Fondo principal con degradado
         PanelDegradado fondo = new PanelDegradado(
                 new Color(19, 27, 62),
-                new Color(104, 54, 157)
+                new Color(105, 54, 157)
         );
 
         fondo.setLayout(
