@@ -6,13 +6,16 @@ package Quizz;
 
 import Avatar.AvatarPanel;
 import java.awt.BorderLayout;
-import javax.swing.plaf.basic.BasicProgressBarUI;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
+import java.awt.Font;
+
+
+
 
 /**
  *
@@ -38,13 +41,65 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
     
     public Quizz_Vocacional(String jugador, String seccion) {
         initComponents();
-        
+        jpInfor.setOpaque(false);
+        jpRo.setOpaque(false);
+
+        jpInfor.setBorder(null);
+        jpRo.setBorder(null);
+
+        lbImagenzquierda.setOpaque(false);
+        lbImagenDerecha.setOpaque(false);
+
+        lbImagenzquierda.setBorder(null);
+        lbImagenDerecha.setBorder(null);
+
+        jpInfor.setCursor(
+                new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR)
+        );
+
+        jpRo.setCursor(
+                new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR)
+        );
+
+        ((TarjetaRespuesta) jpInfor).configurar(
+                "A",
+                "Opción A",
+                new Color(47, 128, 237),
+                new Color(91, 155, 255)
+        );
+
+        ((TarjetaRespuesta) jpRo).configurar(
+                "B",
+                "Opción B",
+                new Color(35, 181, 190),
+                new Color(54, 207, 201)
+        );
+        panelAvatar.setOpaque(false);
+        jpInfor.setOpaque(false);
+        jpRo.setOpaque(false);
+
+        jpInfor.setBorder(null);
+        jpRo.setBorder(null);
+
+        lbImagenzquierda.setOpaque(false);
+        lbImagenDerecha.setOpaque(false);
+
+        lbImagenzquierda.setBorder(null);
+        lbImagenDerecha.setBorder(null);
+
         jugadorC = jugador;
         seccionC = seccion;
         
-        jpbProgreso.setUI(new BasicProgressBarUI());
-        jpbProgreso.setForeground(new Color(59, 130, 246));
-        jpbProgreso.setBackground(new Color(220, 230, 240));
+        jpbProgreso.setUI(new BarraProgresoUI());
+        jpbProgreso.setOpaque(false);
+        jpbProgreso.setBorderPainted(false);
+        jpbProgreso.setStringPainted(true);
+        jpbProgreso.setFont(new Font(
+        "SansSerif",
+        Font.BOLD,
+        14
+));
+        jpbProgreso.setPreferredSize(new Dimension(650, 34));
         
         setExtendedState(Quizz_Vocacional.MAXIMIZED_BOTH);
         jButton1.setVisible(false);
@@ -68,21 +123,13 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
     }
     
     private void dimensiones(){        
-        lbImagenzquierda.setPreferredSize(new Dimension(150, 150));
-        lbImagenDerecha.setPreferredSize(new Dimension(150, 150));
-
-        lbImagenzquierda.setMinimumSize(new Dimension(150, 150));
-        lbImagenDerecha.setMinimumSize(new Dimension(150, 150));
-
-        lbImagenzquierda.setMaximumSize(new Dimension(150, 150));
-        lbImagenDerecha.setMaximumSize(new Dimension(150, 150));
+       
         
         jPanel2.setPreferredSize(new Dimension(1200, 700));
         jPanel2.setMinimumSize(new Dimension(1200, 700));
         jPanel2.setMaximumSize(new Dimension(1200, 700));
         
-        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-        lblSubtitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        
     }
     
     private void cargarListaPreguntas() {
@@ -91,11 +138,11 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             "1. ¿Qué tipo de creación tecnológica te gustaría desarollar?",
 
             "Diseñar máquinas móviles capaces de desplazarse y responder a su entorno.",
-            "/img_quizz/Pregunta1-R.png",
+            "/img_quizz/ROP1.png",
             "Robótica",
 
             "Crear experiencias digitales, como videojuegos.",
-            "/img_quizz/Pregunta1-I.png",
+            "/img_quizz/INP1.png",
             "Informática"
             ));
 
@@ -104,11 +151,11 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             "2. ¿Qué forma de resolver problemas tecnológicos te interesa más?",
 
             "Crear instrucciones y soluciones mediante programación.",
-            "/img_quizz/Pregunta2-I.png",
+            "/img_quizz/INP2.png",
             "Informática",
 
             "Integrar componentes electrónicos para hacer funcionar un sistema.",
-            "/img_quizz/Pregunta2-R.png",
+            "/img_quizz/ROP2.png",
             "Robótica"
         ));
 
@@ -117,11 +164,11 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             "3. ¿En cuál actividad tecnológica te gustaría concentrarte?",
 
             "Conectar componentes y comprobar el funcionamiento de un circuito.",
-            "/img_quizz/Pregunta3-R.png",
+            "/img_quizz/ROP3.png",
             "Robótica",
 
             "Analizar y desarrollar soluciones utilizando una computadora.",
-            "/img_quizz/Pregunta3-I.png",
+            "/img_quizz/INP3.png",
             "Informática"
         ));
 
@@ -130,11 +177,11 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             "4. ¿Qué equipo te gustaría aprender a diagnosticar y reparar?",
 
             "Un robot y sus piezas mecánicas y electrónicas.",
-            "/img_quizz/Pregunta4-R.png",
+            "/img_quizz/ROP4.png",
             "Robótica",
                 
             "Una computadora y sus componentes internos.",
-            "/img_quizz/Pregunta4-I.png",
+            "/img_quizz/INP4.png",
             "Informática"    
         ));
             
@@ -143,11 +190,11 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             "5. ¿Qué funcionamiento te interesa comprender mejor?",
 
             "Cómo se comunican y comparten información diferentes dispositivos.",
-            "/img_quizz/Pregunta5-I.jpeg",
+            "/img_quizz/INP5.png",
             "Informática",
 
             "Cómo un mecanismo recibe órdenes y realiza movimientos.",
-            "/img_quizz/Pregunta5-R.png",
+            "/img_quizz/ROP5.png",
             "Robótica"
         ));
         
@@ -156,11 +203,11 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             "6. ¿Qué tipo de sistemas te gustaría configurar?",
 
             "Una red para conectar computadoras y compartir recursos.",
-            "/img_quizz/Pregunta6-I.png",
+            "/img_quizz/INP6.png",
             "Informática",
 
             "Un sistema automático que utilice sensores para controlar el riego.",
-            "/img_quizz/Pregunta6-R.png",
+            "/img_quizz/ROP6.png",
             "Robótica"
         ));
 
@@ -169,11 +216,11 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             "7. ¿Qué tipo de sistema te gustaría aprender a controlar?",
 
             "Controlar dispositivos que se desplazan en el espacio físico.",
-            "/img_quizz/Pregunta7-R.png",
+            "/img_quizz/ROP7.png",
             "Robótica",
 
             "Explorar y crear entornos digitales inmersivos.",
-            "/img_quizz/Pregunta7-I.png",
+            "/img_quizz/INP7.png",
             "Informática"
         ));
 
@@ -182,11 +229,11 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             "8. ¿Qué propósito tecnológico te interesa más?",
 
             "Proteger información y sistemas frente a amenazas digitales.",
-            "/img_quizz/Pregunta8-I.png",
+            "/img_quizz/INP8.png",
             "Informática",
 
             "Crear dispositivos que apoyen o recuperen el movimiento humano.",
-            "/img_quizz/Pregunta8-R.png",
+            "/img_quizz/ROP8.png",
             "Robótica"
         ));
 
@@ -195,11 +242,11 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             "9. ¿Qué proceso tecnológico te gustaría comprender?",
 
             "Cómo un sistema detecta la presencia de una persona y activa un mecanismo.",
-            "/img_quizz/Pregunta9-R.png",
+            "/img_quizz/ROP9.png",
             "Robótica",
 
             "Cómo un dispositivo captura imágenes y las convierte en información digital.",
-            "/img_quizz/Pregunta9-I.png",
+            "/img_quizz/INP9.png",
             "Informática"
         ));
             
@@ -208,54 +255,95 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             "10. ¿Qué principio tecnológico te causa más curiosidad?",
 
             "Cómo las computadoras representan y procesan información mediante código binario.",
-            "/img_quizz/Pregunta10-I.png",
+            "/img_quizz/INP10.png",
             "Informática",
 
             "Cómo los engranajes transmiten movimiento y fuerza entre diferentes piezas.",
-            "/img_quizz/Pregunta10-R.png",
+            "/img_quizz/ROP10.png",
             "Robótica"
         ));
     }
 
-    private void mostrarPreguntaActual() {
-        int totalPreguntas = listaPreguntas.size();
+private void mostrarPreguntaActual() {
 
-        if (indiceActual < totalPreguntas) {
-            Preguntas p = listaPreguntas.get(indiceActual);
+    int totalPreguntas = listaPreguntas.size();
 
-            // Actualizar barra y textos de la pregunta
-            lblPreguntaNumero.setText(String.format("Pregunta %02d de %02d", indiceActual + 1, totalPreguntas));
-            jpbProgreso.setMinimum(0);
-            jpbProgreso.setMaximum(totalPreguntas);
-            jpbProgreso.setValue(indiceActual + 1);
+    if (indiceActual < totalPreguntas) {
 
-            lbEnunciado.setText(p.getEnunciado());
-            String estiloTooltip = "<html><body style='width: 250px; background-color: #333333; color: #FFFFFF; padding: 8px; font-size: 12px;'>";
+        Preguntas p = listaPreguntas.get(indiceActual);
+        ((TarjetaRespuesta) jpInfor).setTitulo(
+        p.getTextoOpA()
+    );
 
-            // Asignar el texto formateado a cada imagen
-            lbImagenzquierda.setToolTipText(estiloTooltip + p.getTextoOpA() + "</body></html>");
-            lbImagenDerecha.setToolTipText(estiloTooltip + p.getTextoOpB() + "</body></html>");
+        ((TarjetaRespuesta) jpRo).setTitulo(
+        p.getTextoOpB()
+    );
 
+        ((TarjetaRespuesta) jpInfor).setSeleccionado(false);
+        ((TarjetaRespuesta) jpRo).setSeleccionado(false);
 
-            // Actualizar imágenes
-            try {
-                Estilos.imagen150x150(
+     lblPreguntaNumero.setText(
+        String.format(
+                "%02d / %02d",
+                indiceActual + 1,
+                totalPreguntas
+        )
+);
+
+        int porcentaje =
+                ((indiceActual + 1) * 100) / totalPreguntas;
+
+        jpbProgreso.setMinimum(0);
+        jpbProgreso.setMaximum(100);
+        jpbProgreso.setValue(porcentaje);
+        jpbProgreso.setString(porcentaje + "%");
+
+        lbEnunciado.setText(p.getEnunciado());
+
+        String estiloTooltip =
+                "<html><body style='width:250px;"
+                + "background-color:#333333;"
+                + "color:#FFFFFF;"
+                + "padding:8px;"
+                + "font-size:12px;'>";
+
+        lbImagenzquierda.setToolTipText(
+                estiloTooltip
+                + p.getTextoOpA()
+                + "</body></html>"
+        );
+
+        lbImagenDerecha.setToolTipText(
+                estiloTooltip
+                + p.getTextoOpB()
+                + "</body></html>"
+        );
+
+        try {
+
+            Estilos.imagen150x150(
                     lbImagenzquierda,
                     p.getRutaImgA()
-                );
+            );
 
-                Estilos.imagen150x150(
+            Estilos.imagen150x150(
                     lbImagenDerecha,
                     p.getRutaImgB()
-                );
-            } catch (Exception e) {
-                System.out.println("Error al cargar imagen: " + e.getMessage());
-            }
+            );
 
-        } else {
-            mostrarResultadoFinal();
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al cargar imagen: "
+                    + e.getMessage()
+            );
         }
+
+    } else {
+
+        mostrarResultadoFinal();
     }
+}
 
     private void sumarPunto(String carrera) {
         if (carrera.equals("Informática")) {
@@ -293,84 +381,70 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        PanelCircuitos = new Quizz.PanelCircuitos ();
+        jButton1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        panelAvatar = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jpbProgreso = new javax.swing.JProgressBar();
-        lblPreguntaNumero = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jpInfor = new javax.swing.JPanel();
+        jpInfor = new Quizz.TarjetaRespuesta();
         lbImagenzquierda = new javax.swing.JLabel();
-        jpRo = new javax.swing.JPanel();
+        jpRo = new Quizz.TarjetaRespuesta();
         lbImagenDerecha = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         lbEnunciado = new javax.swing.JTextArea();
-        lblTitulo = new javax.swing.JLabel();
-        lblSubtitulo = new javax.swing.JLabel();
-        panelAvatar = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jpbProgreso = new javax.swing.JProgressBar();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        lblPreguntaNumero = new Quizz.PanelNumeroPregunta();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setRequestFocusEnabled(false);
+        PanelCircuitos.setBackground(new java.awt.Color(255, 255, 255));
+        PanelCircuitos.setRequestFocusEnabled(false);
+
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        jButton1.setText("Ver Resultados");
+
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("jLabel1");
+
+        jLabel2.setFont(new java.awt.Font("Pixel Digivolve", 1, 50)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(29, 53, 87));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("QUIZZ");
+
+        jLabel4.setFont(new java.awt.Font("Super Jello", 0, 46)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("¿A qué carrera perteneces?");
+
+        panelAvatar.setBackground(new java.awt.Color(204, 255, 204));
+
+        javax.swing.GroupLayout panelAvatarLayout = new javax.swing.GroupLayout(panelAvatar);
+        panelAvatar.setLayout(panelAvatarLayout);
+        panelAvatarLayout.setHorizontalGroup(
+            panelAvatarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 162, Short.MAX_VALUE)
+        );
+        panelAvatarLayout.setVerticalGroup(
+            panelAvatarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 137, Short.MAX_VALUE)
+        );
 
         jPanel2.setBackground(new java.awt.Color(235, 243, 250));
-        jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 255), 1, true));
-
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 255), 1, true));
-
-        jpbProgreso.setBackground(new java.awt.Color(235, 243, 250));
-        jpbProgreso.setForeground(new java.awt.Color(255, 255, 255));
-        jpbProgreso.setMaximum(15);
-
-        lblPreguntaNumero.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        lblPreguntaNumero.setText("Pregunta 1 de 15");
-
-        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMG/cpu (2).png"))); // NOI18N
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel9)
-                .addGap(678, 678, 678))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addComponent(jLabel10)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblPreguntaNumero)
-                .addGap(60, 60, 60)
-                .addComponent(jpbProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPreguntaNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jpbProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21))
-        );
 
         jpInfor.setBackground(new java.awt.Color(255, 255, 255));
         jpInfor.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true));
         jpInfor.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jpInfor.setPreferredSize(new java.awt.Dimension(340, 360));
 
+        lbImagenzquierda.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbImagenzquierda.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 102), 1, true));
+        lbImagenzquierda.setPreferredSize(new java.awt.Dimension(270, 250));
         lbImagenzquierda.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lbImagenzquierdaMouseClicked(evt);
@@ -383,21 +457,23 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             jpInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpInforLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbImagenzquierda, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lbImagenzquierda, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jpInforLayout.setVerticalGroup(
             jpInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpInforLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpInforLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbImagenzquierda, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lbImagenzquierda, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jpRo.setBackground(new java.awt.Color(255, 255, 255));
         jpRo.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 255), 1, true));
         jpRo.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        lbImagenDerecha.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbImagenDerecha.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 102), 1, true));
         lbImagenDerecha.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lbImagenDerechaMouseClicked(evt);
@@ -410,15 +486,15 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             jpRoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpRoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbImagenDerecha, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                .addComponent(lbImagenDerecha, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jpRoLayout.setVerticalGroup(
             jpRoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpRoLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpRoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbImagenDerecha, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lbImagenDerecha, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -427,143 +503,204 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
         lbEnunciado.setEditable(false);
         lbEnunciado.setBackground(new java.awt.Color(235, 243, 250));
         lbEnunciado.setColumns(20);
-        lbEnunciado.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
+        lbEnunciado.setFont(new java.awt.Font("Super Jello", 1, 24)); // NOI18N
         lbEnunciado.setLineWrap(true);
         lbEnunciado.setRows(5);
         lbEnunciado.setWrapStyleWord(true);
         lbEnunciado.setAutoscrolls(false);
-        lbEnunciado.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 255)));
+        lbEnunciado.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 0, 153), 1, true));
         lbEnunciado.setFocusable(false);
         lbEnunciado.setOpaque(false);
         jScrollPane1.setViewportView(lbEnunciado);
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 255), 1, true));
+        jPanel3.setPreferredSize(new java.awt.Dimension(850, 85));
+
+        jpbProgreso.setBackground(new java.awt.Color(235, 243, 250));
+        jpbProgreso.setForeground(new java.awt.Color(255, 255, 255));
+        jpbProgreso.setMaximum(15);
+        jpbProgreso.setPreferredSize(new java.awt.Dimension(600, 26));
+
+        lblPreguntaNumero.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        lblPreguntaNumero.setText("Pregunta 1 de 15");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(lblPreguntaNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel9))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jpbProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 977, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 45, Short.MAX_VALUE))))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblPreguntaNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jpbProgreso, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9))
+                .addGap(87, 87, 87))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(150, 150, 150)
                 .addComponent(jpInfor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jpRo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(150, 150, 150))
+                .addGap(149, 149, 149))
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 1203, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addGap(21, 21, 21)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 94, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jpInfor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jpRo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60))))
+                    .addComponent(jpInfor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jpRo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(60, 60, 60))
         );
 
-        lblTitulo.setFont(new java.awt.Font("Arial Rounded MT Bold", 1, 28)); // NOI18N
-        lblTitulo.setText("QUIZZ VOCACIONAL");
+        jLabel3.setFont(new java.awt.Font("Pixel Digivolve", 1, 60)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(29, 53, 87));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("VOCACIONAL");
 
-        lblSubtitulo.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        lblSubtitulo.setForeground(new java.awt.Color(0, 51, 102));
-        lblSubtitulo.setText("¿A qué carrera perteneces?");
-
-        panelAvatar.setBackground(new java.awt.Color(255, 255, 255));
-        panelAvatar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        javax.swing.GroupLayout panelAvatarLayout = new javax.swing.GroupLayout(panelAvatar);
-        panelAvatar.setLayout(panelAvatarLayout);
-        panelAvatarLayout.setHorizontalGroup(
-            panelAvatarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 143, Short.MAX_VALUE)
+        javax.swing.GroupLayout PanelCircuitosLayout = new javax.swing.GroupLayout(PanelCircuitos);
+        PanelCircuitos.setLayout(PanelCircuitosLayout);
+        PanelCircuitosLayout.setHorizontalGroup(
+            PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(PanelCircuitosLayout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addGroup(PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(PanelCircuitosLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(897, 897, 897))
+                    .addGroup(PanelCircuitosLayout.createSequentialGroup()
+                        .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(225, Short.MAX_VALUE))
         );
-        panelAvatarLayout.setVerticalGroup(
-            panelAvatarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 111, Short.MAX_VALUE)
-        );
-
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        jButton1.setText("Ver Resultados");
-
-        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("jLabel1");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(lblSubtitulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(70, 70, 70)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(100, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(lblTitulo)
+        PanelCircuitosLayout.setVerticalGroup(
+            PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelCircuitosLayout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblSubtitulo)
-                        .addGap(30, 30, 30)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(384, 384, 384)
-                        .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(178, 178, 178)
-                        .addComponent(jLabel1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                .addComponent(jLabel3)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addGroup(PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCircuitosLayout.createSequentialGroup()
+                        .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(74, 74, 74))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCircuitosLayout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addComponent(jLabel1))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(PanelCircuitos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(PanelCircuitos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lbImagenzquierdaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbImagenzquierdaMouseClicked
-        // TODO add your handling code here:
-        sumarPunto(listaPreguntas.get(indiceActual).getCarreraA());
-        siguientePregunta();
-    }//GEN-LAST:event_lbImagenzquierdaMouseClicked
-
     private void lbImagenDerechaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbImagenDerechaMouseClicked
         // TODO add your handling code here:
-        sumarPunto(listaPreguntas.get(indiceActual).getCarreraB());
-        siguientePregunta();
+        ((TarjetaRespuesta) jpInfor).setSeleccionado(false);
+    ((TarjetaRespuesta) jpRo).setSeleccionado(true);
+
+    sumarPunto(
+            listaPreguntas.get(indiceActual).getCarreraB()
+    );
+
+    javax.swing.Timer timer =
+            new javax.swing.Timer(350, e -> {
+
+                siguientePregunta();
+
+                ((TarjetaRespuesta) jpInfor)
+                        .setSeleccionado(false);
+
+                ((TarjetaRespuesta) jpRo)
+                        .setSeleccionado(false);
+            });
+
+    timer.setRepeats(false);
+    timer.start();
     }//GEN-LAST:event_lbImagenDerechaMouseClicked
+
+    private void lbImagenzquierdaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbImagenzquierdaMouseClicked
+        // TODO add your handling code here:
+        ((TarjetaRespuesta) jpInfor).setSeleccionado(true);
+    ((TarjetaRespuesta) jpRo).setSeleccionado(false);
+
+    sumarPunto(
+            listaPreguntas.get(indiceActual).getCarreraA()
+    );
+
+    javax.swing.Timer timer =
+            new javax.swing.Timer(350, e -> {
+
+                siguientePregunta();
+
+                ((TarjetaRespuesta) jpInfor)
+                        .setSeleccionado(false);
+
+                ((TarjetaRespuesta) jpRo)
+                        .setSeleccionado(false);
+            });
+
+    timer.setRepeats(false);
+    timer.start();
+       
+    }//GEN-LAST:event_lbImagenzquierdaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -591,12 +728,14 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel PanelCircuitos;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
@@ -607,8 +746,6 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
     private javax.swing.JLabel lbImagenDerecha;
     private javax.swing.JLabel lbImagenzquierda;
     private javax.swing.JLabel lblPreguntaNumero;
-    private javax.swing.JLabel lblSubtitulo;
-    private javax.swing.JLabel lblTitulo;
     private javax.swing.JPanel panelAvatar;
     // End of variables declaration//GEN-END:variables
 }
