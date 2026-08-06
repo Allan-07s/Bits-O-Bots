@@ -70,11 +70,18 @@ public class MenuJuego extends JFrame {
     private void configurarVentana() {
 
         setTitle("Juego de Cartas - Menú");
-        setSize(760, 690);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
-    }
+        setUndecorated(true);
+
+    /*
+     * Pantalla completa.
+     */
+      setExtendedState(JFrame.MAXIMIZED_BOTH);
+      setDefaultCloseOperation(
+      JFrame.DO_NOTHING_ON_CLOSE
+    );
+
+        
+        setResizable(true); }
 
     private void construirInterfaz() {
 

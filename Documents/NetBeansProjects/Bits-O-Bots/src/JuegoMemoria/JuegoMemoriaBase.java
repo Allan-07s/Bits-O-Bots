@@ -59,6 +59,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
     private final int filas;
     private final int columnas;
     private final int totalIntercambios;
+    private static final boolean MODO_PRUEBA = false;
 
     private final ImageIcon[] imagenesFrente;
     private final String[] nombresCartas;
@@ -300,6 +301,10 @@ public abstract class JuegoMemoriaBase extends JFrame {
     );
 }
     
+    
+    
+    
+    
     private void construirInterfaz() {
         
     PanelDegradado fondo = new PanelDegradado(
@@ -342,7 +347,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
     PanelRedondeado panelTitulo
             = new PanelRedondeado(
-                    25,
+                    50,
                     new Color(25, 53, 112, 235),
                     new Color(117, 161, 255, 150)
             );
@@ -406,6 +411,117 @@ public abstract class JuegoMemoriaBase extends JFrame {
     // CUATRO TARJETAS DE ESTADÍSTICAS
     // =====================================================
 
+    JPanel botones = new JPanel();
+
+botones.setLayout(
+        new BoxLayout(
+                botones,
+                BoxLayout.Y_AXIS
+        )
+);
+
+botones.setOpaque(false);
+
+BotonRedondeado btnJugar
+        = new BotonRedondeado(
+                "JUGAR",
+                new Color(83, 102, 233),
+                new Color(105, 124, 255)
+        );
+
+BotonRedondeado btnSalir
+        = new BotonRedondeado(
+                "SALIR",
+                new Color(188, 65, 91),
+                new Color(220, 79, 105)
+        );
+
+/*
+ * TIPOGRAFÍA
+ */
+btnJugar.setFont(
+        new Font(
+                "Arial",
+                Font.BOLD,
+                20
+        )
+);
+
+btnSalir.setFont(
+        new Font(
+                "Arial",
+                Font.BOLD,
+                18
+        )
+);
+
+/*
+ * COLOR DEL TEXTO
+ */
+btnJugar.setForeground(Color.WHITE);
+btnSalir.setForeground(Color.WHITE);
+
+/*
+ * MEDIDAS DE CADA BOTÓN
+ */
+Dimension tamanoJugar = new Dimension(
+        100, // ancho
+        64   // alto
+);
+
+Dimension tamanoSalir = new Dimension(
+        100, // ancho
+        56   // alto
+);
+
+/*
+ * TAMAÑO DEL BOTÓN JUGAR
+ */
+btnJugar.setPreferredSize(tamanoJugar);
+btnJugar.setMinimumSize(tamanoJugar);
+btnJugar.setMaximumSize(tamanoJugar);
+
+/*
+ * TAMAÑO DEL BOTÓN SALIR
+ */
+btnSalir.setPreferredSize(tamanoSalir);
+btnSalir.setMinimumSize(tamanoSalir);
+btnSalir.setMaximumSize(tamanoSalir);
+
+/*
+ * CENTRAR LOS BOTONES
+ */
+btnJugar.setAlignmentX(
+        Component.CENTER_ALIGNMENT
+);
+
+btnSalir.setAlignmentX(
+        Component.CENTER_ALIGNMENT
+);
+
+/*
+ * FUNCIONAMIENTO
+ */
+
+/*
+ * AGREGARLOS AL PANEL
+ */
+botones.add(
+        Box.createVerticalGlue()
+);
+
+botones.add(btnJugar);
+
+botones.add(
+        Box.createVerticalStrut(18)
+);
+
+botones.add(btnSalir);
+
+botones.add(
+        Box.createVerticalGlue()
+);
+    
     JPanel barraEstadisticas = new JPanel(
             new GridLayout(
                     1,
@@ -535,7 +651,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
             );
 
     panelDerecho.setPreferredSize(
-            new Dimension(290, 500)
+            new Dimension(330, 500)
     );
 
     panelDerecho.setLayout(
@@ -664,6 +780,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
         )
 );
 
+
     btnVolver.setPreferredSize(
             new Dimension(230, 52)
     );
@@ -679,6 +796,64 @@ public abstract class JuegoMemoriaBase extends JFrame {
     btnVolver.addActionListener(e -> {
         abandonarPartida();
     });
+    
+    /*
+ * BOTÓN TEMPORAL PARA PRUEBAS.
+ */
+if (MODO_PRUEBA) {
+
+    BotonRedondeado btnSaltarNivel
+            = new BotonRedondeado(
+                    "SALTAR NIVEL",
+                    new Color(218, 133, 43),
+                    new Color(244, 157, 61)
+            );
+
+    btnSaltarNivel.setFont(
+            new Font(
+                    "Segoe UI",
+                    Font.BOLD,
+                    15
+            )
+    );
+
+    btnSaltarNivel.setForeground(
+            Color.WHITE
+    );
+
+    Dimension tamanoSaltar = new Dimension(
+            300,
+            50
+    );
+
+    btnSaltarNivel.setPreferredSize(
+            tamanoSaltar
+    );
+
+    btnSaltarNivel.setMinimumSize(
+            tamanoSaltar
+    );
+
+    btnSaltarNivel.setMaximumSize(
+            tamanoSaltar
+    );
+
+    btnSaltarNivel.setAlignmentX(
+            Component.CENTER_ALIGNMENT
+    );
+
+    btnSaltarNivel.addActionListener(e -> {
+        saltarNivelPrueba();
+    });
+
+    panelDerecho.add(
+            btnSaltarNivel
+    );
+
+    panelDerecho.add(
+            Box.createVerticalStrut(8)
+    );
+}
 
     panelDerecho.add(btnVolver);
 
@@ -927,6 +1102,66 @@ public abstract class JuegoMemoriaBase extends JFrame {
         }
     }
 
+    private void saltarNivelPrueba() {
+
+    /*
+     * Evita que el botón pueda ejecutarse dos veces
+     * o que continúen las animaciones del nivel.
+     */
+    if (partidaFinalizada) {
+        return;
+    }
+
+    partidaFinalizada = true;
+    bloqueado = true;
+
+    /*
+     * Invalida los temporizadores y animaciones
+     * que pertenecen a la partida actual.
+     */
+    numeroPartida++;
+
+    detenerCronometro();
+    GestorMusica.detenerFondo();
+
+    /*
+     * Como el nivel fue saltado, no se entrega
+     * bonificación.
+     */
+    int bonificacionPrueba = 0;
+
+    /*
+     * Guarda los puntos, movimientos y tiempo
+     * acumulados hasta el momento de saltarlo.
+     */
+    progreso.agregarResultadoNivel(
+            numeroNivel,
+            puntosNivel,
+            movimientos,
+            segundos
+    );
+
+    /*
+     * Abre la misma pantalla que aparece cuando
+     * el jugador completa normalmente el nivel.
+     */
+    NivelCompletadoForm completado
+            = new NivelCompletadoForm(
+                    progreso,
+                    numeroNivel,
+                    cantidadParejas,
+                    puntosNivel,
+                    bonificacionPrueba,
+                    movimientos,
+                    segundos
+            );
+
+    completado.setLocationRelativeTo(null);
+    completado.setVisible(true);
+
+    dispose();
+}
+    
     private void crearTablero() {
 
         panelCartas.removeAll();
