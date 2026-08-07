@@ -203,52 +203,6 @@ public class FondoCircuitosPanel extends JPanel {
         int largo = 60;
         int margen = 35;
 
-        // Superior izquierda
-        g2.drawLine(margen, margen, margen + largo, margen);
-        g2.drawLine(margen, margen, margen, margen + largo);
-
-        g2.drawLine(
-                margen + 18,
-                margen + 18,
-                margen + 45,
-                margen + 18
-        );
-
-        g2.drawLine(
-                margen + 18,
-                margen + 18,
-                margen + 18,
-                margen + 45
-        );
-
-        // Superior derecha
-        g2.drawLine(
-                ancho - margen,
-                margen,
-                ancho - margen - largo,
-                margen
-        );
-
-        g2.drawLine(
-                ancho - margen,
-                margen,
-                ancho - margen,
-                margen + largo
-        );
-
-        g2.drawLine(
-                ancho - margen - 18,
-                margen + 18,
-                ancho - margen - 65,
-                margen + 18
-        );
-
-        g2.drawLine(
-                ancho - margen - 18,
-                margen + 18,
-                ancho - margen - 18,
-                margen + 45
-        );
 
         // Inferior izquierda
         g2.drawLine(

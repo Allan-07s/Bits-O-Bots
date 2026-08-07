@@ -6,7 +6,8 @@ package Login;
 
 import Avatar.AvatarPanel;
 import com.formdev.flatlaf.FlatLightLaf;
-import java.awt.BorderLayout;
+import java.awt.Dimension;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -26,10 +27,14 @@ public class Login extends javax.swing.JFrame {
         panelAvatar.setOpaque(false);
         PanelRegistrar.putClientProperty("FlatLaf.style",
         "arc:35");
+        setExtendedState(MAXIMIZED_BOTH);
+        setLocationRelativeTo(null);
         configurarVentana();
         configurarPaneles();
         configurarComponentesFlatLaf();
         cargarAvatar();
+        
+        dimensiones();
      
     }
 
@@ -51,12 +56,12 @@ public class Login extends javax.swing.JFrame {
         btnComenzar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         panelAvatar = new javax.swing.JPanel();
-        lblTitulo = new javax.swing.JLabel();
         lblTitulo1 = new javax.swing.JLabel();
-        lblTitulo2 = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        lblTitulo3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -154,19 +159,15 @@ public class Login extends javax.swing.JFrame {
             .addGap(0, 111, Short.MAX_VALUE)
         );
 
-        lblTitulo.setFont(new java.awt.Font("Pixel Digivolve", 1, 130)); // NOI18N
-        lblTitulo.setForeground(new java.awt.Color(0, 66, 119));
-        lblTitulo.setText("BITS");
-
         lblTitulo1.setFont(new java.awt.Font("Pixel Digivolve", 1, 70)); // NOI18N
         lblTitulo1.setForeground(new java.awt.Color(0, 66, 119));
         lblTitulo1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconosL/computer-mouse.png"))); // NOI18N
 
-        lblTitulo2.setFont(new java.awt.Font("Pixel Digivolve", 1, 130)); // NOI18N
-        lblTitulo2.setForeground(new java.awt.Color(0, 66, 119));
-        lblTitulo2.setText("BOTS");
+        lblTitulo.setFont(new java.awt.Font("Pixel Digivolve", 1, 130)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(0, 46, 83));
+        lblTitulo.setText("BiTS");
 
-        jLabel1.setFont(new java.awt.Font("Super Jello", 0, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Super Jello", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(92, 133, 146));
         jLabel1.setText("JUEGO EDUCATIVO • INFORMÁTICA ");
 
@@ -174,65 +175,74 @@ public class Login extends javax.swing.JFrame {
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconosL/bit.png"))); // NOI18N
 
+        lblTitulo3.setFont(new java.awt.Font("Pixel Digivolve", 1, 130)); // NOI18N
+        lblTitulo3.setForeground(new java.awt.Color(0, 46, 83));
+        lblTitulo3.setText("BOTS");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap(127, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(102, 102, 102)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5)
                             .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblTitulo)
-                                .addGap(49, 49, 49)
-                                .addComponent(lblTitulo1)
-                                .addGap(43, 43, 43)
-                                .addComponent(lblTitulo2))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(264, 264, 264)
-                        .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
+                                .addComponent(jLabel6)
+                                .addGap(32, 32, 32)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblTitulo)
+                                        .addGap(27, 27, 27)
+                                        .addComponent(lblTitulo1)
+                                        .addGap(29, 29, 29)
+                                        .addComponent(lblTitulo3)))))
+                        .addGap(74, 74, 74))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(54, 54, 54)))
                 .addComponent(PanelRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(81, 81, 81))
+                .addGap(94, 94, 94))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(111, 111, 111)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(145, 145, 145)
-                        .addComponent(jLabel6))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(178, 178, 178)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(64, 64, 64)
-                                .addComponent(lblTitulo1))
+                                .addGap(31, 31, 31)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(lblTitulo3, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(71, 71, 71)
+                                        .addComponent(lblTitulo1))))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblTitulo2))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel5)))))
-                .addGap(26, 26, 26)
-                .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 237, Short.MAX_VALUE)
-                .addComponent(PanelRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(126, 126, 126))
+                                .addGap(65, 65, 65)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6)
+                                    .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5)
+                        .addGap(126, 126, 126)
+                        .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(PanelRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(252, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
    
+    private void dimensiones(){
+        panelAvatar.setPreferredSize(new Dimension(500,500));
+    }
     private void configurarVentana() {
     setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
     setLocationRelativeTo(null);
@@ -267,10 +277,6 @@ private void configurarComponentesFlatLaf() {
     EfectosLogin.aplicarBotonFlatLaf(btnComenzar);
     EfectosLogin.aplicarColoresTexto(txfNombre);
 
-    lblTitulo.putClientProperty(
-            "FlatLaf.style",
-            "foreground:#004B7A"
-    );
 
     lblRegistrate.putClientProperty(
             "FlatLaf.style",
@@ -298,6 +304,13 @@ private void cargarAvatar() {
 
     private void btnComenzarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComenzarActionPerformed
         // TODO add your handling code here:
+  
+        if(txfNombre.getText().trim().isEmpty()
+            || cmbSeccion.getSelectedIndex()==0){
+
+        JOptionPane.showMessageDialog(null,"Complete todos los datos.");
+        return;
+    }
         Menu menu = new Menu(txfNombre.getText(), cmbSeccion.getSelectedItem().toString());
         menu.setVisible(true);
     }//GEN-LAST:event_btnComenzarActionPerformed
@@ -347,7 +360,7 @@ private void cargarAvatar() {
     private javax.swing.JLabel lblSeccion;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblTitulo1;
-    private javax.swing.JLabel lblTitulo2;
+    private javax.swing.JLabel lblTitulo3;
     private javax.swing.JPanel panelAvatar;
     private javax.swing.JTextField txfNombre;
     // End of variables declaration//GEN-END:variables
