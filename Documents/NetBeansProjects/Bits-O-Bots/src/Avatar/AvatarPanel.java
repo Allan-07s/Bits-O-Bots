@@ -4,17 +4,24 @@
  */
 package Avatar;
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import javax.imageio.ImageIO;
@@ -115,6 +122,52 @@ public class AvatarPanel extends JPanel{
      */
     private JPanel containerPanel;
 
+    private String mensajeCompleto = "";
+    private String mensajeActual = "";
+    private Timer timerEscritura;
+    private int indiceTexto = 0;
+    private boolean mostrandoMensaje = false;
+    
+    // Controles de animación del globo
+    private float alphaGlobo = 0f;            // Opacidad de 0.0f a 1.0f
+    private long tiempoInicioMensaje = 0;     // Cuándo se mostró el mensaje
+    private int duracionMensajeMs = 4000;     // Duración total visible (ej. 4 segundos)
+    private final int FADE_DURATION = 300;     // Tiempo de fade in/out en ms
+    
+    public void decirMensaje(String texto, int velocidadMs) {
+        this.mensajeActual = texto;
+        this.mostrandoMensaje = true;
+        this.tiempoInicioMensaje = System.currentTimeMillis();
+        this.alphaGlobo = 0f;
+        repaint();
+
+        if (timerEscritura != null && timerEscritura.isRunning()) {
+            timerEscritura.stop();
+        }
+
+        timerEscritura = new Timer(velocidadMs, e -> {
+            if (indiceTexto < mensajeCompleto.length()) {
+                mensajeActual += mensajeCompleto.charAt(indiceTexto);
+                indiceTexto++;
+                repaint();
+            } else {
+                ((Timer) e.getSource()).stop();
+            }
+        });
+        timerEscritura.start();
+        repaint();
+    }
+
+    /**
+     * Oculta el bocadillo de texto.
+     */
+    public void ocultarMensaje() {
+        if (timerEscritura != null && timerEscritura.isRunning()) {
+            timerEscritura.stop();
+        }
+        this.mostrandoMensaje = false;
+        repaint();
+    }
     /*
      * CONSTRUCTOR
      */
@@ -587,7 +640,7 @@ public class AvatarPanel extends JPanel{
                 + random.nextDouble() * 1.8;
     }
 
-    /*
+   /*
      * DIBUJAR AVATAR
      */
     @Override
@@ -795,9 +848,135 @@ public class AvatarPanel extends JPanel{
 
             g2.dispose();
         }
+
+        /*
+         * DIBUJAR GLOBO DE TEXTO (MENSAJE CON FADE IN/OUT Y MÁS ARRIBA)
+         */
+        if (mostrandoMensaje && mensajeActual != null && !mensajeActual.isEmpty()) {
+
+            long tiempoTranscurrido = System.currentTimeMillis() - tiempoInicioMensaje;
+
+            // 1. Calcular el Alpha (Desvanecimiento / Aparición)
+            if (tiempoTranscurrido < FADE_DURATION) {
+                // Fade In (Aparición)
+                alphaGlobo = (float) tiempoTranscurrido / FADE_DURATION;
+            } else if (tiempoTranscurrido > (duracionMensajeMs - FADE_DURATION)) {
+                // Fade Out (Desvanecimiento)
+                alphaGlobo = 1.0f - ((float) (tiempoTranscurrido - (duracionMensajeMs - FADE_DURATION)) / FADE_DURATION);
+            } else {
+                // Totalmente visible
+                alphaGlobo = 1.0f;
+            }
+
+            // Clampar valores de alpha entre 0.0 y 1.0
+            alphaGlobo = Math.max(0.0f, Math.min(1.0f, alphaGlobo));
+
+            // Si ya terminó la animación por completo, ocultar
+            if (tiempoTranscurrido >= duracionMensajeMs) {
+                mostrandoMensaje = false;
+                alphaGlobo = 0f;
+            } else {
+
+                Graphics2D g2Globe = (Graphics2D) graphics.create();
+
+                try {
+                    // Aplicar el nivel de opacidad global a todo el globo y texto
+                    g2Globe.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaGlobo));
+
+                    g2Globe.setRenderingHint(
+                            RenderingHints.KEY_ANTIALIASING,
+                            RenderingHints.VALUE_ANTIALIAS_ON
+                    );
+                    g2Globe.setRenderingHint(
+                            RenderingHints.KEY_TEXT_ANTIALIASING,
+                            RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+                    );
+
+                    Font font = new Font("SansSerif", Font.BOLD, 18);
+                    g2Globe.setFont(font);
+
+                    int anchoMaximo = Math.max(180, getWidth() - 40);
+                    FontMetrics fm = g2Globe.getFontMetrics();
+                    List<String> lineas = envolverTexto(mensajeActual, fm, anchoMaximo);
+
+                    int altoLinea = fm.getHeight();
+                    int altoGlobo = (lineas.size() * altoLinea) + 20;
+                    int anchoGlobo = 0;
+
+                    for (String linea : lineas) {
+                        int anchoLinea = fm.stringWidth(linea);
+                        if (anchoLinea > anchoGlobo) {
+                            anchoGlobo = anchoLinea;
+                        }
+                    }
+                    anchoGlobo += 35;
+
+                    int xGlobo = (getWidth() - anchoGlobo) / 2;
+                    
+                    int yGlobo = 0; 
+
+                    // Sombra (se atenúa proporcionalmente)
+                    g2Globe.setColor(new Color(0, 0, 0, (int) (40 * alphaGlobo)));
+                    g2Globe.fill(new RoundRectangle2D.Float(xGlobo + 3, yGlobo + 3, anchoGlobo, altoGlobo, 20, 20));
+
+                    // Fondo
+                    g2Globe.setColor(new Color(255, 255, 255, 240));
+                    g2Globe.fill(new RoundRectangle2D.Float(xGlobo, yGlobo, anchoGlobo, altoGlobo, 20, 20));
+
+                    // Borde
+                    g2Globe.setColor(new Color(40, 40, 40));
+                    g2Globe.setStroke(new BasicStroke(2f));
+                    g2Globe.draw(new RoundRectangle2D.Float(xGlobo, yGlobo, anchoGlobo, altoGlobo, 20, 20));
+
+                    // Pico del globo
+                    int[] picosX = {xGlobo + (anchoGlobo / 2) - 10, xGlobo + (anchoGlobo / 2) + 10, xGlobo + (anchoGlobo / 2)};
+                    int[] picosY = {yGlobo + altoGlobo - 1, yGlobo + altoGlobo - 1, yGlobo + altoGlobo + 12};
+
+                    g2Globe.setColor(new Color(255, 255, 255, 240));
+                    g2Globe.fillPolygon(picosX, picosY, 3);
+
+                    g2Globe.setColor(new Color(40, 40, 40));
+                    g2Globe.drawLine(picosX[0], picosY[0], picosX[2], picosY[2]);
+                    g2Globe.drawLine(picosX[1], picosY[1], picosX[2], picosY[2]);
+
+                    // Texto
+                    g2Globe.setColor(new Color(30, 30, 30));
+                    int textoY = yGlobo + fm.getAscent() + 10;
+                    for (String linea : lineas) {
+                        int textoX = xGlobo + (anchoGlobo - fm.stringWidth(linea)) / 2;
+                        g2Globe.drawString(linea, textoX, textoY);
+                        textoY += altoLinea;
+                    }
+
+                } finally {
+                    g2Globe.dispose();
+                }
+            }
+        }
+    }
+    
+    // Auxiliar para dividir el texto en varias líneas si supera el ancho permitido
+    private List<String> envolverTexto(String texto, FontMetrics fm, int anchoMax) {
+        List<String> lineas = new ArrayList<>();
+        String[] palabras = texto.split(" ");
+        StringBuilder lineaActual = new StringBuilder();
+
+        for (String palabra : palabras) {
+            if (fm.stringWidth(lineaActual + palabra) < anchoMax) {
+                if (lineaActual.length() > 0) lineaActual.append(" ");
+                lineaActual.append(palabra);
+            } else {
+                lineas.add(lineaActual.toString());
+                lineaActual = new StringBuilder(palabra);
+            }
+        }
+        if (lineaActual.length() > 0) {
+            lineas.add(lineaActual.toString());
+        }
+        return lineas;
     }
 
-    /*
+/*
      * DIBUJAR AVATAR POR PARTES
      */
     private void paintLayeredAvatar(
