@@ -21,9 +21,18 @@ public class PantallaFinal extends JFrame {
         this.progreso = progreso;
 
         setTitle("Memory Tech - Resultado final");
-        setSize(780, 690);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+         setUndecorated(true);
+
+    /*
+     * Pantalla completa.
+     */
+      setExtendedState(JFrame.MAXIMIZED_BOTH);
+      setDefaultCloseOperation(
+      JFrame.DO_NOTHING_ON_CLOSE
+    );
+
+        
+        setResizable(true);
 
         construirInterfaz();
 
