@@ -27,6 +27,19 @@ public class Nivel3Form extends JuegoMemoriaBase {
         "/img/n3_pinza_robotica.PNG",
         "/img/n3_dron.PNG"
     };
+    
+    private static final String[] CATEGORIAS = {
+        "INFORMATICA",
+        "INFORMATICA",
+        "INFORMATICA",
+        "INFORMATICA",
+        "INFORMATICA",
+        "ROBOTICA",
+        "ROBOTICA",
+        "ROBOTICA",
+        "ROBOTICA",
+        "ROBOTICA"
+    };
 
     public Nivel3Form(ProgresoJuego progreso) {
 
@@ -38,7 +51,8 @@ public class Nivel3Form extends JuegoMemoriaBase {
                 5,
                 12,
                 NOMBRES,
-                IMAGENES
+                IMAGENES,
+                CATEGORIAS
         );
     }
 }

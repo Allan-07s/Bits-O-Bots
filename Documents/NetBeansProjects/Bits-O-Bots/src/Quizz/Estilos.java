@@ -16,7 +16,7 @@ public final class Estilos {
         // Evita crear objetos de esta clase.
     }
 
-    public static void imagen150x150(
+    public static void multimedia(
             JLabel label,
             String ruta
     ) {
@@ -69,8 +69,8 @@ public final class Estilos {
          * Dejamos un margen interior para que la imagen
          * no quede pegada a los bordes de la tarjeta.
          */
-        int margenHorizontal = 16;
-        int margenVertical = 16;
+        int margenHorizontal = 0;
+        int margenVertical = 0;
 
         int anchoDisponible =
                 Math.max(1, anchoLabel - margenHorizontal * 2);

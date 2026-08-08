@@ -11,11 +11,11 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
+import ResultadoQuizz.Informatica;
+import ResultadoQuizz.Robotica;
 import java.awt.Font;
-
-
-
+import Login.Menu;
+import BaseDeDatos.conexion;
 
 /**
  *
@@ -26,10 +26,35 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
     private final String jugadorC;
     private final String seccionC;
     
+    private String ganadora;
+    private int porcentajeGanadora;
+    
     private List<Preguntas> listaPreguntas = new ArrayList<>();
     private int indiceActual = 0;
     private int puntosInformatica = 0;
     private int puntosRobotica = 0;
+    
+    private AvatarPanel avatar;
+    private final Menu menuC;
+    
+    //Toca cambiar TODO esto
+    private final String[] MENSAJES_AVATAR = {
+        "¡Bienvenido! Elige la opción que más despierte tu curiosidad.",
+        "Ambas áreas resuelven problemas, pero de formas distintas.",
+        "¿Te atraen más los circuitos físicos o las pantallas?",
+        "¿Qué hardware te llama más la atención explorar?",
+        "Piensa en cómo te gustaría que interactúen los datos.",
+        "¡Redes o Automatización! Dos mundos con gran futuro.",
+        "¿Entornos virtuales o dispositivos en el mundo real?",
+        "Seguridad digital vs. Mecatrónica aplicada a la salud.",
+        "Sensórica física frente a procesamiento digital.",
+        "¡Última de imágenes! Código binario o mecánica pura.",
+        "¡Atención! Observa con cuidado estos videos antes de elegir.",
+        "Analiza el movimiento y la lógica mostrada en pantalla.",
+        "Compara cómo se aplica la tecnología en cada opción.",
+        "¡Ya casi terminamos! Elige la que más te identifique.",
+        "¡Última pregunta! Da tu mejor elección final."
+    };
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Quizz_Vocacional.class.getName());
 
@@ -39,8 +64,29 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
      * @param seccion
      */
     
-    public Quizz_Vocacional(String jugador, String seccion) {
+    public Quizz_Vocacional(String jugador, String seccion, Menu menu) {
         initComponents();
+        menuC = menu;
+        
+        // Instanciamos el avatar Bug
+        this.avatar = new AvatarPanel();
+        panelAvatar.setLayout(new BorderLayout());
+        panelAvatar.add(avatar);
+        avatar.startAnimation();
+
+        // --- AGREGAR ESTAS LÍNEAS PARA FORZAR EL RENDERIZADO ---
+        panelAvatar.revalidate();
+        panelAvatar.repaint();
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setOpaque(false);
+        jScrollPane1.getViewport().setOpaque(false);
+
+        // Estilizado moderno para el enunciado de la pregunta
+        lbEnunciado.setOpaque(false);
+        lbEnunciado.setBorder(null);
+        lbEnunciado.setFont(new Font("SansSerif", Font.BOLD, 22));
+        lbEnunciado.setForeground(new Color(29, 53, 87));
+        
         jpInfor.setOpaque(false);
         jpRo.setOpaque(false);
 
@@ -102,7 +148,7 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
         jpbProgreso.setPreferredSize(new Dimension(650, 34));
         
         setExtendedState(Quizz_Vocacional.MAXIMIZED_BOTH);
-        jButton1.setVisible(false);
+        btnResultados.setVisible(false);
         
         cargarListaPreguntas();
         mostrarPreguntaActual();
@@ -115,25 +161,25 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
         manager.setReshowDelay(0);
         javax.swing.UIManager.put("ToolTip.background", new java.awt.Color(0,0,0,0));
         
-        //Avatar
-        AvatarPanel avatar = new AvatarPanel();
+        // Instanciamos el avatar Bug
+        this.avatar = new AvatarPanel();
         panelAvatar.setLayout(new BorderLayout());
         panelAvatar.add(avatar);
         avatar.startAnimation();
+
+        // --- AGREGAR ESTAS LÍNEAS PARA FORZAR EL RENDERIZADO ---
+        panelAvatar.revalidate();
+        panelAvatar.repaint();
     }
     
-    private void dimensiones(){        
-       
-        
+    private void dimensiones(){
         jPanel2.setPreferredSize(new Dimension(1200, 700));
         jPanel2.setMinimumSize(new Dimension(1200, 700));
         jPanel2.setMaximumSize(new Dimension(1200, 700));
-        
-        
     }
     
     private void cargarListaPreguntas() {
-        // Pregunta 1
+    // Pregunta 1
         listaPreguntas.add(new Preguntas(
             "1. ¿Qué tipo de creación tecnológica te gustaría desarollar?",
 
@@ -155,7 +201,7 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             "Informática",
 
             "Integrar componentes electrónicos para hacer funcionar un sistema.",
-            "/img_quizz/ROP2.png",
+            "/img_quizz/ROP5.png",
             "Robótica"
         ));
 
@@ -164,7 +210,7 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             "3. ¿En cuál actividad tecnológica te gustaría concentrarte?",
 
             "Conectar componentes y comprobar el funcionamiento de un circuito.",
-            "/img_quizz/ROP3.png",
+            "/img_quizz/ROPPP3.png",
             "Robótica",
 
             "Analizar y desarrollar soluciones utilizando una computadora.",
@@ -262,36 +308,99 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
             "/img_quizz/ROP10.png",
             "Robótica"
         ));
+
+        // Pregunta 11
+        listaPreguntas.add(new Preguntas(
+            "11. ¿Qué actividad te gustaría aprender?",
+
+            "Aprender a escribir instrucciones y crear programas.",
+            "/video_quizz/Pregunta11-I.gif",
+            "Informática",
+
+            "Aprender a conectar componentes para controlar un dispositivo.",
+            "/video_quizz/Pregunta11-R.gif",
+            "Robótica"
+        ));
+
+        // Pregunta 12
+        listaPreguntas.add(new Preguntas(
+            "12. ¿Qué resultado te parece más interesante?",
+
+            "Lograr que un robot se desplace de manera controlada.",
+            "/video_quizz/Pregunta12-R.gif",
+            "Robótica",
+
+            "Lograr que un videojuego responda correctamente a las acciones del jugador.",
+            "/video_quizz/Pregunta12-I.gif",
+            "Informática"
+        ));
+
+        // Pregunta 13
+        listaPreguntas.add(new Preguntas(
+            "13. ¿Qué problema preferirías resolver?",
+
+            "Encontrar y corregir un error dentro de un programa.",
+            "/video_quizz/Pregunta13-I.gif",
+            "Informática",
+
+            "Encontrar por qué un robot no se mueve y corregir su funcionamiento.",
+            "/video_quizz/Pregunta13-R.gif",
+            "Robótica"
+        ));
+
+        // Pregunta 14
+        listaPreguntas.add(new Preguntas(
+            "14. ¿Qué proyecto te gustaría crear?",
+
+            "Crear un sistema que encienda una luz de manera automática.",
+            "/video_quizz/Pregunta14-R.gif",
+            "Robótica",
+
+            "Desarrollar una aplicación o experiencia digital interactiva.",
+            "/video_quizz/Pregunta14-I.gif",
+            "Informática"
+        ));
+
+        // Pregunta 15
+        listaPreguntas.add(new Preguntas(
+            "15. ¿Qué te llama más la atención?",
+
+            "Observar cómo funciona un videojuego creado mediante programación.",
+            "/video_quizz/Pregunta15-I.gif",
+            "Informática",
+
+            "Observar cómo un sensor detecta una mano y activa una respuesta.",
+            "/video_quizz/Pregunta15-R.gif",
+            "Robótica"
+        ));
     }
 
 private void mostrarPreguntaActual() {
 
     int totalPreguntas = listaPreguntas.size();
 
-    if (indiceActual < totalPreguntas) {
+        if (indiceActual < totalPreguntas) {
 
-        Preguntas p = listaPreguntas.get(indiceActual);
-        ((TarjetaRespuesta) jpInfor).setTitulo(
-        p.getTextoOpA()
-    );
+            Preguntas p = listaPreguntas.get(indiceActual);
+            ((TarjetaRespuesta) jpInfor).setTitulo(
+            p.getTextoOpA()
+        );
 
-        ((TarjetaRespuesta) jpRo).setTitulo(
-        p.getTextoOpB()
-    );
+            ((TarjetaRespuesta) jpRo).setTitulo(
+            p.getTextoOpB()
+        );
 
-        ((TarjetaRespuesta) jpInfor).setSeleccionado(false);
-        ((TarjetaRespuesta) jpRo).setSeleccionado(false);
+            ((TarjetaRespuesta) jpInfor).setSeleccionado(false);
+            ((TarjetaRespuesta) jpRo).setSeleccionado(false);
 
-     lblPreguntaNumero.setText(
-        String.format(
-                "%02d / %02d",
-                indiceActual + 1,
-                totalPreguntas
-        )
-);
+         lblPreguntaNumero.setText(
+            String.format(
+                    "%02d / %02d",
+                    indiceActual + 1,
+                    totalPreguntas
+            ));
 
-        int porcentaje =
-                ((indiceActual + 1) * 100) / totalPreguntas;
+        int porcentaje = ((indiceActual + 1) * 100) / totalPreguntas;
 
         jpbProgreso.setMinimum(0);
         jpbProgreso.setMaximum(100);
@@ -299,51 +408,23 @@ private void mostrarPreguntaActual() {
         jpbProgreso.setString(porcentaje + "%");
 
         lbEnunciado.setText(p.getEnunciado());
-
-        String estiloTooltip =
-                "<html><body style='width:250px;"
-                + "background-color:#333333;"
-                + "color:#FFFFFF;"
-                + "padding:8px;"
-                + "font-size:12px;'>";
-
-        lbImagenzquierda.setToolTipText(
-                estiloTooltip
-                + p.getTextoOpA()
-                + "</body></html>"
-        );
-
-        lbImagenDerecha.setToolTipText(
-                estiloTooltip
-                + p.getTextoOpB()
-                + "</body></html>"
-        );
-
-        try {
-
-            Estilos.imagen150x150(
-                    lbImagenzquierda,
-                    p.getRutaImgA()
-            );
-
-            Estilos.imagen150x150(
-                    lbImagenDerecha,
-                    p.getRutaImgB()
-            );
-
-        } catch (Exception e) {
-
-            System.out.println(
-                    "Error al cargar imagen: "
-                    + e.getMessage()
-            );
+        
+        // --- ACTUALIZAR MENSAJE DEL AVATAR ---
+        if (avatar != null && indiceActual < MENSAJES_AVATAR.length) {
+            avatar.decirMensaje(MENSAJES_AVATAR[indiceActual], 30);
         }
-
-    } else {
-
-        mostrarResultadoFinal();
+            try {
+                Estilos.multimedia(lbImagenzquierda, p.getRutaOpA()
+                );
+                Estilos.multimedia(lbImagenDerecha, p.getRutaOpB()
+                );
+            } catch (Exception e) {
+                System.out.println("Error al cargar imagen: " + e.getMessage());
+            }
+        } else {
+            mostrarResultadoFinal();
+        }
     }
-}
 
     private void sumarPunto(String carrera) {
         if (carrera.equals("Informática")) {
@@ -359,19 +440,56 @@ private void mostrarPreguntaActual() {
     }
 
     private void mostrarResultadoFinal() {
-        String ganadora = (puntosInformatica >= puntosRobotica) ? "Informática" : "Robótica";
-
-        JOptionPane.showMessageDialog(this, 
+        int totalPreguntas = listaPreguntas.size();
+        
+        if (puntosInformatica > puntosRobotica) {
+            ganadora = "Informática";
+            porcentajeGanadora = (puntosInformatica * 100) / totalPreguntas;
+        } else if (puntosRobotica > puntosInformatica) {
+            ganadora = "Robótica";
+            porcentajeGanadora = (puntosRobotica * 100) / totalPreguntas;
+        }
+        JOptionPane.showMessageDialog(
+            this,
             "¡Quiz Finalizado con Éxito!\n\n" +
             "Puntos Informática: " + puntosInformatica + "\n" +
             "Puntos Robótica: " + puntosRobotica + "\n\n" +
             "Resultado Sugerido: " + ganadora,
             "Resultados Vocacionales",
-            JOptionPane.INFORMATION_MESSAGE);
-        jButton1.setVisible(true);
+            JOptionPane.INFORMATION_MESSAGE
+        );
+        btnResultados.setVisible(true);
         lbImagenzquierda.setToolTipText(null);
         lbImagenDerecha.setToolTipText(null);
+        
+        insertarDatos();
     }
+    
+    private void insertarDatos() {
+        String insertar = "INSERT INTO tbl_registro(Nombre, Grado, Seccion, puntosInformatica, puntosRobotica, Recomendada) VALUES(?, ?, ?, ?, ?, ?)";
+
+        conexion objetoConexion = new conexion();
+        try (java.sql.Connection con = objetoConexion.crearConexion();
+             java.sql.PreparedStatement ps = con.prepareStatement(insertar)) {
+
+            String[] partesSeccion = seccionC.split(" - ");
+            String grado = partesSeccion[0];
+            String seccion = partesSeccion.length > 1 ? partesSeccion[1] : "";
+
+            ps.setString(1, jugadorC);
+            ps.setString(2, grado);
+            ps.setString(3, seccion);
+            ps.setString(4, String.valueOf(puntosInformatica));
+            ps.setString(5, String.valueOf(puntosRobotica));
+            ps.setString(6, ganadora);
+
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Registro completado con éxito");
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog(null, "No se pudo completar el registro: " + e.toString());
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -382,7 +500,7 @@ private void mostrarPreguntaActual() {
     private void initComponents() {
 
         PanelCircuitos = new Quizz.PanelCircuitos ();
-        jButton1 = new javax.swing.JButton();
+        btnResultados = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -400,25 +518,30 @@ private void mostrarPreguntaActual() {
         jLabel9 = new javax.swing.JLabel();
         lblPreguntaNumero = new Quizz.PanelNumeroPregunta();
         jLabel3 = new javax.swing.JLabel();
+        btnRegresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         PanelCircuitos.setBackground(new java.awt.Color(255, 255, 255));
         PanelCircuitos.setRequestFocusEnabled(false);
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        jButton1.setText("Ver Resultados");
+        btnResultados.setBackground(new java.awt.Color(235, 243, 250));
+        btnResultados.setFont(new java.awt.Font("Pixel Digivolve", 1, 26)); // NOI18N
+        btnResultados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconosL/ir.png"))); // NOI18N
+        btnResultados.setText("Ver Resultados");
+        btnResultados.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 102), 2, true));
+        btnResultados.addActionListener(this::btnResultadosActionPerformed);
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("jLabel1");
 
-        jLabel2.setFont(new java.awt.Font("Pixel Digivolve", 1, 50)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Pixel Digivolve", 1, 58)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(29, 53, 87));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("QUIZZ");
 
-        jLabel4.setFont(new java.awt.Font("Super Jello", 0, 46)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Super Jello", 0, 44)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("¿A qué carrera perteneces?");
 
@@ -436,6 +559,7 @@ private void mostrarPreguntaActual() {
         );
 
         jPanel2.setBackground(new java.awt.Color(235, 243, 250));
+        jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 102), 1, true));
 
         jpInfor.setBackground(new java.awt.Color(255, 255, 255));
         jpInfor.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true));
@@ -456,15 +580,15 @@ private void mostrarPreguntaActual() {
         jpInforLayout.setHorizontalGroup(
             jpInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpInforLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lbImagenzquierda, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(14, 14, 14)
+                .addComponent(lbImagenzquierda, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         jpInforLayout.setVerticalGroup(
             jpInforLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpInforLayout.createSequentialGroup()
+            .addGroup(jpInforLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbImagenzquierda, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                .addComponent(lbImagenzquierda, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -485,15 +609,15 @@ private void mostrarPreguntaActual() {
         jpRoLayout.setHorizontalGroup(
             jpRoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpRoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lbImagenDerecha, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(14, 14, 14)
+                .addComponent(lbImagenDerecha, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         jpRoLayout.setVerticalGroup(
             jpRoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpRoLayout.createSequentialGroup()
+            .addGroup(jpRoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lbImagenDerecha, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                .addComponent(lbImagenDerecha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -508,7 +632,7 @@ private void mostrarPreguntaActual() {
         lbEnunciado.setRows(5);
         lbEnunciado.setWrapStyleWord(true);
         lbEnunciado.setAutoscrolls(false);
-        lbEnunciado.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 0, 153), 1, true));
+        lbEnunciado.setBorder(null);
         lbEnunciado.setFocusable(false);
         lbEnunciado.setOpaque(false);
         jScrollPane1.setViewportView(lbEnunciado);
@@ -566,11 +690,11 @@ private void mostrarPreguntaActual() {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(150, 150, 150)
-                .addComponent(jpInfor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(116, 116, 116)
+                .addComponent(jpInfor, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jpRo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(149, 149, 149))
+                .addGap(139, 139, 139))
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 1203, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
@@ -583,57 +707,74 @@ private void mostrarPreguntaActual() {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jpInfor, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jpRo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jpRo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jpInfor, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE))
                 .addGap(60, 60, 60))
         );
 
-        jLabel3.setFont(new java.awt.Font("Pixel Digivolve", 1, 60)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Pixel Digivolve", 1, 65)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(29, 53, 87));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("VOCACIONAL");
+
+        btnRegresar.setFont(new java.awt.Font("Pixel Digivolve", 0, 25)); // NOI18N
+        btnRegresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconosL/volver.png"))); // NOI18N
+        btnRegresar.setText("Regresar al Menú");
+        btnRegresar.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 51), 2, true));
+        btnRegresar.addActionListener(this::btnRegresarActionPerformed);
 
         javax.swing.GroupLayout PanelCircuitosLayout = new javax.swing.GroupLayout(PanelCircuitos);
         PanelCircuitos.setLayout(PanelCircuitosLayout);
         PanelCircuitosLayout.setHorizontalGroup(
             PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(PanelCircuitosLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addGroup(PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(PanelCircuitosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCircuitosLayout.createSequentialGroup()
+                        .addGap(0, 508, Short.MAX_VALUE)
                         .addComponent(jLabel1)
-                        .addGap(897, 897, 897))
-                    .addGroup(PanelCircuitosLayout.createSequentialGroup()
+                        .addGap(897, 1115, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCircuitosLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
                         .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(225, Short.MAX_VALUE))
+                        .addGroup(PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(PanelCircuitosLayout.createSequentialGroup()
+                                .addGap(60, 60, 60)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(PanelCircuitosLayout.createSequentialGroup()
+                                .addGap(117, 117, 117)
+                                .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         PanelCircuitosLayout.setVerticalGroup(
             PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelCircuitosLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addGroup(PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCircuitosLayout.createSequentialGroup()
-                        .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(74, 74, 74))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCircuitosLayout.createSequentialGroup()
+                    .addGroup(PanelCircuitosLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                        .addGap(29, 29, 29)
+                        .addGroup(PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnResultados, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnRegresar, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCircuitosLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(81, 81, 81)))
                 .addComponent(jLabel1))
         );
 
@@ -654,53 +795,78 @@ private void mostrarPreguntaActual() {
     private void lbImagenDerechaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbImagenDerechaMouseClicked
         // TODO add your handling code here:
         ((TarjetaRespuesta) jpInfor).setSeleccionado(false);
-    ((TarjetaRespuesta) jpRo).setSeleccionado(true);
+        ((TarjetaRespuesta) jpRo).setSeleccionado(true);
 
-    sumarPunto(
-            listaPreguntas.get(indiceActual).getCarreraB()
-    );
+        sumarPunto(
+                listaPreguntas.get(indiceActual).getCarreraB()
+        );
 
-    javax.swing.Timer timer =
-            new javax.swing.Timer(350, e -> {
+        javax.swing.Timer timer =
+                new javax.swing.Timer(350, e -> {
 
-                siguientePregunta();
+                    siguientePregunta();
 
-                ((TarjetaRespuesta) jpInfor)
-                        .setSeleccionado(false);
+                    ((TarjetaRespuesta) jpInfor)
+                            .setSeleccionado(false);
 
-                ((TarjetaRespuesta) jpRo)
-                        .setSeleccionado(false);
-            });
+                    ((TarjetaRespuesta) jpRo)
+                            .setSeleccionado(false);
+                });
 
-    timer.setRepeats(false);
-    timer.start();
+        timer.setRepeats(false);
+        timer.start();
     }//GEN-LAST:event_lbImagenDerechaMouseClicked
 
     private void lbImagenzquierdaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbImagenzquierdaMouseClicked
         // TODO add your handling code here:
         ((TarjetaRespuesta) jpInfor).setSeleccionado(true);
-    ((TarjetaRespuesta) jpRo).setSeleccionado(false);
+        ((TarjetaRespuesta) jpRo).setSeleccionado(false);
 
-    sumarPunto(
-            listaPreguntas.get(indiceActual).getCarreraA()
-    );
+        sumarPunto(
+                listaPreguntas.get(indiceActual).getCarreraA()
+        );
 
-    javax.swing.Timer timer =
-            new javax.swing.Timer(350, e -> {
+        javax.swing.Timer timer =
+                new javax.swing.Timer(350, e -> {
 
-                siguientePregunta();
+                    siguientePregunta();
 
-                ((TarjetaRespuesta) jpInfor)
-                        .setSeleccionado(false);
+                    ((TarjetaRespuesta) jpInfor)
+                            .setSeleccionado(false);
 
-                ((TarjetaRespuesta) jpRo)
-                        .setSeleccionado(false);
-            });
-
-    timer.setRepeats(false);
-    timer.start();
+                    ((TarjetaRespuesta) jpRo)
+                            .setSeleccionado(false);
+                });
+        timer.setRepeats(false);
+        timer.start();
        
     }//GEN-LAST:event_lbImagenzquierdaMouseClicked
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        // TODO add your handling code here:
+        if (menuC != null) {
+            menuC.setVisible(true);
+        } 
+        else {
+            Menu menu = new Menu(jugadorC, seccionC); 
+            menu.setLocationRelativeTo(null); 
+            menu.setVisible(true);
+        }
+        dispose();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnResultadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResultadosActionPerformed
+        // TODO add your handling code here:
+        if ("Informática".equals(ganadora)) {
+            Informatica info = new Informatica(ganadora, porcentajeGanadora);
+            info.setVisible(true);
+            this.dispose();
+        } else if ("Robótica".equals(ganadora)) {
+            Robotica rob = new Robotica(ganadora, porcentajeGanadora);
+            rob.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnResultadosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -724,12 +890,13 @@ private void mostrarPreguntaActual() {
         //</editor-fold>
         
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Quizz_Vocacional(null, null).setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new Quizz_Vocacional(null, null, null).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelCircuitos;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JButton btnResultados;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -1,5 +1,6 @@
 package JuegoMemoria;
 
+import Tipografias.Fuentes;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,10 +21,15 @@ public class PantallaFinal extends JFrame {
         this.progreso = progreso;
 
         setTitle("Memory Tech - Resultado final");
-        setSize(780, 690);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setResizable(false);
+         setUndecorated(true);
+
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setDefaultCloseOperation(
+        JFrame.DO_NOTHING_ON_CLOSE
+        );
+
+        
+        setResizable(true);
 
         construirInterfaz();
 
@@ -69,12 +75,11 @@ public class PantallaFinal extends JFrame {
         );
 
         titulo.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        35
-                )
-        );
+                 Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                35f
+        )
+    );
 
         titulo.setForeground(Color.WHITE);
 
@@ -84,12 +89,11 @@ public class PantallaFinal extends JFrame {
         );
 
         jugador.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        18
-                )
-        );
+                Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                18f
+        )
+    );
 
         jugador.setForeground(
                 new Color(232, 233, 248)
@@ -101,12 +105,11 @@ public class PantallaFinal extends JFrame {
         );
 
         subtitulo.setFont(
-                new Font(
-                        "Arial",
-                        Font.PLAIN,
-                        15
-                )
-        );
+                Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                15f
+        )
+    );
 
         subtitulo.setForeground(
                 new Color(216, 217, 237)
@@ -160,12 +163,11 @@ public class PantallaFinal extends JFrame {
         );
 
         total.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        38
-                )
-        );
+                Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                18f
+        )
+    );
 
         total.setForeground(
                 new Color(255, 221, 105)
@@ -196,12 +198,11 @@ public class PantallaFinal extends JFrame {
         );
 
         resumen.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        15
-                )
-        );
+                Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                15f
+        )
+    );
 
         resumen.setForeground(Color.WHITE);
 
@@ -331,12 +332,11 @@ public class PantallaFinal extends JFrame {
                 );
 
         boton.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        14
-                )
-        );
+                 Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                12f
+        )
+    );
 
         return boton;
     }

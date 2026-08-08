@@ -19,6 +19,15 @@ public class Nivel1Form extends JuegoMemoriaBase {
         "/img/n1_motor.PNG",
         "/img/n1_sensor.PNG"
     };
+    
+    private static final String[] CATEGORIAS = {
+        "INFORMATICA",
+        "INFORMATICA",
+        "INFORMATICA",
+        "ROBOTICA",
+        "ROBOTICA",
+        "ROBOTICA"
+    };
 
     public Nivel1Form(ProgresoJuego progreso) {
 
@@ -30,7 +39,8 @@ public class Nivel1Form extends JuegoMemoriaBase {
                 4,
                 8,
                 NOMBRES,
-                IMAGENES
+                IMAGENES,
+                CATEGORIAS
         );
     }
 }

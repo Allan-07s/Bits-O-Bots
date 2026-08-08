@@ -313,60 +313,57 @@ public class TarjetaRespuesta extends JPanel {
 
         // Insignia A/B
         GradientPaint insignia = new GradientPaint(
-                x + 15,
-                y + 15,
+                x,
+                y,
                 colorPrincipal,
-                x + 72,
-                y + 72,
+                x + 58,
+                y + 58,
                 colorFinal
         );
 
         g2.setPaint(insignia);
 
         g2.fillRoundRect(
-                x + 16,
-                y + 16,
+                x,
+                y,
                 58,
                 58,
-                18,
-                18
+                34,
+                34
         );
 
-        g2.setColor(new Color(255, 255, 255, 70));
+            g2.fillRect(x + 20, y, 38, 58);
+            g2.fillRect(x, y + 20, 58, 38);
 
-        g2.fillRoundRect(
-                x + 20,
-                y + 20,
-                50,
-                24,
-                14,
-                14
-        );
+            // Brillo sutil sobre la insignia
+            g2.setColor(new Color(255, 255, 255, 70));
+            g2.fillRoundRect(
+                    x + 4,
+                    y + 4,
+                    50,
+                    24,
+                    14,
+                    14
+            );
 
-        g2.setFont(new Font(
-                "SansSerif",
-                Font.BOLD,
-                31
-        ));
+            // Texto de la letra centrado en el badge (A / B)
+            g2.setFont(new Font("SansSerif", Font.BOLD, 28));
+            g2.setColor(Color.WHITE);
 
-        g2.setColor(Color.WHITE);
+            FontMetrics fmLetra = g2.getFontMetrics();
+            int xLetra = x + (58 - fmLetra.stringWidth(letra)) / 2;
+            int yLetra = y + (58 + fmLetra.getAscent() - fmLetra.getDescent()) / 2 - 2;
 
-        FontMetrics fmLetra = g2.getFontMetrics();
+            g2.drawString(letra, xLetra, yLetra);
 
-        int xLetra =
-                x + 45 - fmLetra.stringWidth(letra) / 2;
-
-        int yLetra =
-                y + 46 + fmLetra.getAscent() / 2;
-
-        g2.drawString(
-                letra,
-                xLetra,
-                yLetra
-        );
+               g2.drawString(
+                       letra,
+                       xLetra,
+                       yLetra
+         );
 
         // Franja inferior
-        int altoFranja = 68;
+        int altoFranja = 75;
         int yFranja = y + h - altoFranja;
 
         GradientPaint franja = new GradientPaint(
@@ -381,20 +378,20 @@ public class TarjetaRespuesta extends JPanel {
         g2.setPaint(franja);
 
         g2.fillRoundRect(
-                x + 7,
+                x,
                 yFranja,
-                w - 14,
-                altoFranja - 7,
-                22,
-                22
+                w,
+                altoFranja,
+                25,
+                25
         );
 
         // Corrige las esquinas superiores de la franja
         g2.fillRect(
-                x + 7,
+                x,
                 yFranja,
-                w - 14,
-                22
+                w,
+                25
         );
 
         // Texto inferior

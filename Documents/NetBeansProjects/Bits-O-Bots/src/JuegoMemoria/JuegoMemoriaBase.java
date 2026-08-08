@@ -1,11 +1,14 @@
 package JuegoMemoria;
-
+import Tipografias.Fuentes;
+import Avatar.AvatarPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.net.URL;
@@ -23,17 +26,21 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.BoxLayout;
+import javax.swing.Box;
+
+
 
 public abstract class JuegoMemoriaBase extends JFrame {
 
-    private static final int ANCHO_CARTA = 112;
-    private static final int ALTO_CARTA = 112;
-    private static final int ESPACIO = 10;
-    private static final int MARGEN = 18;
+    private static final int ANCHO_CARTA = 135;
+    private static final int ALTO_CARTA = 180;
+    private static final int ESPACIO = 18;
+    private static final int MARGEN = 22;
 
     private static final int TIEMPO_OBSERVACION = 1500;
     private static final int PAUSA_FINAL = 500;
-    private static final int TIEMPO_INCORRECTAS = 210;
+    private static final int TIEMPO_INCORRECTAS = 850;
 
     private static final int PASOS_MOVIMIENTO = 17;
     private static final int VELOCIDAD_MOVIMIENTO = 7;
@@ -52,12 +59,15 @@ public abstract class JuegoMemoriaBase extends JFrame {
     private final int filas;
     private final int columnas;
     private final int totalIntercambios;
+    private static final boolean MODO_PRUEBA = true;
 
     private final ImageIcon[] imagenesFrente;
     private final String[] nombresCartas;
     private final String[] rutasImagenes;
+    private final String[] categoriasCartas;
 
-    private ImageIcon imagenReverso;
+    private ImageIcon reversoInformatica;
+    private ImageIcon reversoRobotica;
 
     private BotonCarta[] cartas;
     private int[] valores;
@@ -70,6 +80,14 @@ public abstract class JuegoMemoriaBase extends JFrame {
     private int movimientos;
     private int puntosNivel;
     private int segundos;
+    
+    private static final int ANCHO_PANEL_DERECHO = 360;
+    private static final int ALTO_PANEL_DERECHO = 500;
+
+    private static final int ANCHO_AVATAR = 350;
+    private static final int ALTO_AVATAR = 370;
+
+    private static final int ANCHO_BOTON_DERECHO = ANCHO_PANEL_DERECHO - 60;
 
     private boolean bloqueado = true;
     private boolean partidaFinalizada;
@@ -78,16 +96,22 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
     private final Random aleatorio = new Random();
 
-    private JLabel lblMovimientos;
+    private JPanel panelTablero;
+    private JPanel panelAvatar;
+
+    private JLabel lblMovimientos; 
     private JLabel lblPuntosNivel;
     private JLabel lblPuntosTotal;
     private JLabel lblTiempo;
     private JLabel lblMensaje;
 
+    private AvatarPanel avatar;
+
     private JPanel panelCartas;
     private JPanel contenedorCartas;
 
     private Timer cronometro;
+    private Timer timerTexto;
 
     protected JuegoMemoriaBase(
             ProgresoJuego progreso,
@@ -97,7 +121,8 @@ public abstract class JuegoMemoriaBase extends JFrame {
             int columnas,
             int totalIntercambios,
             String[] nombresCartas,
-            String[] rutasImagenes
+            String[] rutasImagenes,
+            String[] categoriasCartas
     ) {
 
         this.progreso = progreso;
@@ -108,19 +133,10 @@ public abstract class JuegoMemoriaBase extends JFrame {
         this.columnas = columnas;
         this.totalIntercambios = totalIntercambios;
 
-        if (
-                nombresCartas == null
-                || rutasImagenes == null
-                || nombresCartas.length != this.cantidadParejas
-                || rutasImagenes.length != this.cantidadParejas
-        ) {
-            throw new IllegalArgumentException(
-                    "Cada nivel debe tener un nombre y una imagen por pareja."
-            );
-        }
+        this.nombresCartas = nombresCartas;
+        this.rutasImagenes = rutasImagenes;
+        this.categoriasCartas = categoriasCartas;
 
-        this.nombresCartas = nombresCartas.clone();
-        this.rutasImagenes = rutasImagenes.clone();
         this.imagenesFrente = new ImageIcon[this.cantidadParejas];
 
         configurarVentana();
@@ -134,82 +150,743 @@ public abstract class JuegoMemoriaBase extends JFrame {
         iniciarNivelAutomaticamente();
     }
 
+    
+    
+    
+    
+    
     private void configurarVentana() {
 
         setTitle(
                 "Memory Tech - Nivel " + numeroNivel
         );
 
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setLocationRelativeTo(null);
-        setResizable(true);
+        
+        setUndecorated(true);
 
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setDefaultCloseOperation(
+        JFrame.DO_NOTHING_ON_CLOSE
+    );
+
+        setResizable(true);
+        
     }
 
+    
+    private JLabel crearLabelValor(
+        String texto
+    ) {
+
+    JLabel label = new JLabel(
+            texto,
+            SwingConstants.CENTER
+    );
+
+    label.setFont(
+           Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+    );
+
+    label.setForeground(
+            Color.WHITE
+    );
+
+    return label;
+    }
+    
+    
+    private JPanel crearTarjetaEstadistica(
+        String titulo,
+        JLabel labelValor
+    ) {
+
+    PanelRedondeado tarjeta
+            = new PanelRedondeado(
+                    22,
+                    new Color(19, 48, 111, 230),
+                    new Color(92, 147, 255, 175)
+            );
+
+    tarjeta.setLayout(
+            new BorderLayout(0, 3)
+    );
+
+    tarjeta.setBorder(
+            BorderFactory.createEmptyBorder(
+                    8,
+                    12,
+                    8,
+                    12
+            )
+    );
+
+    JLabel lblTituloDato = new JLabel(
+            titulo,
+            SwingConstants.CENTER
+    );
+
+    lblTituloDato.setFont(
+             Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+    );
+
+
+    lblTituloDato.setForeground(
+            new Color(222, 233, 255)
+    );
+
+    tarjeta.add(
+            lblTituloDato,
+            BorderLayout.NORTH
+    );
+
+    tarjeta.add(
+            labelValor,
+            BorderLayout.CENTER
+    );
+
+    return tarjeta;
+    }
+    
+    
+    
+    
+    
+    
+    
+    private void actualizarMarcadores() {
+
+    lblMovimientos.setText(
+            String.valueOf(movimientos)
+    );
+
+    lblPuntosNivel.setText(
+            puntosNivel + " pts"
+    );
+
+    int totalActual
+            = progreso.getPuntosTotales()
+            + puntosNivel;
+
+    lblPuntosTotal.setText(
+            totalActual + " pts"
+    );
+
+    lblTiempo.setText(
+            formatearTiempo(segundos)
+    );
+    
+    }
+    
+    
+    
+    
+    
+    
+    private String formatearTiempo(
+        int segundosTotales
+    ) {
+
+    int minutos = segundosTotales / 60;
+    int segundosRestantes
+            = segundosTotales % 60;
+
+    return String.format(
+            "%02d:%02d",
+            minutos,
+            segundosRestantes
+    );
+}
+    
+    
+    
+    
+    
+    
+    
+    
     private void construirInterfaz() {
+        
+    PanelDegradado fondo = new PanelDegradado(
+            new Color(21, 35, 87),
+            new Color(57, 37, 111)
+    );
 
-        PanelDegradado fondo = new PanelDegradado(
-                new Color(20, 27, 58),
-                new Color(76, 47, 126)
-        );
+    fondo.setLayout(
+            new BorderLayout(14, 14)
+    );
 
-        fondo.setLayout(new BorderLayout(10, 10));
-        fondo.setBorder(
-                BorderFactory.createEmptyBorder(
-                        13,
-                        19,
-                        16,
-                        19
-                )
-        );
+    fondo.setBorder(
+            BorderFactory.createEmptyBorder(
+                    12,
+                    20,
+                    18,
+                    20
+            )
+    );
 
-        setContentPane(fondo);
+    setContentPane(fondo);
 
-        fondo.add(
-                crearEncabezado(),
-                BorderLayout.NORTH
-        );
+    JLabel lblTitulo = new JLabel(
+            "NIVEL "
+            + numeroNivel
+            + " · MEMORIA TECNOLÓGICA",
+            SwingConstants.CENTER
+    );
+
+    lblTitulo.setFont(
+            Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+        )
+    );
+
+    lblTitulo.setForeground(
+            Color.WHITE
+    );
+
+    PanelRedondeado panelTitulo
+            = new PanelRedondeado(
+                    50,
+                    new Color(25, 53, 112, 235),
+                    new Color(117, 161, 255, 150)
+            );
+
+    panelTitulo.setLayout(
+            new BorderLayout()
+    );
+
+    panelTitulo.setBorder(
+            BorderFactory.createEmptyBorder(
+                    8,
+                    25,
+                    8,
+                    25
+            )
+    );
+
+    panelTitulo.add(
+            lblTitulo,
+            BorderLayout.CENTER
+    );
+
+    JPanel contenedorTitulo = new JPanel(
+            new GridBagLayout()
+    );
+
+    contenedorTitulo.setOpaque(false);
+    contenedorTitulo.add(panelTitulo);
+
+    fondo.add(
+            contenedorTitulo,
+            BorderLayout.NORTH
+    );
+
+    PanelRedondeado panelPrincipal
+            = new PanelRedondeado(
+                    32,
+                    new Color(10, 35, 88, 225),
+                    new Color(124, 167, 255, 150)
+            );
+
+    panelPrincipal.setLayout(
+            new BorderLayout(18, 18)
+    );
+
+    panelPrincipal.setBorder(
+            BorderFactory.createEmptyBorder(
+                    18,
+                    22,
+                    20,
+                    22
+            )
+    );
+
+    fondo.add(
+            panelPrincipal,
+            BorderLayout.CENTER
+    );
+
+    JPanel botones = new JPanel();
+
+    botones.setLayout(
+        new BoxLayout(
+                botones,
+                BoxLayout.Y_AXIS
+        )
+    );
+
+    botones.setOpaque(false);
+
+    BotonRedondeado btnJugar
+        = new BotonRedondeado(
+                "JUGAR",
+                new Color(83, 102, 233),
+                new Color(105, 124, 255)
+    );
+ 
+    BotonRedondeado btnSalir
+        = new BotonRedondeado(
+                "SALIR",
+                new Color(188, 65, 91),
+                new Color(220, 79, 105)
+    );
+
+    btnJugar.setFont(
+        new Font(
+                "Arial",
+                Font.BOLD,
+                20
+        )
+    );
+
+    btnSalir.setFont(
+        new Font(
+                "Arial",
+                Font.BOLD,
+                18
+        )
+    );
+
+    btnJugar.setForeground(Color.WHITE);
+    btnSalir.setForeground(Color.WHITE);
+
+    Dimension tamanoJugar = new Dimension(
+        50, // ancho
+        64   // alto
+    );
+
+    Dimension tamanoSalir = new Dimension(
+        50, // ancho
+        56   // alto
+    );
+
+
+    btnJugar.setPreferredSize(tamanoJugar);
+    btnJugar.setMinimumSize(tamanoJugar);
+    btnJugar.setMaximumSize(tamanoJugar);
+
+    btnSalir.setPreferredSize(tamanoSalir);
+    btnSalir.setMinimumSize(tamanoSalir);
+    btnSalir.setMaximumSize(tamanoSalir);
+
+    btnJugar.setAlignmentX(
+        Component.CENTER_ALIGNMENT
+    );
+
+    btnSalir.setAlignmentX(
+        Component.CENTER_ALIGNMENT
+    );
+
+    botones.add(
+        Box.createVerticalGlue()
+    );
+
+    botones.add(btnJugar);
+
+    botones.add(
+        Box.createVerticalStrut(5)
+    );
+
+    botones.add(btnSalir);
+
+    botones.add(
+        Box.createVerticalGlue()
+    );
+    
+    JPanel barraEstadisticas = new JPanel(
+            new GridLayout(
+                    1,
+                    5,
+                    14,
+                    0
+            )
+    );
+
+    barraEstadisticas.setOpaque(false);
+
+    lblMovimientos = crearLabelValor("0");
+    lblPuntosNivel = crearLabelValor("0 pts");
+    lblPuntosTotal = crearLabelValor("0 pts");
+    lblTiempo = crearLabelValor("00:00");
+
+    barraEstadisticas.add(
+            crearTarjetaEstadistica(
+                    "MOVIMIENTOS",
+                    lblMovimientos
+            )
+    );
+
+    barraEstadisticas.add(
+            crearTarjetaEstadistica(
+                    "NIVEL " + numeroNivel,
+                    lblPuntosNivel
+            )
+    );
+
+    barraEstadisticas.add(
+            crearTarjetaEstadistica(
+                    "TOTAL",
+                    lblPuntosTotal
+            )
+    );
+
+    barraEstadisticas.add(
+            crearTarjetaEstadistica(
+                    "TIEMPO",
+                    lblTiempo
+            )
+    );
+
+    /*
+     * Botón de música.
+     */
+    BotonIconoMusica btnMusica
+            = new BotonIconoMusica();
+
+    btnMusica.setPreferredSize(
+            new Dimension(68, 68)
+    );
+
+    btnMusica.addActionListener(e -> {
+
+        GestorMusica.alternarSilencio();
+        btnMusica.repaint();
+    });
+
+    JPanel panelMusica = new JPanel(
+            new GridBagLayout()
+    );
+
+    panelMusica.setOpaque(false);
+    panelMusica.add(btnMusica);
+
+    barraEstadisticas.add(panelMusica);
+
+    panelPrincipal.add(
+            barraEstadisticas,
+            BorderLayout.NORTH
+    );
+
+    JPanel contenidoCentral = new JPanel(
+            new BorderLayout(25, 0)
+    );
+
+    contenidoCentral.setOpaque(false);
+
+    /*
+     * Medidas exactas del tablero.
+     */
+    int anchoTablero
+        = MARGEN * 2
+        + columnas * ANCHO_CARTA
+        + (columnas - 1) * ESPACIO;
+
+    int altoTablero
+        = MARGEN * 2
+        + filas * ALTO_CARTA
+        + (filas - 1) * ESPACIO;
 
         panelCartas = new JPanel(null);
         panelCartas.setOpaque(false);
 
+        panelCartas.setPreferredSize(
+        new Dimension(
+                anchoTablero,
+                altoTablero
+        )
+    );
+
+        panelTablero = panelCartas;
+
         contenedorCartas = new JPanel(
-                new FlowLayout(
-                        FlowLayout.CENTER,
-                        0,
-                        8
-                )
-        );
+        new GridBagLayout()
+    );
 
         contenedorCartas.setOpaque(false);
         contenedorCartas.add(panelCartas);
 
-        fondo.add(
-                contenedorCartas,
-                BorderLayout.CENTER
+    contenidoCentral.add(
+        contenedorCartas,
+        BorderLayout.CENTER
+    );
+    
+    PanelRedondeado panelDerecho
+            = new PanelRedondeado(
+                    28,
+                    new Color(255, 255, 255, 16),
+                    new Color(118, 162, 255, 90)
+            );
+
+    Dimension tamanoPanelDerecho = new Dimension(
+        ANCHO_PANEL_DERECHO,
+        ALTO_PANEL_DERECHO
+    );
+
+    panelDerecho.setPreferredSize(
+        tamanoPanelDerecho
+    );
+
+    panelDerecho.setMinimumSize(
+        tamanoPanelDerecho
+    );
+
+    panelDerecho.setLayout(
+            new BoxLayout(
+                    panelDerecho,
+                    BoxLayout.Y_AXIS
+            )
+    );
+
+    
+    
+    panelDerecho.setBorder(
+            BorderFactory.createEmptyBorder(
+                    16,
+                    18,
+                    16,
+                    18
+            )
+    );
+
+    BurbujaMensaje burbujaMensaje
+        = new BurbujaMensaje(
+                new Color(250, 251, 255, 245),
+                new Color(180, 196, 235)
         );
 
-        lblMensaje = new JLabel(
-                "Preparando nivel...",
-                SwingConstants.CENTER
-        );
+    burbujaMensaje.setTamanoPunta(
+        35, // ancho de la punta
+        25  // alto de la punta
+    );
+    
+    burbujaMensaje.setLayout(
+            new BorderLayout()
+    );
 
-        lblMensaje.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        17
-                )
-        );
+    Dimension tamanoBurbuja = new Dimension(
+        ANCHO_PANEL_DERECHO - 50,
+        100
+    );
 
-        lblMensaje.setForeground(Color.WHITE);
-        lblMensaje.setPreferredSize(
-                new Dimension(810, 45)
-        );
+    burbujaMensaje.setPreferredSize(
+        tamanoBurbuja
+    );
 
-        fondo.add(lblMensaje, BorderLayout.SOUTH);
+    burbujaMensaje.setMinimumSize(
+        tamanoBurbuja
+    );
+
+    burbujaMensaje.setMaximumSize(
+        tamanoBurbuja
+    );
+
+    lblMensaje = new JLabel(
+            "<html><div style='text-align:center;'>"
+            + "¡Encuentra todas las parejas!"
+            + "</div></html>",
+            SwingConstants.CENTER
+    );
+
+    lblMensaje.setFont(
+             Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                13f
+        )
+    );
+
+    lblMensaje.setForeground(
+            new Color(31, 42, 77)
+    );
+
+    burbujaMensaje.add(
+            lblMensaje,
+            BorderLayout.CENTER
+    );
+
+    burbujaMensaje.setAlignmentX(
+            Component.CENTER_ALIGNMENT
+    );
+
+    panelDerecho.add(burbujaMensaje);
+    panelDerecho.add(
+            Box.createVerticalStrut(10)
+    );
+
+   /*ZONA DEL AVATAR*/
+
+    panelAvatar = new JPanel(
+        new GridBagLayout()
+    );
+
+    panelAvatar.setOpaque(false);
+
+    Dimension tamanoPanelAvatar = new Dimension(
+        ANCHO_PANEL_DERECHO - 10,
+        ALTO_AVATAR + 10
+    );
+
+    panelAvatar.setPreferredSize(
+        tamanoPanelAvatar
+    );
+
+    panelAvatar.setMinimumSize(
+        tamanoPanelAvatar
+    );
+
+    panelAvatar.setMaximumSize(
+        tamanoPanelAvatar
+    );
+
+    panelAvatar.setAlignmentX(
+        Component.CENTER_ALIGNMENT
+    );
+
+    avatar = new AvatarPanel();
+
+    Dimension tamanoAvatar = new Dimension(
+        ANCHO_AVATAR,
+        ALTO_AVATAR
+    );
+
+    avatar.setPreferredSize(
+        tamanoAvatar
+    );
+
+    avatar.setMinimumSize(
+        tamanoAvatar
+    );
+
+    avatar.setMaximumSize(
+        tamanoAvatar
+    );
+
+    panelAvatar.add(avatar);
+
+    avatar.startAnimation();
+
+    panelDerecho.add(
+        Box.createVerticalGlue()
+    );
+
+    panelDerecho.add(
+        panelAvatar
+    );
+
+    panelDerecho.add(
+        Box.createVerticalGlue()
+    );
+
+    BotonRedondeado btnVolver
+            = new BotonRedondeado(
+                    " VOLVER AL MENÚ",
+                    new Color(30, 61, 126),
+                    new Color(48, 84, 164)
+            );
+
+    btnVolver.setFont(
+             Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                15f
+        )
+    );
+
+
+    btnVolver.setPreferredSize(
+            new Dimension(230, 52)
+    );
+
+    btnVolver.setMaximumSize(
+            new Dimension(230, 52)
+    );
+
+    btnVolver.setAlignmentX(
+            Component.CENTER_ALIGNMENT
+    );
+
+    btnVolver.addActionListener(e -> {
+        abandonarPartida();
+    });
+
+    if (MODO_PRUEBA) {
+
+    BotonRedondeado btnSaltarNivel
+            = new BotonRedondeado(
+                    "SALTAR NIVEL",
+                    new Color(218, 133, 43),
+                    new Color(244, 157, 61)
+            );
+
+    btnSaltarNivel.setFont(
+            new Font(
+                    "Segoe UI",
+                    Font.BOLD,
+                    15
+            )
+    );
+
+    btnSaltarNivel.setForeground(
+            Color.WHITE
+    );
+
+    Dimension tamanoSaltar = new Dimension(
+            300,
+            50
+    );
+
+    btnSaltarNivel.setPreferredSize(
+            tamanoSaltar
+    );
+
+    btnSaltarNivel.setMinimumSize(
+            tamanoSaltar
+    );
+
+    btnSaltarNivel.setMaximumSize(
+            tamanoSaltar
+    );
+
+    btnSaltarNivel.setAlignmentX(
+            Component.CENTER_ALIGNMENT
+    );
+
+    btnSaltarNivel.addActionListener(e -> {
+        saltarNivelPrueba();
+    });
+
+    panelDerecho.add(
+            btnSaltarNivel
+    );
+
+    panelDerecho.add(
+            Box.createVerticalStrut(14)
+    );
     }
 
+    panelDerecho.add(btnVolver);
+
+    contenidoCentral.add(
+            panelDerecho,
+            BorderLayout.EAST
+    );
+
+    panelPrincipal.add(
+            contenidoCentral,
+            BorderLayout.CENTER
+    );
+    
+    }
+    
+    
+    
+    
+ 
+    
     private JPanel crearEncabezado() {
 
         JPanel superior = new JPanel(
@@ -229,11 +906,10 @@ public abstract class JuegoMemoriaBase extends JFrame {
         );
 
         lblJugador.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        15
-                )
+                Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                15f
+            )
         );
 
         lblJugador.setForeground(
@@ -248,11 +924,10 @@ public abstract class JuegoMemoriaBase extends JFrame {
         );
 
         lblNivel.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        25
-                )
+                Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+            )
         );
 
         lblNivel.setForeground(Color.WHITE);
@@ -287,11 +962,10 @@ public abstract class JuegoMemoriaBase extends JFrame {
                 );
 
         btnAbandonar.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        13
-                )
+                Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                22f
+            )
         );
 
         btnAbandonar.setPreferredSize(
@@ -359,6 +1033,11 @@ public abstract class JuegoMemoriaBase extends JFrame {
         return superior;
     }
 
+    
+    
+    
+    
+    
     private JLabel crearEtiquetaDato(String texto) {
 
         JLabel etiqueta = new JLabel(
@@ -367,47 +1046,104 @@ public abstract class JuegoMemoriaBase extends JFrame {
         );
 
         etiqueta.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        15
-                )
-        );
+                Fuentes.cargar(
+                "Pixel Digivolve.otf",
+                15f
+        )
+    );
 
         etiqueta.setForeground(Color.WHITE);
         return etiqueta;
     }
 
-    private void iniciarNivelAutomaticamente() {
+    private void escribirTextoAnimado(
+        String texto,
+        int velocidadMs
+    ) {
 
-        numeroPartida++;
-        int partidaActual = numeroPartida;
-
-        primeraCarta = -1;
-        segundaCarta = -1;
-        parejasEncontradas = 0;
-        movimientos = 0;
-        puntosNivel = 0;
-        segundos = 0;
-        partidaFinalizada = false;
-        bloqueado = true;
-
-        crearValores();
-        crearTablero();
-
-        lblMensaje.setText(
-                "¡Memoriza todas las cartas!"
-        );
-
-        SwingUtilities.invokeLater(() -> {
-
-            if (partidaActual != numeroPartida) {
-                return;
-            }
-
-            iniciarPresentacion(partidaActual);
-        });
+    /*
+     * Detiene cualquier mensaje anterior.
+     * Así nunca escriben dos Timer al mismo tiempo.
+     */
+    if (timerTexto != null) {
+        timerTexto.stop();
+        timerTexto = null;
     }
+
+    lblMensaje.setText("");
+
+    /*
+     * Guarda a qué partida pertenece este mensaje.
+     */
+    final int partidaDelTexto = numeroPartida;
+    final int[] indice = {0};
+
+    timerTexto = new Timer(
+            velocidadMs,
+            e -> {
+
+                /*
+                 * Si cambió el nivel o la partida,
+                 * detenemos este mensaje.
+                 */
+                if (partidaDelTexto != numeroPartida) {
+
+                    ((Timer) e.getSource()).stop();
+                    return;
+                }
+
+                if (indice[0] < texto.length()) {
+
+                    indice[0]++;
+
+                    /*
+                     * Usar substring es más seguro que
+                     * concatenar el contenido del JLabel.
+                     */
+                    lblMensaje.setText(
+                            texto.substring(
+                                    0,
+                                    indice[0]
+                            )
+                    );
+
+                } else {
+
+                    ((Timer) e.getSource()).stop();
+                    timerTexto = null;
+                }
+            }
+    );
+
+    timerTexto.start();
+    }
+
+    
+    private void iniciarNivelAutomaticamente() { 
+    numeroPartida++; 
+    int partidaActual = numeroPartida; 
+    primeraCarta = -1; 
+    segundaCarta = -1; 
+    parejasEncontradas = 0; 
+    movimientos = 0; 
+    puntosNivel = 0; 
+    segundos = 0; 
+    actualizarMarcadores(); 
+    partidaFinalizada = false; 
+    bloqueado = true; 
+    crearValores(); 
+    crearTablero(); 
+    
+    escribirTextoAnimado("¡Memoriza todas las cartas!", 10); 
+    
+    SwingUtilities.invokeLater(() -> { 
+        if (partidaActual != numeroPartida) { 
+            return; 
+        } 
+        iniciarPresentacion(partidaActual); 
+    }); 
+    }
+
 
     private void crearValores() {
 
@@ -437,6 +1173,62 @@ public abstract class JuegoMemoriaBase extends JFrame {
         }
     }
 
+    private void saltarNivelPrueba() {
+
+    if (partidaFinalizada) {
+        return;
+    }
+
+    partidaFinalizada = true;
+    bloqueado = true;
+
+    /*
+     * Invalida los temporizadores y animaciones
+     * que pertenecen a la partida actual.
+     */
+    numeroPartida++;
+
+    detenerCronometro();
+    GestorMusica.detenerFondo();
+
+    /*
+     * Como el nivel fue saltado, no se entrega
+     * bonificación.
+     */
+    int bonificacionPrueba = 0;
+
+    /*
+     * Guarda los puntos, movimientos y tiempo
+     * acumulados hasta el momento de saltarlo.
+     */
+    progreso.agregarResultadoNivel(
+            numeroNivel,
+            puntosNivel,
+            movimientos,
+            segundos
+    );
+
+    /*
+     * Abre la misma pantalla que aparece cuando
+     * el jugador completa normalmente el nivel.
+     */
+    NivelCompletadoForm completado
+            = new NivelCompletadoForm(
+                    progreso,
+                    numeroNivel,
+                    cantidadParejas,
+                    puntosNivel,
+                    bonificacionPrueba,
+                    movimientos,
+                    segundos
+            );
+
+    completado.setLocationRelativeTo(null);
+    completado.setVisible(true);
+
+    dispose();
+}
+    
     private void crearTablero() {
 
         panelCartas.removeAll();
@@ -465,7 +1257,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
                 i++
         ) {
 
-            BotonCarta carta = new BotonCarta(27);
+            BotonCarta carta = new BotonCarta(18);
             carta.setColorBorde(COLOR_BORDE);
 
             int fila = i / columnas;
@@ -505,25 +1297,47 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
     private void cargarImagenes() {
 
-        imagenReverso = cargarIcono(
-                "/img/reverso.JPG",
-                96,
-                96
+        int anchoImagen = ANCHO_CARTA - 8;
+        int altoImagen = ALTO_CARTA - 8;
+        
+        reversoInformatica = cargarIcono(
+            "/img/reverso_informatica.PNG",
+            anchoImagen,
+            altoImagen
         );
-
+        
+        reversoRobotica = cargarIcono(
+            "/img/reverso_robotica.PNG",
+            anchoImagen,
+            altoImagen
+        );
+        
         for (
-                int i = 0;
-                i < imagenesFrente.length;
-                i++
+            int i = 0;
+            i < rutasImagenes.length;
+            i++
         ) {
-            imagenesFrente[i] = cargarIcono(
-                    rutasImagenes[i],
-                    96,
-                    96
+
+        imagenesFrente[i] = cargarIcono(
+                rutasImagenes[i],
+                anchoImagen,
+                altoImagen
             );
         }
     }
 
+    private javax.swing.ImageIcon obtenerReverso( int posicion)
+    { 
+        int indiceComponente = valores[posicion] - 1;
+        String categoria = categoriasCartas[indiceComponente];
+        
+        if ("ROBOTICA".equalsIgnoreCase(categoria)
+                ) { 
+            return reversoRobotica;
+        }
+        
+        return reversoInformatica;
+    }  
     private ImageIcon cargarIcono(
             String ruta,
             int anchoMaximo,
@@ -598,9 +1412,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
                                     return;
                                 }
 
-                                lblMensaje.setText(
-                                        "¡Sigue el movimiento de las cartas!"
-                                );
+                                escribirTextoAnimado("¡Sigue el movimiento de las cartas!", 50); 
 
                                 animarIntercambios(
                                         partidaActual,
@@ -709,9 +1521,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
         if (numeroIntercambio >= totalIntercambios) {
 
-            lblMensaje.setText(
-                    "Memoriza el orden final..."
-            );
+            escribirTextoAnimado("Memoriza el orden final...", 50); 
 
             Timer pausa = new Timer(
                     PAUSA_FINAL,
@@ -730,9 +1540,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
                                     bloqueado = false;
 
-                                    lblMensaje.setText(
-                                            "¡Comienza! Encuentra todas las parejas"
-                                    );
+                                    escribirTextoAnimado("Encuentra todas las parejas", 50); 
 
                                     iniciarCronometro(
                                             partidaActual
@@ -1061,11 +1869,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
                         segundaCarta = posicion;
                         movimientos++;
-
-                        lblMovimientos.setText(
-                                "Movimientos: "
-                                + movimientos
-                        );
+                        actualizarMarcadores();
 
                         comprobarPareja(
                                 partidaActual
@@ -1184,17 +1988,8 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
             parejasEncontradas++;
             puntosNivel += 100;
-
-            lblPuntosNivel.setText(
-                    "Nivel: " + puntosNivel + " pts"
-            );
-
-            lblPuntosTotal.setText(
-                    "Total: "
-                    + (progreso.getPuntosTotales()
-                    + puntosNivel)
-                    + " pts"
-            );
+            
+            actualizarMarcadores();
 
             String nombre = nombresCartas[
                     valores[cartaA] - 1
@@ -1241,9 +2036,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
                                                 == numeroPartida
                                         ) {
 
-                                            lblMensaje.setText(
-                                                    "Continúa buscando las parejas"
-                                            );
+                                            escribirTextoAnimado("Continúa buscando las parejas", 50); 
                                         }
                                     }
                             );
@@ -1263,10 +2056,8 @@ public abstract class JuegoMemoriaBase extends JFrame {
             "/audio/incorrecto.wav"
             );
             
-            lblMensaje.setText(
-                    "Estas cartas no coinciden"
-            );
-
+            escribirTextoAnimado("Estas cartas no coinciden", 50); 
+            
             Timer tiempo = new Timer(
                     TIEMPO_INCORRECTAS,
                     e -> {
@@ -1302,9 +2093,8 @@ public abstract class JuegoMemoriaBase extends JFrame {
                 segundaCarta = -1;
                 bloqueado = false;
 
-                lblMensaje.setText(
-                        "Intenta encontrar otra pareja"
-                );
+                escribirTextoAnimado("Intenta encontrar otra pareja", 50); 
+                
             }
         };
 
@@ -1456,9 +2246,12 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
         cartas[posicion].setColorBorde(COLOR_BORDE);
 
-        if (imagenReverso != null) {
+        ImageIcon reverso = obtenerReverso(posicion);
+        
+        if (reverso != null) {
 
-            cartas[posicion].setIcon(imagenReverso);
+            cartas[posicion].setIcon(reverso);
+            
             cartas[posicion].setText("");
 
         } else {
@@ -1497,11 +2290,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
                     }
 
                     segundos++;
-
-                    lblTiempo.setText(
-                            "Tiempo: "
-                            + formatearTiempo(segundos)
-                    );
+                    actualizarMarcadores();
                 }
         );
 
@@ -1516,16 +2305,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
         }
     }
 
-    private String formatearTiempo(
-            int totalSegundos
-    ) {
-
-        return String.format(
-                "%02d:%02d",
-                totalSegundos / 60,
-                totalSegundos % 60
-        );
-    }
+   
 
     private void finalizarNivel(
             int partidaActual
@@ -1555,20 +2335,10 @@ public abstract class JuegoMemoriaBase extends JFrame {
                 segundos
         );
 
-        lblPuntosNivel.setText(
-                "Nivel: " + puntosNivel + " pts"
-        );
+        
 
-        lblPuntosTotal.setText(
-                "Total: "
-                + progreso.getPuntosTotales()
-                + " pts"
-        );
-
-        lblMensaje.setText(
-                "¡Nivel completado!"
-        );
-
+        escribirTextoAnimado("¡Nivel cmpletado!", 50); 
+        
         GestorMusica.reproducirEfecto(
                 "/audio/victoria.wav"
         );

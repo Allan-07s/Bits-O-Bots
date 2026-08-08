@@ -75,6 +75,7 @@ public class BotonIconoMusica extends JButton {
         int cx = getWidth() / 2;
         int cy = getHeight() / 2;
 
+        
         /* Caja del altavoz. */
         g2.setColor(Color.WHITE);
         g2.fillRoundRect(cx - 15, cy - 7, 9, 14, 3, 3);
