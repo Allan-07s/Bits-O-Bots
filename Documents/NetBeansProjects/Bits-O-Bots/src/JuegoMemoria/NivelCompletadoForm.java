@@ -2,20 +2,21 @@ package JuegoMemoria;
 
 import Avatar.AvatarPanel;
 import Tipografias.Fuentes;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
+import java.awt.GridBagLayout;
+
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import java.awt.GridBagLayout;
-import java.awt.GridBagLayout;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+
 public class NivelCompletadoForm extends JFrame {
 
     private final ProgresoJuego progreso;
@@ -34,37 +35,46 @@ public class NivelCompletadoForm extends JFrame {
         this.progreso = progreso;
         this.numeroNivel = numeroNivel;
 
-        setTitle("Bits o Bots - Nivel completado");
+        setTitle(
+                "Bits o Bots - Nivel completado"
+        );
 
-         setUndecorated(true);
+        setUndecorated(true);
 
-    /*
-     * Pantalla completa.
-     */
-      setExtendedState(JFrame.MAXIMIZED_BOTH);
-      setDefaultCloseOperation(
-      JFrame.DO_NOTHING_ON_CLOSE
-    );
+        setExtendedState(
+                JFrame.MAXIMIZED_BOTH
+        );
 
-        
+        setDefaultCloseOperation(
+                JFrame.DO_NOTHING_ON_CLOSE
+        );
+
         setResizable(true);
 
-    
-        construirInterfaz(puntosNivel);
+        construirInterfaz(
+                puntosNivel
+        );
     }
 
     private void construirInterfaz(
             int puntosNivel
     ) {
 
-        // Fondo principal con degradado
-        PanelDegradado fondo = new PanelDegradado(
-                new Color(19, 27, 62),
-                new Color(105, 54, 157)
-        );
+        // =================================================
+        // FONDO
+        // =================================================
+
+        PanelDegradado fondo
+                = new PanelDegradado(
+                        ColoresBitsOBots.FONDO_SUPERIOR,
+                        ColoresBitsOBots.FONDO_INFERIOR
+                );
 
         fondo.setLayout(
-                new BorderLayout(15, 15)
+                new BorderLayout(
+                        15,
+                        15
+                )
         );
 
         fondo.setBorder(
@@ -76,46 +86,39 @@ public class NivelCompletadoForm extends JFrame {
                 )
         );
 
-        setContentPane(fondo);
-        
-        
-        
-        
-        
-        
-        
-        
+        setContentPane(
+                fondo
+        );
 
         // =================================================
         // BARRA SUPERIOR
         // =================================================
 
-        JPanel barraSuperior = new JPanel(
-                new BorderLayout()
-        );
+        JPanel barraSuperior
+                = new JPanel(
+                        new BorderLayout()
+                );
 
         barraSuperior.setOpaque(false);
 
-        /*
-         * Botón circular para activar
-         * o desactivar la música.
-         */
         BotonIconoMusica btnMusica
                 = new BotonIconoMusica();
 
         btnMusica.setPreferredSize(
-                new Dimension(52, 52)
+                new Dimension(
+                        52,
+                        52
+                )
         );
 
-        btnMusica.addActionListener(e -> {
+        btnMusica.addActionListener(
+                e -> {
 
-            GestorMusica.alternarSilencio();
+                    GestorMusica.alternarSilencio();
 
-            /*
-             * Actualiza el dibujo del altavoz.
-             */
-            btnMusica.repaint();
-        });
+                    btnMusica.repaint();
+                }
+        );
 
         barraSuperior.add(
                 btnMusica,
@@ -134,12 +137,20 @@ public class NivelCompletadoForm extends JFrame {
         PanelRedondeado tarjeta
                 = new PanelRedondeado(
                         40,
-                        new Color(255, 255, 255, 32),
-                        new Color(255, 255, 255, 78)
+                        new Color(
+                                255,
+                                255,
+                                255,
+                                225
+                        ),
+                        ColoresBitsOBots.BORDE_SUAVE
                 );
 
         tarjeta.setLayout(
-                new BorderLayout(15, 25)
+                new BorderLayout(
+                        15,
+                        25
+                )
         );
 
         tarjeta.setBorder(
@@ -155,22 +166,23 @@ public class NivelCompletadoForm extends JFrame {
         // TÍTULO
         // =================================================
 
-        JLabel lblTitulo = new JLabel(
-                "¡NIVEL "
-                + numeroNivel
-                + " COMPLETADO!",
-                SwingConstants.CENTER
-        );
+        JLabel lblTitulo
+                = new JLabel(
+                        "¡NIVEL "
+                        + numeroNivel
+                        + " COMPLETADO!",
+                        SwingConstants.CENTER
+                );
 
         lblTitulo.setFont(
-                 Fuentes.cargar(
-                "Pixel Digivolve.otf",
-                50f
-        )
-);
+                Fuentes.cargar(
+                        "Pixel Digivolve.otf",
+                        50f
+                )
+        );
 
         lblTitulo.setForeground(
-                Color.WHITE
+                ColoresBitsOBots.TEXTO_PRINCIPAL
         );
 
         tarjeta.add(
@@ -178,387 +190,520 @@ public class NivelCompletadoForm extends JFrame {
                 BorderLayout.NORTH
         );
 
-        
-        
-        
-        
-        
-        
-   
-
-      // =================================================
-// CONTENIDO CENTRAL: PUNTOS + AVATAR
-// =================================================
-
-JPanel contenidoCentral = new JPanel(
-        new BorderLayout(
-                30,
-                0
-        )
-);
-
-contenidoCentral.setOpaque(false);
-
-// =================================================
-// CUADRO DE PUNTOS
-// =================================================
-
-PanelRedondeado panelPuntos
-        = new PanelRedondeado(
-                30,
-                new Color(18, 24, 55, 145),
-                new Color(255, 255, 255, 42)
-        );
-
-panelPuntos.setLayout(
-        new BorderLayout()
-);
-
-/*
- * TAMAÑO DEL CUADRO DE PUNTOS.
- *
- * 650 = ancho
- * 320 = alto
- */
-Dimension tamanoPanelPuntos = new Dimension(
-        650,
-        320
-);
-
-panelPuntos.setPreferredSize(tamanoPanelPuntos);
-panelPuntos.setMinimumSize(tamanoPanelPuntos);
-panelPuntos.setMaximumSize(tamanoPanelPuntos);
-
-panelPuntos.setBorder(
-        BorderFactory.createEmptyBorder(
-                28,
-                20,
-                28,
-                20
-        )
-);
-
-JLabel lblPuntos = new JLabel(
-        puntosNivel + " PUNTOS",
-        SwingConstants.CENTER
-);
-
-lblPuntos.setFont(
-        Fuentes.cargar(
-                "Pixel Digivolve.otf",
-                50f
-        )
-);
-
-lblPuntos.setForeground(
-        new Color(255, 222, 103)
-);
-
-panelPuntos.add(
-        lblPuntos,
-        BorderLayout.CENTER
-);
-
-/*
- * Centra el cuadro de puntos sin estirarlo.
- */
-JPanel contenedorPuntos = new JPanel(
-        new GridBagLayout()
-);
-
-contenedorPuntos.setOpaque(false);
-contenedorPuntos.add(panelPuntos);
-
-contenidoCentral.add(
-        contenedorPuntos,
-        BorderLayout.CENTER
-);
-
-// =================================================
-// PANEL DERECHO: MENSAJE + AVATAR
-// =================================================
-
-JPanel panelAsistente = new JPanel();
-
-panelAsistente.setLayout(
-        new BoxLayout(
-                panelAsistente,
-                BoxLayout.Y_AXIS
-        )
-);
-
-panelAsistente.setOpaque(false);
-
-/*
- * TAMAÑO DE TODA LA ZONA DERECHA.
- */
-Dimension tamanoAsistente = new Dimension(
-        380,
-        450
-);
-
-panelAsistente.setPreferredSize(tamanoAsistente);
-panelAsistente.setMinimumSize(tamanoAsistente);
-panelAsistente.setMaximumSize(tamanoAsistente);
-
-// =================================================
-// BURBUJA DEL MENSAJE
-// =================================================
-
-PanelRedondeado burbujaMensaje
-        = new PanelRedondeado(
-                28,
-                new Color(248, 250, 255, 245),
-                new Color(160, 177, 230)
-        );
-
-Dimension tamanoBurbuja = new Dimension(
-        345,
-        125
-);
-
-burbujaMensaje.setPreferredSize(tamanoBurbuja);
-burbujaMensaje.setMinimumSize(tamanoBurbuja);
-burbujaMensaje.setMaximumSize(tamanoBurbuja);
-
-burbujaMensaje.setAlignmentX(
-        Component.CENTER_ALIGNMENT
-);
-
-burbujaMensaje.setLayout(
-        new BorderLayout()
-);
-
-burbujaMensaje.setBorder(
-        BorderFactory.createEmptyBorder(
-                15,
-                18,
-                15,
-                18
-        )
-);
-
-JLabel lblMensajeRobot = new JLabel(
-        "<html>"
-        + "<div style='text-align:center;'>"
-        + "¡NIVEL "
-        + numeroNivel
-        + " COMPLETADO!"
-        + "<br>"
-        + "¡Excelente trabajo!"
-        + "</div>"
-        + "</html>",
-        SwingConstants.CENTER
-);
-
-lblMensajeRobot.setFont(
-          Fuentes.cargar(
-                "Pixel Digivolve.otf",
-                22f
-        )
-);
-
-lblMensajeRobot.setForeground(
-        new Color(30, 40, 85)
-);
-
-burbujaMensaje.add(
-        lblMensajeRobot,
-        BorderLayout.CENTER
-);
-
-// =================================================
-// AVATAR
-// =================================================
-
-JPanel panelAvatar = new JPanel(
-        new BorderLayout()
-);
-
-panelAvatar.setOpaque(false);
-
-Dimension tamanoPanelAvatar = new Dimension(
-        345,
-        270
-);
-
-panelAvatar.setPreferredSize(tamanoPanelAvatar);
-panelAvatar.setMinimumSize(tamanoPanelAvatar);
-panelAvatar.setMaximumSize(tamanoPanelAvatar);
-
-panelAvatar.setAlignmentX(
-        Component.CENTER_ALIGNMENT
-);
-
-/*
- * Crear el robot.
- */
-AvatarPanel avatar = new AvatarPanel();
-
-Dimension tamanoAvatar = new Dimension(
-        325,
-        295
-);
-
-avatar.setPreferredSize(tamanoAvatar);
-avatar.setMinimumSize(tamanoAvatar);
-avatar.setMaximumSize(tamanoAvatar);
-
-/*
- * SOUTH coloca el robot hacia la parte
- * inferior de su panel.
- */
-panelAvatar.add(
-        avatar,
-        BorderLayout.SOUTH
-);
-
-avatar.startAnimation();
-
-// =================================================
-// ORDENAR LA ZONA DERECHA
-// =================================================
-
-panelAsistente.add(
-        Box.createVerticalGlue()
-);
-
-panelAsistente.add(
-        burbujaMensaje
-);
-
-panelAsistente.add(
-        Box.createVerticalStrut(10)
-);
-
-panelAsistente.add(
-        panelAvatar
-);
-
-panelAsistente.add(
-        Box.createVerticalGlue()
-);
-
-/*
- * Agregar el robot al lado derecho.
- */
-contenidoCentral.add(
-        panelAsistente,
-        BorderLayout.EAST
-);
-
-/*
- * Agregar puntos y avatar al centro
- * de la tarjeta principal.
- */
-tarjeta.add(
-        contenidoCentral,
-        BorderLayout.CENTER
-);
-        
         // =================================================
-        // BOTÓN PARA CONTINUAR
+        // CONTENIDO CENTRAL
+        // =================================================
+
+        JPanel contenidoCentral
+                = new JPanel(
+                        new BorderLayout(
+                                30,
+                                0
+                        )
+                );
+
+        contenidoCentral.setOpaque(false);
+
+        // =================================================
+        // CUADRO DE PUNTOS
+        // =================================================
+
+        PanelRedondeado panelPuntos
+                = new PanelRedondeado(
+                        30,
+                        new Color(
+                                234,
+                                253,
+                                254
+                        ),
+                        ColoresBitsOBots.BORDE_TURQUESA
+                );
+
+        panelPuntos.setLayout(
+                new BorderLayout()
+        );
+
+        Dimension tamanoPanelPuntos
+                = new Dimension(
+                        650,
+                        320
+                );
+
+        panelPuntos.setPreferredSize(
+                tamanoPanelPuntos
+        );
+
+        panelPuntos.setMinimumSize(
+                tamanoPanelPuntos
+        );
+
+        panelPuntos.setMaximumSize(
+                tamanoPanelPuntos
+        );
+
+        panelPuntos.setBorder(
+                BorderFactory.createEmptyBorder(
+                        28,
+                        20,
+                        28,
+                        20
+                )
+        );
+
+        JLabel lblPuntos
+                = new JLabel(
+                        puntosNivel
+                        + " PUNTOS",
+                        SwingConstants.CENTER
+                );
+
+        lblPuntos.setFont(
+                Fuentes.cargar(
+                        "Pixel Digivolve.otf",
+                        50f
+                )
+        );
+
+        lblPuntos.setForeground(
+                ColoresBitsOBots.TEXTO_PRINCIPAL
+        );
+
+        panelPuntos.add(
+                lblPuntos,
+                BorderLayout.CENTER
+        );
+
+        JPanel contenedorPuntos
+                = new JPanel(
+                        new GridBagLayout()
+                );
+
+        contenedorPuntos.setOpaque(false);
+
+        contenedorPuntos.add(
+                panelPuntos
+        );
+
+        contenidoCentral.add(
+                contenedorPuntos,
+                BorderLayout.CENTER
+        );
+
+        // =================================================
+        // PANEL DERECHO
+        // =================================================
+
+        JPanel panelAsistente
+                = new JPanel();
+
+        panelAsistente.setLayout(
+                new BoxLayout(
+                        panelAsistente,
+                        BoxLayout.Y_AXIS
+                )
+        );
+
+        panelAsistente.setOpaque(false);
+
+        /*
+         * AUMENTADO:
+         * Antes era 380 x 450.
+         */
+        Dimension tamanoAsistente
+                = new Dimension(
+                        410,
+                        500
+                );
+
+        panelAsistente.setPreferredSize(
+                tamanoAsistente
+        );
+
+        panelAsistente.setMinimumSize(
+                tamanoAsistente
+        );
+
+        panelAsistente.setMaximumSize(
+                tamanoAsistente
+        );
+
+        // =================================================
+        // BURBUJA
+        // =================================================
+
+        BurbujaMensaje burbujaNivel
+                = new BurbujaMensaje(
+                        new Color(
+                                255,
+                                255,
+                                255,
+                                245
+                        ),
+                        ColoresBitsOBots.BORDE_TURQUESA
+                );
+
+        burbujaNivel.setTamanoPunta(
+                35,
+                25
+        );
+
+        Dimension tamanoBurbuja
+                = new Dimension(
+                        345,
+                        125
+                );
+
+        burbujaNivel.setPreferredSize(
+                tamanoBurbuja
+        );
+
+        burbujaNivel.setMinimumSize(
+                tamanoBurbuja
+        );
+
+        burbujaNivel.setMaximumSize(
+                tamanoBurbuja
+        );
+
+        burbujaNivel.setAlignmentX(
+                Component.CENTER_ALIGNMENT
+        );
+
+        burbujaNivel.setLayout(
+                new BorderLayout()
+        );
+
+        burbujaNivel.setBorder(
+                BorderFactory.createEmptyBorder(
+                        12,
+                        16,
+                        24,
+                        16
+                )
+        );
+
+        // =================================================
+        // TEXTO DE LA BURBUJA
+        // =================================================
+
+        JPanel panelMensaje
+                = new JPanel();
+
+        panelMensaje.setLayout(
+                new BoxLayout(
+                        panelMensaje,
+                        BoxLayout.Y_AXIS
+                )
+        );
+
+        panelMensaje.setOpaque(false);
+
+        JLabel lblNivelRobot
+                = new JLabel(
+                        "¡NIVEL "
+                        + numeroNivel
+                        + " COMPLETADO!"
+                );
+
+        lblNivelRobot.setFont(
+                Fuentes.cargar(
+                        "Pixel Digivolve.otf",
+                        18f
+                )
+        );
+
+        lblNivelRobot.setForeground(
+                ColoresBitsOBots.TEXTO_PRINCIPAL
+        );
+
+        lblNivelRobot.setAlignmentX(
+                Component.CENTER_ALIGNMENT
+        );
+
+        lblNivelRobot.setHorizontalAlignment(
+                SwingConstants.CENTER
+        );
+
+        JLabel lblExcelente
+                = new JLabel(
+                        "¡EXCELENTE TRABAJO!"
+                );
+
+        lblExcelente.setFont(
+                Fuentes.cargar(
+                        "Pixel Digivolve.otf",
+                        14f
+                )
+        );
+
+        lblExcelente.setForeground(
+                ColoresBitsOBots.TEXTO_SECUNDARIO
+        );
+
+        lblExcelente.setAlignmentX(
+                Component.CENTER_ALIGNMENT
+        );
+
+        lblExcelente.setHorizontalAlignment(
+                SwingConstants.CENTER
+        );
+
+        panelMensaje.add(
+                Box.createVerticalGlue()
+        );
+
+        panelMensaje.add(
+                lblNivelRobot
+        );
+
+        panelMensaje.add(
+                Box.createVerticalStrut(
+                        8
+                )
+        );
+
+        panelMensaje.add(
+                lblExcelente
+        );
+
+        panelMensaje.add(
+                Box.createVerticalGlue()
+        );
+
+        burbujaNivel.add(
+                panelMensaje,
+                BorderLayout.CENTER
+        );
+
+        // =================================================
+        // AVATAR
+        // =================================================
+
+        JPanel panelAvatar
+                = new JPanel(
+                        new BorderLayout()
+                );
+
+        panelAvatar.setOpaque(false);
+
+        /*
+         * AUMENTADO:
+         *
+         * Antes:
+         * 345 x 270
+         *
+         * Ahora:
+         * 380 x 330
+         */
+        Dimension tamanoPanelAvatar
+                = new Dimension(
+                        380,
+                        330
+                );
+
+        panelAvatar.setPreferredSize(
+                tamanoPanelAvatar
+        );
+
+        panelAvatar.setMinimumSize(
+                tamanoPanelAvatar
+        );
+
+        panelAvatar.setMaximumSize(
+                tamanoPanelAvatar
+        );
+
+        panelAvatar.setAlignmentX(
+                Component.CENTER_ALIGNMENT
+        );
+
+        // =================================================
+        // ROBOT
+        // =================================================
+
+        AvatarPanel avatar
+                = new AvatarPanel();
+
+        /*
+         * AUMENTADO:
+         *
+         * Antes:
+         * 325 x 295
+         *
+         * Ahora:
+         * 365 x 325
+         */
+        Dimension tamanoAvatar
+                = new Dimension(
+                        365,
+                        325
+                );
+
+        avatar.setPreferredSize(
+                tamanoAvatar
+        );
+
+        avatar.setMinimumSize(
+                tamanoAvatar
+        );
+
+        avatar.setMaximumSize(
+                tamanoAvatar
+        );
+
+        /*
+         * Lo mantenemos abajo
+         * como ya lo teníamos.
+         */
+        panelAvatar.add(
+                avatar,
+                BorderLayout.SOUTH
+        );
+
+        avatar.startAnimation();
+
+        // =================================================
+        // ORDENAR ZONA DEL ASISTENTE
+        // =================================================
+
+        panelAsistente.add(
+                Box.createVerticalGlue()
+        );
+
+        panelAsistente.add(
+                burbujaNivel
+        );
+
+        panelAsistente.add(
+                Box.createVerticalStrut(
+                        8
+                )
+        );
+
+        panelAsistente.add(
+                panelAvatar
+        );
+
+        panelAsistente.add(
+                Box.createVerticalGlue()
+        );
+
+        contenidoCentral.add(
+                panelAsistente,
+                BorderLayout.EAST
+        );
+
+        tarjeta.add(
+                contenidoCentral,
+                BorderLayout.CENTER
+        );
+
+        // =================================================
+        // BOTÓN CONTINUAR
         // =================================================
 
         String textoBoton;
 
         if (numeroNivel == 1) {
 
-            textoBoton = "CONTINUAR AL NIVEL 2";
+            textoBoton
+                    = "CONTINUAR AL NIVEL 2";
 
         } else if (numeroNivel == 2) {
 
-            textoBoton = "CONTINUAR AL NIVEL 3";
+            textoBoton
+                    = "CONTINUAR AL NIVEL 3";
 
         } else {
 
-            textoBoton = "VER RESULTADO FINAL";
+            textoBoton
+                    = "VER RESULTADO FINAL";
         }
 
         BotonRedondeado btnContinuar
                 = new BotonRedondeado(
                         textoBoton,
-                        new Color(78, 101, 234),
-                        new Color(107, 130, 255)
+                        ColoresBitsOBots.TURQUESA_OSCURO,
+                        ColoresBitsOBots.TURQUESA_HOVER
                 );
 
         btnContinuar.setFont(
-                 Fuentes.cargar(
-                "Pixel Digivolve.otf",
-                17f
-        )
-);
+                Fuentes.cargar(
+                        "Pixel Digivolve.otf",
+                        17f
+                )
+        );
 
-   
+        btnContinuar.setForeground(
+                Color.WHITE
+        );
 
-      btnContinuar.setForeground(
-        Color.WHITE
-);
+        Dimension tamanoContinuar
+                = new Dimension(
+                        470,
+                        72
+                );
 
-/*
- * MEDIDAS DEL BOTÓN CONTINUAR
- *
- * Primer número = ancho.
- * Segundo número = alto.
- */
-     Dimension tamanoContinuar = new Dimension(
-        470,
-        72
-);
+        btnContinuar.setPreferredSize(
+                tamanoContinuar
+        );
 
-    btnContinuar.setPreferredSize(tamanoContinuar);
-    btnContinuar.setMinimumSize(tamanoContinuar);
-    btnContinuar.setMaximumSize(tamanoContinuar);
+        btnContinuar.setMinimumSize(
+                tamanoContinuar
+        );
 
-    btnContinuar.addActionListener(e -> {
+        btnContinuar.setMaximumSize(
+                tamanoContinuar
+        );
 
-    abrirSiguientePantalla();
-});
+        btnContinuar.addActionListener(
+                e -> {
 
-/*
- * Panel auxiliar para centrar el botón
- * y evitar que ocupe todo el ancho.
- */
-    JPanel contenedorBoton = new JPanel(
-        new GridBagLayout()
-    );
+                    abrirSiguientePantalla();
+                }
+        );
 
-    contenedorBoton.setOpaque(false);
+        JPanel contenedorBoton
+                = new JPanel(
+                        new GridBagLayout()
+                );
 
-/*
- * Espacio arriba del botón.
- */
-    contenedorBoton.setBorder(
-        BorderFactory.createEmptyBorder(
-                15,
-                0,
-                0,
-                0
-        )
-);
+        contenedorBoton.setOpaque(false);
 
+        contenedorBoton.setBorder(
+                BorderFactory.createEmptyBorder(
+                        15,
+                        0,
+                        0,
+                        0
+                )
+        );
 
+        contenedorBoton.add(
+                btnContinuar
+        );
 
+        tarjeta.add(
+                contenedorBoton,
+                BorderLayout.SOUTH
+        );
 
+        // =================================================
+        // FINAL
+        // =================================================
 
-    contenedorBoton.add(btnContinuar);
+        fondo.add(
+                tarjeta,
+                BorderLayout.CENTER
+        );
 
-    tarjeta.add(
-        contenedorBoton,
-        BorderLayout.SOUTH
-);
+        fondo.revalidate();
+        fondo.repaint();
+    }
 
-    fondo.add(
-        tarjeta,
-        BorderLayout.CENTER
-);
-
-    fondo.revalidate();
-    fondo.repaint();
-    
-}
-    
-    
+    // =====================================================
+    // SIGUIENTE PANTALLA
+    // =====================================================
 
     private void abrirSiguientePantalla() {
 
@@ -581,9 +726,6 @@ tarjeta.add(
             ).setVisible(true);
         }
 
-        /*
-         * Cierra la pantalla de nivel completado.
-         */
         dispose();
     }
 }
