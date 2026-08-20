@@ -32,7 +32,7 @@ public class LogoMemoria extends JPanel {
                 centroX - 86,
                 centroY - 48,
                 -0.10,
-                new Color(99, 119, 255)
+                new Color(133, 229, 235)
         );
 
         dibujarCarta(
@@ -40,7 +40,7 @@ public class LogoMemoria extends JPanel {
                 centroX + 8,
                 centroY - 48,
                 0.10,
-                new Color(145, 94, 255)
+                new Color(36, 209, 212)
         );
 
         g2.dispose();

@@ -12,6 +12,8 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 /**
@@ -461,82 +463,55 @@ public class TarjetaRespuesta extends JPanel {
             int ancho,
             int alto
     ) {
-
-        if (texto == null) {
+        if (texto == null || texto.trim().isEmpty()) {
             return;
         }
 
         FontMetrics fm = g2.getFontMetrics();
+        String[] palabras = texto.split("\\s+");
 
-        String[] palabras = texto.split(" ");
-
-        StringBuilder linea1 = new StringBuilder();
-        StringBuilder linea2 = new StringBuilder();
-
-        boolean segundaLinea = false;
+        List<String> lineas = new ArrayList<>();
+        StringBuilder lineaActual = new StringBuilder();
 
         for (String palabra : palabras) {
+            // Probamos cómo quedaría la línea actual si le añadimos la palabra
+            String prueba = lineaActual.length() == 0 
+                    ? palabra 
+                    : lineaActual + " " + palabra;
 
-            String prueba =
-                    (segundaLinea ? linea2 : linea1)
-                    + (segundaLinea
-                        ? linea2.length() == 0 ? "" : " "
-                        : linea1.length() == 0 ? "" : " ")
-                    + palabra;
-
-            if (!segundaLinea
-                    && fm.stringWidth(prueba) > ancho) {
-
-                segundaLinea = true;
-                linea2.append(palabra);
-
+            // Si sobrepasa el ancho y ya tenemos algo escrito, guardamos la línea actual e iniciamos una nueva
+            if (fm.stringWidth(prueba) > ancho && lineaActual.length() > 0) {
+                lineas.add(lineaActual.toString());
+                lineaActual = new StringBuilder(palabra);
             } else {
-
-                if (segundaLinea) {
-
-                    if (linea2.length() > 0) {
-                        linea2.append(" ");
-                    }
-
-                    linea2.append(palabra);
-
-                } else {
-
-                    if (linea1.length() > 0) {
-                        linea1.append(" ");
-                    }
-
-                    linea1.append(palabra);
+                if (lineaActual.length() > 0) {
+                    lineaActual.append(" ");
                 }
+                lineaActual.append(palabra);
             }
         }
 
-        int cantidadLineas =
-                linea2.length() > 0 ? 2 : 1;
+        // Agregamos la última línea pendiente
+        if (lineaActual.length() > 0) {
+            lineas.add(lineaActual.toString());
+        }
 
-        int alturaTotal =
-                cantidadLineas * fm.getHeight();
+        // Si quieres limitar estrictamente a 3 líneas como máximo:
+        // if (lineas.size() > 3) lineas = lineas.subList(0, 3);
 
-        int baseY =
-                y + (alto - alturaTotal) / 2
-                + fm.getAscent();
+        // Cálculo dinámico para centrar verticalmente todas las líneas
+        int cantidadLineas = lineas.size();
+        int alturaTotal = cantidadLineas * fm.getHeight();
+        int baseY = y + (alto - alturaTotal) / 2 + fm.getAscent();
 
-        dibujarLineaCentrada(
-                g2,
-                linea1.toString(),
-                x,
-                ancho,
-                baseY
-        );
-
-        if (linea2.length() > 0) {
-
+        // Dibujamos cada línea calculando su posición Y
+        for (int i = 0; i < lineas.size(); i++) {
             dibujarLineaCentrada(
                     g2,
-                    linea2.toString(),
+                    lineas.get(i),
                     x,
                     ancho,
-                    baseY + fm.getHeight()
+                    baseY + (i * fm.getHeight())
             );
         }
     }

@@ -39,21 +39,41 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
     
     //Toca cambiar TODO esto
     private final String[] MENSAJES_AVATAR = {
-        "¡Bienvenido! Elige la opción que más despierte tu curiosidad.",
-        "Ambas áreas resuelven problemas, pero de formas distintas.",
-        "¿Te atraen más los circuitos físicos o las pantallas?",
-        "¿Qué hardware te llama más la atención explorar?",
-        "Piensa en cómo te gustaría que interactúen los datos.",
-        "¡Redes o Automatización! Dos mundos con gran futuro.",
-        "¿Entornos virtuales o dispositivos en el mundo real?",
-        "Seguridad digital vs. Mecatrónica aplicada a la salud.",
-        "Sensórica física frente a procesamiento digital.",
-        "¡Última de imágenes! Código binario o mecánica pura.",
-        "¡Atención! Observa con cuidado estos videos antes de elegir.",
-        "Analiza el movimiento y la lógica mostrada en pantalla.",
-        "Compara cómo se aplica la tecnología en cada opción.",
-        "¡Ya casi terminamos! Elige la que más te identifique.",
-        "¡Última pregunta! Da tu mejor elección final."
+        // Preguntas 1 a 10 (Bloque de imágenes)
+        "¡Bienvenido! Empecemos analizando cómo te orientas al ver un mapa.",
+        "Acomodar objetos en un espacio reducido: ¿lógica o rotación física?",
+        "Al contemplar un edificio: ¿piensas en la planificación o en los soportes?",
+        "Secuencia de figuras: ¿notaste la regla matemática o el giro 3D?",
+        "Frente a un gráfico denso: ¿te enfocas en los datos o en las trayectorias?",
+        "Si un aparato falla: ¿culpas a la configuración o a una pieza floja?",
+        "¿Cómo mapeas un problema: esquematizas el mecanismo o creas reglas?",
+        "Si una pieza no encaja: ¿relees el manual o la mides y giras manualmente?",
+        "Juegos de estrategia: ¿calculas decisiones o dominas el espacio físico?",
+        "Para memorizar: ¿prefieres listas ordenadas o asociar movimientos?",
+
+        // Preguntas 11 a 20 (Bloque de videos y pensamiento)
+        "¡Pasamos a los videos! ¿Entorno en pantalla o taller con herramientas?",
+        "Ante un desafío: ¿te motiva un logro físico visible o hallar la falla lógica?",
+        "¿Cómo aprendes mejor: comprendiendo la teoría o probando con las manos?",
+        "Retos mentales: ¿rompecabezas 3D o acertijos y patrones de datos?",
+        "¿Qué error te molesta más: un dato mal calculado o un desalineamiento?",
+        "Tu forma de pensar: ¿es analítica con reglas o visual basada en fuerzas?",
+        "En la ciencia ficción: ¿te atraen los datos de la red o los motores del robot?",
+        "Clasificar 100 objetos: ¿por categorías digitales o por propiedades físicas?",
+        "Concentración máxima: ¿atención a texto/símbolos o coordinación mano-ojo?",
+        "¡Llegamos a la 20! ¿Orgullo por un código elegante o por un mecanismo fluido?",
+
+        // Preguntas 21 a 30 (Casos prácticos de aplicación)
+        "Control de acceso: ¿reglas lógicas de contraseña o la cerradura física?",
+        "Falla en almacén: ¿revisas el sensor mecánico o la base de datos?",
+        "Pizzería automatizada: ¿el menú interactivo o el brazo robótico?",
+        "Invernadero inteligente: ¿soldar los sensores o programar alertas por correo?",
+        "Vehículo autónomo: ¿el algoritmo de ruta o la potencia de los motores?",
+        "Mantenimiento: ¿seguridad y registros de red o tarjetas de circuitos?",
+        "Dron de rescate: ¿reconocimiento de imágenes o balance de las hélices?",
+        "Pruebas de calidad: ¿resistencia a caídas o ingresar datos extremos?",
+        "Prótesis médica: ¿traducir impulsos neuronales o la mecánica de agarre?",
+        "¡Última pregunta! ¿Procesamiento en milisegundos o precisión milimétrica?"
     };
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Quizz_Vocacional.class.getName());
@@ -179,199 +199,109 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
     }
     
     private void cargarListaPreguntas() {
-    // Pregunta 1
+        // Pregunta 1 (Mapeo visual vs. Secuencia lógica)
         listaPreguntas.add(new Preguntas(
-            "1. ¿Qué tipo de creación tecnológica te gustaría desarollar?",
-
-            "Diseñar máquinas móviles capaces de desplazarse y responder a su entorno.",
-            "/img_quizz/ROP1.png",
-            "Robótica",
-
-            "Crear experiencias digitales, como videojuegos.",
-            "/img_quizz/INP1.png",
-            "Informática"
-            ));
-
-        // Pregunta 2
-        listaPreguntas.add(new Preguntas(
-            "2. ¿Qué forma de resolver problemas tecnológicos te interesa más?",
-
-            "Crear instrucciones y soluciones mediante programación.",
-            "/img_quizz/INP2.png",
-            "Informática",
-
-            "Integrar componentes electrónicos para hacer funcionar un sistema.",
-            "/img_quizz/ROP5.png",
-            "Robótica"
+            "1. Cuando miras un plano o croquis sencillo para llegar a un lugar nuevo, ¿qué se te facilita más?",
+            "Imaginar mentalmente la ruta completa en 3D como si la estuvieras viendo desde arriba.", "/img_quizz/", "Robótica",
+            "Recordar los nombres de las calles, referencias escritas y la secuencia exacta de pasos.", "/img_quizz/", "Informática"
         ));
 
-        // Pregunta 3
+        // Pregunta 2 (Optimización conceptual vs. Manipulación física)
         listaPreguntas.add(new Preguntas(
-            "3. ¿En cuál actividad tecnológica te gustaría concentrarte?",
-
-            "Conectar componentes y comprobar el funcionamiento de un circuito.",
-            "/img_quizz/ROPPP3.png",
-            "Robótica",
-
-            "Analizar y desarrollar soluciones utilizando una computadora.",
-            "/img_quizz/INP3.png",
-            "Informática"
+            "2. Al ordenar cajas u objetos de distintos tamaños en un espacio reducido, ¿cuál es tu fuerte?",
+            "Calcular mentalmente el volumen total y organizar la secuencia lógica de acomodo antes de moverlas.", "/img_quizz/", "Informática",
+            "Rotar, acomodar y presionar físicamente cada caja hasta sentir que encajaron perfectamente.", "/img_quizz/", "Robótica"
         ));
 
-        // Pregunta 4
+        // Pregunta 3 (Rotación 3D vs. Patrón matemático)
         listaPreguntas.add(new Preguntas(
-            "4. ¿Qué equipo te gustaría aprender a diagnosticar y reparar?",
-
-            "Un robot y sus piezas mecánicas y electrónicas.",
-            "/img_quizz/ROP4.png",
-            "Robótica",
-                
-            "Una computadora y sus componentes internos.",
-            "/img_quizz/INP4.png",
-            "Informática"    
-        ));
-            
-        // Pregunta 5
-        listaPreguntas.add(new Preguntas(
-            "5. ¿Qué funcionamiento te interesa comprender mejor?",
-
-            "Cómo se comunican y comparten información diferentes dispositivos.",
-            "/img_quizz/INP5.png",
-            "Informática",
-
-            "Cómo un mecanismo recibe órdenes y realiza movimientos.",
-            "/img_quizz/ROP5.png",
-            "Robótica"
-        ));
-        
-        // Pregunta 6
-        listaPreguntas.add(new Preguntas(
-            "6. ¿Qué tipo de sistemas te gustaría configurar?",
-
-            "Una red para conectar computadoras y compartir recursos.",
-            "/img_quizz/INP6.png",
-            "Informática",
-
-            "Un sistema automático que utilice sensores para controlar el riego.",
-            "/img_quizz/ROP6.png",
-            "Robótica"
+            "3. Si ves una serie de figuras geométricas ordenadas en secuencia, ¿qué te resulta más sencillo notar?",
+            "La rotación espacial y cómo se vería la figura al girarla en tres dimensiones.", "/img_quizz/", "Robótica",
+            "La regla matemática o el patrón numérico bajo el cual cambian los elementos.", "/img_quizz/", "Informática"
         ));
 
-        // Pregunta 7
+        // Pregunta 4 (Diagnóstico de software vs. Diagnóstico de hardware)
         listaPreguntas.add(new Preguntas(
-            "7. ¿Qué tipo de sistema te gustaría aprender a controlar?",
-
-            "Controlar dispositivos que se desplazan en el espacio físico.",
-            "/img_quizz/ROP7.png",
-            "Robótica",
-
-            "Explorar y crear entornos digitales inmersivos.",
-            "/img_quizz/INP7.png",
-            "Informática"
+            "4. Si un aparato en tu casa empieza a fallar de repente, ¿qué intuyes primero?",
+            "Que hubo un error en la configuración, en las órdenes guardadas o en el sistema interno.", "/img_quizz/", "Informática",
+            "Que hay una pieza floja, un cable desgastado o un engrane haciendo falso contacto.", "/img_quizz/", "Robótica"
         ));
 
-        // Pregunta 8
+        // Pregunta 5 (Diagramas de flujo vs. Diagramas físicos)
         listaPreguntas.add(new Preguntas(
-            "8. ¿Qué propósito tecnológico te interesa más?",
-
-            "Proteger información y sistemas frente a amenazas digitales.",
-            "/img_quizz/INP8.png",
-            "Informática",
-
-            "Crear dispositivos que apoyen o recuperen el movimiento humano.",
-            "/img_quizz/ROP8.png",
-            "Robótica"
+            "5. Cuando se te presenta un problema complejo, ¿cómo prefieres estructurarlo?",
+            "Dibujando un esquema del mecanismo o mapeando visualmente cómo se conectan las partes físicas.", "/img_quizz/", "Robótica",
+            "Dividiendo el problema en una lista de reglas, instrucciones paso a paso y condiciones lógicas.", "/img_quizz/", "Informática"
         ));
 
-        // Pregunta 9
+        // Pregunta 6 (Paso a paso lógico vs. Ensayo visual/físico)
         listaPreguntas.add(new Preguntas(
-            "9. ¿Qué proceso tecnológico te gustaría comprender?",
-
-            "Cómo un sistema detecta la presencia de una persona y activa un mecanismo.",
-            "/img_quizz/ROP9.png",
-            "Robótica",
-
-            "Cómo un dispositivo captura imágenes y las convierte en información digital.",
-            "/img_quizz/INP9.png",
-            "Informática"
-        ));
-            
-        // Pregunta 10
-        listaPreguntas.add(new Preguntas(
-            "10. ¿Qué principio tecnológico te causa más curiosidad?",
-
-            "Cómo las computadoras representan y procesan información mediante código binario.",
-            "/img_quizz/INP10.png",
-            "Informática",
-
-            "Cómo los engranajes transmiten movimiento y fuerza entre diferentes piezas.",
-            "/img_quizz/ROP10.png",
-            "Robótica"
+            "6. Si estás armando algo y una pieza no encaja donde creías que iba, ¿cuál es tu primera acción?",
+            "Releer el instructivo desde el inicio para encontrar en qué punto de la secuencia estuvo el error.", "/img_quizz/", "Informática",
+            "Inspeccionar la pieza físicamente, medir los encajes y probar girándola en distintos ángulos.", "/img_quizz/", "Robótica"
         ));
 
-        // Pregunta 11
+        // Pregunta 7 (Mnemotecnia conceptual vs. Memoria quinestésica)
         listaPreguntas.add(new Preguntas(
-            "11. ¿Qué actividad te gustaría aprender?",
-
-            "Aprender a escribir instrucciones y crear programas.",
-            "/video_quizz/Pregunta11-I.gif",
-            "Informática",
-
-            "Aprender a conectar componentes para controlar un dispositivo.",
-            "/video_quizz/Pregunta11-R.gif",
-            "Robótica"
+            "7. Si tienes que memorizar un procedimiento largo, ¿qué técnica te funciona mejor?",
+            "Crear un acrónimo, regla nemotécnica o lista ordenada de términos.", "/img_quizz/", "Informática",
+            "Asociar cada paso con un movimiento corporal, gesto o manipulación física.", "/img_quizz/", "Robótica"
         ));
 
-        // Pregunta 12
+        // Pregunta 8 (Lógica pura vs. Acción física)
         listaPreguntas.add(new Preguntas(
-            "12. ¿Qué resultado te parece más interesante?",
-
-            "Lograr que un robot se desplace de manera controlada.",
-            "/video_quizz/Pregunta12-R.gif",
-            "Robótica",
-
-            "Lograr que un videojuego responda correctamente a las acciones del jugador.",
-            "/video_quizz/Pregunta12-I.gif",
-            "Informática"
+            "8. Si llevas bastante tiempo intentando resolver un problema sin éxito, ¿qué te devuelve la motivación?",
+            "Ver que un intento manual finalmente produce un movimiento o resultado físico visible.", "/video_quizz/", "Robótica",
+            "Descubrir la falla lógica invisible o la regla mal aplicada que nadie más había notado.", "/video_quizz/", "Informática"
         ));
 
-        // Pregunta 13
+        // Pregunta 9 (Acertijos lógicos vs. Retos tridimensionales)
         listaPreguntas.add(new Preguntas(
-            "13. ¿Qué problema preferirías resolver?",
-
-            "Encontrar y corregir un error dentro de un programa.",
-            "/video_quizz/Pregunta13-I.gif",
-            "Informática",
-
-            "Encontrar por qué un robot no se mueve y corregir su funcionamiento.",
-            "/video_quizz/Pregunta13-R.gif",
-            "Robótica"
+            "9. ¿Qué tipo de reto mental te produce mayor satisfacción?",
+            "Resolver rompecabezas tridimensionales, armar modelos a escala o manipular el cubo Rubik.", "/video_quizz/", "Robótica",
+            "Descifrar acertijos numéricos, resolver crucigramas o encontrar patrones de datos.", "/video_quizz/", "Informática"
         ));
 
-        // Pregunta 14
+        // Pregunta 10 (Validación de datos vs. Actuación electromecánica)
         listaPreguntas.add(new Preguntas(
-            "14. ¿Qué proyecto te gustaría crear?",
-
-            "Crear un sistema que encienda una luz de manera automática.",
-            "/video_quizz/Pregunta14-R.gif",
-            "Robótica",
-
-            "Desarrollar una aplicación o experiencia digital interactiva.",
-            "/video_quizz/Pregunta14-I.gif",
-            "Informática"
+            "10. En la creación de una aplicación para control de acceso, ¿qué fase del desarrollo te atrae más?",
+            "Escribir las reglas lógicas que verifican si la contraseña del usuario es correcta antes de darle paso.", "/video_quizz/", "Informática",
+            "Conectar la cerradura eléctrica a la placa de control para que el pulso libere el pestillo físico.", "/video_quizz/", "Robótica"
         ));
 
-        // Pregunta 15
+        // Pregunta 11 (Bases de datos vs. Sensores y actuadores)
         listaPreguntas.add(new Preguntas(
-            "15. ¿Qué te llama más la atención?",
+            "11. Si un sistema de inventario comete un error al registrar productos en un almacén, ¿dónde buscas la causa?",
+            "En el escáner de la banda de transporte, revisando si el sensor óptico o el brazo mecánico fallaron.", "/video_quizz/", "Robótica",
+            "En la base de datos, revisando si las tablas guardaron mal el número de identificación del producto.", "/video_quizz/", "Informática"
+        ));
 
-            "Observar cómo funciona un videojuego creado mediante programación.",
-            "/video_quizz/Pregunta15-I.gif",
-            "Informática",
+        // Pregunta 12 (Redes y protocolos vs. Electrónica de potencia)
+        listaPreguntas.add(new Preguntas(
+            "12. Al implementar un sistema de monitoreo ambiental en un invernadero, ¿qué parte disfrutas resolver?",
+            "Soldar y ubicar los sensores de humedad en la tierra conectándolos con los cables a la fuente de poder.", "/video_quizz/", "Robótica",
+            "Configurar el envío de alertas automáticas por correo cuando la temperatura supera el límite permitido.", "/video_quizz/", "Informática"
+        ));
 
-            "Observar cómo un sensor detecta una mano y activa una respuesta.",
-            "/video_quizz/Pregunta15-R.gif",
-            "Robótica"
+        // Pregunta 13 (Ciberseguridad y registros vs. Mantenimiento físico de circuitos)
+        listaPreguntas.add(new Preguntas(
+            "13. Al dar mantenimiento a la infraestructura de una empresa, ¿qué trabajo te resulta más interesante?",
+            "Inspeccionar las tarjetas de circuitos, limpiar los componentes y reemplazar piezas quemadas.", "/video_quizz/", "Robótica",
+            "Analizar los registros de red para detectar accesos no autorizados y corregir fallas de seguridad.", "/video_quizz/", "Informática"
+        ));
+
+        // Pregunta 14 (Traducción de señales en software vs. Mecánica de articulaciones)
+        listaPreguntas.add(new Preguntas(
+            "14. Si vas a construir una prótesis médica moderna, ¿cuál sería tu aporte principal?",
+            "Programar la traducción de los impulsos neuronales o musculares en instrucciones digitales claras.", "/video_quizz/", "Informática",
+            "Seleccionar los servosistemas, engranajes y articulaciones para que la mano tenga agarre y fuerza.", "/video_quizz/", "Robótica"
+        ));
+
+        // Pregunta 15 (Rendimiento de procesamiento vs. Precisión de movimiento)
+        listaPreguntas.add(new Preguntas(
+            "15. Al finalizar un sistema interactivo, ¿cuál de estas dos mejoras te genera más satisfacción haber logrado?",
+            "Reducir el tiempo de respuesta del sistema para que procese miles de instrucciones en milisegundos.", "/video_quizz/", "Informática",
+            "Lograr que la respuesta física del mecanismo sea fluida, suave y responda exactamente en los milímetros deseados.", "/video_quizz/", "Robótica"
         ));
     }
 
@@ -466,11 +396,15 @@ private void mostrarPreguntaActual() {
     }
     
     private void insertarDatos() {
-        String insertar = "INSERT INTO tbl_registro(Nombre, Grado, Seccion, puntosInformatica, puntosRobotica, Recomendada) VALUES(?, ?, ?, ?, ?, ?)";
+        String insertar = "INSERT INTO tbl_registro(Nombre, Grado, Seccion, puntosInformatica, puntosRobotica, Recomendada) VALUES (?, ?, ?, ?, ?, ?)";
 
         conexion objetoConexion = new conexion();
+
         try (java.sql.Connection con = objetoConexion.crearConexion();
              java.sql.PreparedStatement ps = con.prepareStatement(insertar)) {
+
+            // Asegurar que guarde de inmediato en el servidor
+            con.setAutoCommit(true);
 
             String[] partesSeccion = seccionC.split(" - ");
             String grado = partesSeccion[0];
@@ -479,14 +413,23 @@ private void mostrarPreguntaActual() {
             ps.setString(1, jugadorC);
             ps.setString(2, grado);
             ps.setString(3, seccion);
-            ps.setString(4, String.valueOf(puntosInformatica));
-            ps.setString(5, String.valueOf(puntosRobotica));
+
+            // Asignar enteros si las columnas en MySQL son INT
+            ps.setInt(4, puntosInformatica); 
+            ps.setInt(5, puntosRobotica);
             ps.setString(6, ganadora);
 
-            ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Registro completado con éxito");
-        } catch(Exception e) {
-            JOptionPane.showMessageDialog(null, "No se pudo completar el registro: " + e.toString());
+            int filasAfectadas = ps.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(null, "Registro completado con éxito en la BD");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se insertó ningún registro.");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al registrar en la BD: " + e.getMessage());
+            e.printStackTrace(); // Revisa la consola de NetBeans para ver el error exacto si ocurre
         }
     }
 

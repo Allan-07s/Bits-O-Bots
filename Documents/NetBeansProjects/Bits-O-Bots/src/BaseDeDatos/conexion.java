@@ -18,7 +18,7 @@ public class conexion {
     static Connection conectar = null;
     static String usuario = "root";
     static String clave = "btpi";
-    static String cadena = "jdbc:mysql://localhost:3306/bits_o_bots";
+    static String cadena = "jdbc:mysql://192.168.1.36:3306/bits_o_bots?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     
     public static Connection crearConexion () {
         try {
