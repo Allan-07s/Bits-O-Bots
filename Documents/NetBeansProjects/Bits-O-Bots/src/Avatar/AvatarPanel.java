@@ -127,47 +127,66 @@ public class AvatarPanel extends JPanel{
     private Timer timerEscritura;
     private int indiceTexto = 0;
     private boolean mostrandoMensaje = false;
-    
+
     // Controles de animación del globo
     private float alphaGlobo = 0f;            // Opacidad de 0.0f a 1.0f
-    private long tiempoInicioMensaje = 0;     // Cuándo se mostró el mensaje
-    private int duracionMensajeMs = 4000;     // Duración total visible (ej. 4 segundos)
-    private final int FADE_DURATION = 300;     // Tiempo de fade in/out en ms
-    
-    public void decirMensaje(String texto, int velocidadMs) {
-        this.mensajeActual = texto;
-        this.mostrandoMensaje = true;
-        this.tiempoInicioMensaje = System.currentTimeMillis();
-        this.alphaGlobo = 0f;
-        repaint();
+    private long tiempoInicioMensaje = 2000;     // Cuándo se mostró el mensaje
+    private int duracionMensajeMs = 6000;     // Duración total visible
+    private final int FADE_DURATION = 500;   // Tiempo de fade in/out en ms
 
-        if (timerEscritura != null && timerEscritura.isRunning()) {
+    public void decirMensaje(String texto, int velocidadMs) {
+        // 1. Detener el timer previo inmediatamente para evitar ejecuciones concurrentes
+        if (timerEscritura != null) {
             timerEscritura.stop();
         }
 
+        // 2. Reiniciar todas las variables de estado
+        this.mensajeCompleto = (texto != null) ? texto : "";
+        this.mensajeActual = "";
+        this.indiceTexto = 0;
+        this.mostrandoMensaje = true;
+        this.tiempoInicioMensaje = System.currentTimeMillis();
+        this.alphaGlobo = 0f;
+
+        // Redibujar el estado inicial (pantalla limpia antes de escribir)
+        repaint();
+
+        // Si el texto está vacío, no creamos el timer de escritura
+        if (this.mensajeCompleto.isEmpty()) {
+            return;
+        }
+
+        // 3. Crear e iniciar el nuevo Timer de máquina de escribir
         timerEscritura = new Timer(velocidadMs, e -> {
             if (indiceTexto < mensajeCompleto.length()) {
                 mensajeActual += mensajeCompleto.charAt(indiceTexto);
                 indiceTexto++;
                 repaint();
             } else {
-                ((Timer) e.getSource()).stop();
+                if (timerEscritura != null) {
+                    timerEscritura.stop();
+                }
             }
         });
+
+        // Iniciar de forma segura en el hilo de eventos de Swing (EDT)
         timerEscritura.start();
-        repaint();
     }
 
     /**
-     * Oculta el bocadillo de texto.
+     * Oculta el bocadillo de texto y limpia el estado del timer.
      */
     public void ocultarMensaje() {
-        if (timerEscritura != null && timerEscritura.isRunning()) {
+        if (timerEscritura != null) {
             timerEscritura.stop();
         }
         this.mostrandoMensaje = false;
+        this.mensajeActual = "";
+        this.mensajeCompleto = "";
+        this.indiceTexto = 0;
         repaint();
     }
+    
     /*
      * CONSTRUCTOR
      */
@@ -976,7 +995,7 @@ public class AvatarPanel extends JPanel{
         return lineas;
     }
 
-/*
+    /*
      * DIBUJAR AVATAR POR PARTES
      */
     private void paintLayeredAvatar(
@@ -1065,7 +1084,7 @@ public class AvatarPanel extends JPanel{
                 = Math.sin(
                         elapsedSeconds * 4.2
                 ) * Math.toRadians(9.0);
-
+        
         drawRotatedLayer(
                 g2,
                 rightArm,
@@ -1099,11 +1118,9 @@ public class AvatarPanel extends JPanel{
             double pivotY,
             double angle) {
 
-        Graphics2D layer
-                = (Graphics2D) g2.create();
-
+        Graphics2D layer = (Graphics2D) g2.create();
+        
         try {
-
             layer.setComposite(
                     AlphaComposite.SrcOver
             );
@@ -1120,11 +1137,8 @@ public class AvatarPanel extends JPanel{
                     (int) y,
                     null
             );
-
         } finally {
-
             layer.dispose();
         }
     }
-    
 }

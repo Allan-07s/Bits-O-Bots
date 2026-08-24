@@ -85,7 +85,7 @@ public class Login extends javax.swing.JFrame {
         txfNombre.addActionListener(this::txfNombreActionPerformed);
 
         cmbSeccion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cmbSeccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona tu Sección:", "Noveno 1", "Noveno 2", "Noveno 3", "Noveno 4", "Noveno 5", "Noveno 6", "Noveno 7" }));
+        cmbSeccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona tu Sección:", "Noveno - 1", "Noveno - 2", "Noveno - 3", "Noveno - 4", "Noveno - 5", "Noveno - 6", "Noveno - 7" }));
 
         btnComenzar.setBackground(new java.awt.Color(1, 121, 115));
         btnComenzar.setFont(new java.awt.Font("Pixel Digivolve", 1, 24)); // NOI18N
@@ -313,6 +313,7 @@ private void cargarAvatar() {
     }
         Menu menu = new Menu(txfNombre.getText(), cmbSeccion.getSelectedItem().toString());
         menu.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnComenzarActionPerformed
 
     /**

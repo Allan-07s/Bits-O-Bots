@@ -16,7 +16,7 @@ public final class Estilos {
         // Evita crear objetos de esta clase.
     }
 
-    public static void imagen150x150(
+    public static void multimedia(
             JLabel label,
             String ruta
     ) {

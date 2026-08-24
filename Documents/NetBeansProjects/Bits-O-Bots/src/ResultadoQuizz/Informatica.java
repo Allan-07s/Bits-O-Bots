@@ -19,9 +19,10 @@ public class Informatica extends javax.swing.JFrame {
     /**
      * Creates new form Informatica
      */
-    public Informatica() {
+    public Informatica(String porcentaje, int porcentajeGanadora) {
         setContentPane(new FondoCircuitosPanel());
         initComponents();
+        ((BarraNivel) BarraPorcentaje).setPorcentaje(porcentajeGanadora);
         
         PanelTituloPrincipal.setOpaque(false);
          setExtendedState(MAXIMIZED_BOTH);
@@ -420,7 +421,7 @@ public class Informatica extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Informatica().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new Informatica(null, 0).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

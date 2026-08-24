@@ -15,20 +15,18 @@ import javax.swing.Timer;
 public class BarraNivel extends JPanel {
 
     private int porcentaje = 0;
-    private int porcentajeObjetivo = 85;
+    private int porcentajeObjetivo;
 
     private final int radio = 22;
 
     public BarraNivel() {
-
         setOpaque(false);
-
         iniciarAnimacion();
     }
 
     private void iniciarAnimacion() {
 
-        Timer timer = new Timer(15, null);
+        Timer timer = new Timer(10, null);
 
         timer.addActionListener(e -> {
 

@@ -11,10 +11,11 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
+import ResultadoQuizz.Informatica;
+import ResultadoQuizz.Robotica;
 import java.awt.Font;
-
-
+import Login.Menu;
+import BaseDeDatos.conexion;
 
 /**
  *
@@ -25,30 +26,56 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
     private final String jugadorC;
     private final String seccionC;
     
+    private String ganadora;
+    private int porcentajeGanadora;
+    
     private List<Preguntas> listaPreguntas = new ArrayList<>();
     private int indiceActual = 0;
     private int puntosInformatica = 0;
     private int puntosRobotica = 0;
     
     private AvatarPanel avatar;
+    private final Menu menuC;
     
+    //Toca cambiar TODO esto
     private final String[] MENSAJES_AVATAR = {
-        "¡Bienvenido! Elige la opción que más despierte tu curiosidad.",
-        "Ambas áreas resuelven problemas, pero de formas distintas.",
-        "¿Te atraen más los circuitos físicos o las pantallas?",
-        "¿Qué hardware te llama más la atención explorar?",
-        "Piensa en cómo te gustaría que interactúen los datos.",
-        "¡Redes o Automatización! Dos mundos con gran futuro.",
-        "¿Entornos virtuales o dispositivos en el mundo real?",
-        "Seguridad digital vs. Mecatrónica aplicada a la salud.",
-        "Sensórica física frente a procesamiento digital.",
-        "¡Última de imágenes! Código binario o mecánica pura.",
-        "¡Atención! Observa con cuidado estos videos antes de elegir.",
-        "Analiza el movimiento y la lógica mostrada en pantalla.",
-        "Compara cómo se aplica la tecnología en cada opción.",
-        "¡Ya casi terminamos! Elige la que más te identifique.",
-        "¡Última pregunta! Da tu mejor elección final."
+        // Preguntas 1 a 10 (Bloque de imágenes)
+        "¡Bienvenido! Empecemos analizando cómo te orientas al ver un mapa.",
+        "Acomodar objetos en un espacio reducido: ¿lógica o rotación física?",
+        "Al contemplar un edificio: ¿piensas en la planificación o en los soportes?",
+        "Secuencia de figuras: ¿notaste la regla matemática o el giro 3D?",
+        "Frente a un gráfico denso: ¿te enfocas en los datos o en las trayectorias?",
+        "Si un aparato falla: ¿culpas a la configuración o a una pieza floja?",
+        "¿Cómo mapeas un problema: esquematizas el mecanismo o creas reglas?",
+        "Si una pieza no encaja: ¿relees el manual o la mides y giras manualmente?",
+        "Juegos de estrategia: ¿calculas decisiones o dominas el espacio físico?",
+        "Para memorizar: ¿prefieres listas ordenadas o asociar movimientos?",
+
+        // Preguntas 11 a 20 (Bloque de videos y pensamiento)
+        "¡Pasamos a los videos! ¿Entorno en pantalla o taller con herramientas?",
+        "Ante un desafío: ¿te motiva un logro físico visible o hallar la falla lógica?",
+        "¿Cómo aprendes mejor: comprendiendo la teoría o probando con las manos?",
+        "Retos mentales: ¿rompecabezas 3D o acertijos y patrones de datos?",
+        "¿Qué error te molesta más: un dato mal calculado o un desalineamiento?",
+        "Tu forma de pensar: ¿es analítica con reglas o visual basada en fuerzas?",
+        "En la ciencia ficción: ¿te atraen los datos de la red o los motores del robot?",
+        "Clasificar 100 objetos: ¿por categorías digitales o por propiedades físicas?",
+        "Concentración máxima: ¿atención a texto/símbolos o coordinación mano-ojo?",
+        "¡Llegamos a la 20! ¿Orgullo por un código elegante o por un mecanismo fluido?",
+
+        // Preguntas 21 a 30 (Casos prácticos de aplicación)
+        "Control de acceso: ¿reglas lógicas de contraseña o la cerradura física?",
+        "Falla en almacén: ¿revisas el sensor mecánico o la base de datos?",
+        "Pizzería automatizada: ¿el menú interactivo o el brazo robótico?",
+        "Invernadero inteligente: ¿soldar los sensores o programar alertas por correo?",
+        "Vehículo autónomo: ¿el algoritmo de ruta o la potencia de los motores?",
+        "Mantenimiento: ¿seguridad y registros de red o tarjetas de circuitos?",
+        "Dron de rescate: ¿reconocimiento de imágenes o balance de las hélices?",
+        "Pruebas de calidad: ¿resistencia a caídas o ingresar datos extremos?",
+        "Prótesis médica: ¿traducir impulsos neuronales o la mecánica de agarre?",
+        "¡Última pregunta! ¿Procesamiento en milisegundos o precisión milimétrica?"
     };
+    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Quizz_Vocacional.class.getName());
 
     /**
@@ -57,9 +84,10 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
      * @param seccion
      */
     
-    public Quizz_Vocacional(String jugador, String seccion) {
+    public Quizz_Vocacional(String jugador, String seccion, Menu menu) {
         initComponents();
-        // Estilizado moderno para el enunciado de la pregunta
+        menuC = menu;
+        
         // Instanciamos el avatar Bug
         this.avatar = new AvatarPanel();
         panelAvatar.setLayout(new BorderLayout());
@@ -73,6 +101,7 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
         jScrollPane1.setOpaque(false);
         jScrollPane1.getViewport().setOpaque(false);
 
+        // Estilizado moderno para el enunciado de la pregunta
         lbEnunciado.setOpaque(false);
         lbEnunciado.setBorder(null);
         lbEnunciado.setFont(new Font("SansSerif", Font.BOLD, 22));
@@ -152,152 +181,127 @@ public class Quizz_Vocacional extends javax.swing.JFrame {
         manager.setReshowDelay(0);
         javax.swing.UIManager.put("ToolTip.background", new java.awt.Color(0,0,0,0));
         
-        //Avatar
-        AvatarPanel avatar = new AvatarPanel();
+        // Instanciamos el avatar Bug
+        this.avatar = new AvatarPanel();
         panelAvatar.setLayout(new BorderLayout());
         panelAvatar.add(avatar);
         avatar.startAnimation();
+
+        // --- AGREGAR ESTAS LÍNEAS PARA FORZAR EL RENDERIZADO ---
+        panelAvatar.revalidate();
+        panelAvatar.repaint();
     }
     
-    private void dimensiones(){        
-       
-        
+    private void dimensiones(){
         jPanel2.setPreferredSize(new Dimension(1200, 700));
         jPanel2.setMinimumSize(new Dimension(1200, 700));
         jPanel2.setMaximumSize(new Dimension(1200, 700));
-        
-        
     }
     
     private void cargarListaPreguntas() {
-        // Pregunta 1
+        // Pregunta 1 (Mapeo visual vs. Secuencia lógica)
         listaPreguntas.add(new Preguntas(
-            "1. ¿Qué tipo de creación tecnológica te gustaría desarollar?",
-
-            "Diseñar máquinas móviles capaces de desplazarse y responder a su entorno.",
-            "/img_quizz/ROP1.png",
-            "Robótica",
-
-            "Crear experiencias digitales, como videojuegos.",
-            "/img_quizz/INP1.png",
-            "Informática"
-            ));
-
-        // Pregunta 2
-        listaPreguntas.add(new Preguntas(
-            "2. ¿Qué forma de resolver problemas tecnológicos te interesa más?",
-
-            "Crear instrucciones y soluciones mediante programación.",
-            "/img_quizz/INP2.png",
-            "Informática",
-
-            "Integrar componentes electrónicos para hacer funcionar un sistema.",
-            "/img_quizz/ROP5.png",
-            "Robótica"
+            "1. Cuando miras un plano o croquis sencillo para llegar a un lugar nuevo, ¿qué se te facilita más?",
+            "Imaginar mentalmente la ruta completa en 3D como si la estuvieras viendo desde arriba.", "/img_quizz/", "Robótica",
+            "Recordar los nombres de las calles, referencias escritas y la secuencia exacta de pasos.", "/img_quizz/", "Informática"
         ));
 
-        // Pregunta 3
+        // Pregunta 2 (Optimización conceptual vs. Manipulación física)
         listaPreguntas.add(new Preguntas(
-            "3. ¿En cuál actividad tecnológica te gustaría concentrarte?",
-
-            "Conectar componentes y comprobar el funcionamiento de un circuito.",
-            "/img_quizz/ROPPP3.png",
-            "Robótica",
-
-            "Analizar y desarrollar soluciones utilizando una computadora.",
-            "/img_quizz/INP3.png",
-            "Informática"
+            "2. Al ordenar cajas u objetos de distintos tamaños en un espacio reducido, ¿cuál es tu fuerte?",
+            "Calcular mentalmente el volumen total y organizar la secuencia lógica de acomodo antes de moverlas.", "/img_quizz/", "Informática",
+            "Rotar, acomodar y presionar físicamente cada caja hasta sentir que encajaron perfectamente.", "/img_quizz/", "Robótica"
         ));
 
-        // Pregunta 4
+        // Pregunta 3 (Rotación 3D vs. Patrón matemático)
         listaPreguntas.add(new Preguntas(
-            "4. ¿Qué equipo te gustaría aprender a diagnosticar y reparar?",
-
-            "Un robot y sus piezas mecánicas y electrónicas.",
-            "/img_quizz/ROP4.png",
-            "Robótica",
-                
-            "Una computadora y sus componentes internos.",
-            "/img_quizz/INP4.png",
-            "Informática"    
-        ));
-            
-        // Pregunta 5
-        listaPreguntas.add(new Preguntas(
-            "5. ¿Qué funcionamiento te interesa comprender mejor?",
-
-            "Cómo se comunican y comparten información diferentes dispositivos.",
-            "/img_quizz/INP5.png",
-            "Informática",
-
-            "Cómo un mecanismo recibe órdenes y realiza movimientos.",
-            "/img_quizz/ROP5.png",
-            "Robótica"
-        ));
-        
-        // Pregunta 6
-        listaPreguntas.add(new Preguntas(
-            "6. ¿Qué tipo de sistemas te gustaría configurar?",
-
-            "Una red para conectar computadoras y compartir recursos.",
-            "/img_quizz/INP6.png",
-            "Informática",
-
-            "Un sistema automático que utilice sensores para controlar el riego.",
-            "/img_quizz/ROP6.png",
-            "Robótica"
+            "3. Si ves una serie de figuras geométricas ordenadas en secuencia, ¿qué te resulta más sencillo notar?",
+            "La rotación espacial y cómo se vería la figura al girarla en tres dimensiones.", "/img_quizz/", "Robótica",
+            "La regla matemática o el patrón numérico bajo el cual cambian los elementos.", "/img_quizz/", "Informática"
         ));
 
-        // Pregunta 7
+        // Pregunta 4 (Diagnóstico de software vs. Diagnóstico de hardware)
         listaPreguntas.add(new Preguntas(
-            "7. ¿Qué tipo de sistema te gustaría aprender a controlar?",
-
-            "Controlar dispositivos que se desplazan en el espacio físico.",
-            "/img_quizz/ROP7.png",
-            "Robótica",
-
-            "Explorar y crear entornos digitales inmersivos.",
-            "/img_quizz/INP7.png",
-            "Informática"
+            "4. Si un aparato en tu casa empieza a fallar de repente, ¿qué intuyes primero?",
+            "Que hubo un error en la configuración, en las órdenes guardadas o en el sistema interno.", "/img_quizz/", "Informática",
+            "Que hay una pieza floja, un cable desgastado o un engrane haciendo falso contacto.", "/img_quizz/", "Robótica"
         ));
 
-        // Pregunta 8
+        // Pregunta 5 (Diagramas de flujo vs. Diagramas físicos)
         listaPreguntas.add(new Preguntas(
-            "8. ¿Qué propósito tecnológico te interesa más?",
-
-            "Proteger información y sistemas frente a amenazas digitales.",
-            "/img_quizz/INP8.png",
-            "Informática",
-
-            "Crear dispositivos que apoyen o recuperen el movimiento humano.",
-            "/img_quizz/ROP8.png",
-            "Robótica"
+            "5. Cuando se te presenta un problema complejo, ¿cómo prefieres estructurarlo?",
+            "Dibujando un esquema del mecanismo o mapeando visualmente cómo se conectan las partes físicas.", "/img_quizz/", "Robótica",
+            "Dividiendo el problema en una lista de reglas, instrucciones paso a paso y condiciones lógicas.", "/img_quizz/", "Informática"
         ));
 
-        // Pregunta 9
+        // Pregunta 6 (Paso a paso lógico vs. Ensayo visual/físico)
         listaPreguntas.add(new Preguntas(
-            "9. ¿Qué proceso tecnológico te gustaría comprender?",
-
-            "Cómo un sistema detecta la presencia de una persona y activa un mecanismo.",
-            "/img_quizz/ROP9.png",
-            "Robótica",
-
-            "Cómo un dispositivo captura imágenes y las convierte en información digital.",
-            "/img_quizz/INP9.png",
-            "Informática"
+            "6. Si estás armando algo y una pieza no encaja donde creías que iba, ¿cuál es tu primera acción?",
+            "Releer el instructivo desde el inicio para encontrar en qué punto de la secuencia estuvo el error.", "/img_quizz/", "Informática",
+            "Inspeccionar la pieza físicamente, medir los encajes y probar girándola en distintos ángulos.", "/img_quizz/", "Robótica"
         ));
-            
-        // Pregunta 10
+
+        // Pregunta 7 (Mnemotecnia conceptual vs. Memoria quinestésica)
         listaPreguntas.add(new Preguntas(
-            "10. ¿Qué principio tecnológico te causa más curiosidad?",
+            "7. Si tienes que memorizar un procedimiento largo, ¿qué técnica te funciona mejor?",
+            "Crear un acrónimo, regla nemotécnica o lista ordenada de términos.", "/img_quizz/", "Informática",
+            "Asociar cada paso con un movimiento corporal, gesto o manipulación física.", "/img_quizz/", "Robótica"
+        ));
 
-            "Cómo las computadoras representan y procesan información mediante código binario.",
-            "/img_quizz/INP10.png",
-            "Informática",
+        // Pregunta 8 (Lógica pura vs. Acción física)
+        listaPreguntas.add(new Preguntas(
+            "8. Si llevas bastante tiempo intentando resolver un problema sin éxito, ¿qué te devuelve la motivación?",
+            "Ver que un intento manual finalmente produce un movimiento o resultado físico visible.", "/video_quizz/", "Robótica",
+            "Descubrir la falla lógica invisible o la regla mal aplicada que nadie más había notado.", "/video_quizz/", "Informática"
+        ));
 
-            "Cómo los engranajes transmiten movimiento y fuerza entre diferentes piezas.",
-            "/img_quizz/ROP10.png",
-            "Robótica"
+        // Pregunta 9 (Acertijos lógicos vs. Retos tridimensionales)
+        listaPreguntas.add(new Preguntas(
+            "9. ¿Qué tipo de reto mental te produce mayor satisfacción?",
+            "Resolver rompecabezas tridimensionales, armar modelos a escala o manipular el cubo Rubik.", "/video_quizz/", "Robótica",
+            "Descifrar acertijos numéricos, resolver crucigramas o encontrar patrones de datos.", "/video_quizz/", "Informática"
+        ));
+
+        // Pregunta 10 (Validación de datos vs. Actuación electromecánica)
+        listaPreguntas.add(new Preguntas(
+            "10. En la creación de una aplicación para control de acceso, ¿qué fase del desarrollo te atrae más?",
+            "Escribir las reglas lógicas que verifican si la contraseña del usuario es correcta antes de darle paso.", "/video_quizz/", "Informática",
+            "Conectar la cerradura eléctrica a la placa de control para que el pulso libere el pestillo físico.", "/video_quizz/", "Robótica"
+        ));
+
+        // Pregunta 11 (Bases de datos vs. Sensores y actuadores)
+        listaPreguntas.add(new Preguntas(
+            "11. Si un sistema de inventario comete un error al registrar productos en un almacén, ¿dónde buscas la causa?",
+            "En el escáner de la banda de transporte, revisando si el sensor óptico o el brazo mecánico fallaron.", "/video_quizz/", "Robótica",
+            "En la base de datos, revisando si las tablas guardaron mal el número de identificación del producto.", "/video_quizz/", "Informática"
+        ));
+
+        // Pregunta 12 (Redes y protocolos vs. Electrónica de potencia)
+        listaPreguntas.add(new Preguntas(
+            "12. Al implementar un sistema de monitoreo ambiental en un invernadero, ¿qué parte disfrutas resolver?",
+            "Soldar y ubicar los sensores de humedad en la tierra conectándolos con los cables a la fuente de poder.", "/video_quizz/", "Robótica",
+            "Configurar el envío de alertas automáticas por correo cuando la temperatura supera el límite permitido.", "/video_quizz/", "Informática"
+        ));
+
+        // Pregunta 13 (Ciberseguridad y registros vs. Mantenimiento físico de circuitos)
+        listaPreguntas.add(new Preguntas(
+            "13. Al dar mantenimiento a la infraestructura de una empresa, ¿qué trabajo te resulta más interesante?",
+            "Inspeccionar las tarjetas de circuitos, limpiar los componentes y reemplazar piezas quemadas.", "/video_quizz/", "Robótica",
+            "Analizar los registros de red para detectar accesos no autorizados y corregir fallas de seguridad.", "/video_quizz/", "Informática"
+        ));
+
+        // Pregunta 14 (Traducción de señales en software vs. Mecánica de articulaciones)
+        listaPreguntas.add(new Preguntas(
+            "14. Si vas a construir una prótesis médica moderna, ¿cuál sería tu aporte principal?",
+            "Programar la traducción de los impulsos neuronales o musculares en instrucciones digitales claras.", "/video_quizz/", "Informática",
+            "Seleccionar los servosistemas, engranajes y articulaciones para que la mano tenga agarre y fuerza.", "/video_quizz/", "Robótica"
+        ));
+
+        // Pregunta 15 (Rendimiento de procesamiento vs. Precisión de movimiento)
+        listaPreguntas.add(new Preguntas(
+            "15. Al finalizar un sistema interactivo, ¿cuál de estas dos mejoras te genera más satisfacción haber logrado?",
+            "Reducir el tiempo de respuesta del sistema para que procese miles de instrucciones en milisegundos.", "/video_quizz/", "Informática",
+            "Lograr que la respuesta física del mecanismo sea fluida, suave y responda exactamente en los milímetros deseados.", "/video_quizz/", "Robótica"
         ));
     }
 
@@ -305,30 +309,28 @@ private void mostrarPreguntaActual() {
 
     int totalPreguntas = listaPreguntas.size();
 
-    if (indiceActual < totalPreguntas) {
+        if (indiceActual < totalPreguntas) {
 
-        Preguntas p = listaPreguntas.get(indiceActual);
-        ((TarjetaRespuesta) jpInfor).setTitulo(
-        p.getTextoOpA()
-    );
+            Preguntas p = listaPreguntas.get(indiceActual);
+            ((TarjetaRespuesta) jpInfor).setTitulo(
+            p.getTextoOpA()
+        );
 
-        ((TarjetaRespuesta) jpRo).setTitulo(
-        p.getTextoOpB()
-    );
+            ((TarjetaRespuesta) jpRo).setTitulo(
+            p.getTextoOpB()
+        );
 
-        ((TarjetaRespuesta) jpInfor).setSeleccionado(false);
-        ((TarjetaRespuesta) jpRo).setSeleccionado(false);
+            ((TarjetaRespuesta) jpInfor).setSeleccionado(false);
+            ((TarjetaRespuesta) jpRo).setSeleccionado(false);
 
-     lblPreguntaNumero.setText(
-        String.format(
-                "%02d / %02d",
-                indiceActual + 1,
-                totalPreguntas
-        )
-);
+         lblPreguntaNumero.setText(
+            String.format(
+                    "%02d / %02d",
+                    indiceActual + 1,
+                    totalPreguntas
+            ));
 
-        int porcentaje =
-                ((indiceActual + 1) * 100) / totalPreguntas;
+        int porcentaje = ((indiceActual + 1) * 100) / totalPreguntas;
 
         jpbProgreso.setMinimum(0);
         jpbProgreso.setMaximum(100);
@@ -336,55 +338,23 @@ private void mostrarPreguntaActual() {
         jpbProgreso.setString(porcentaje + "%");
 
         lbEnunciado.setText(p.getEnunciado());
+        
         // --- ACTUALIZAR MENSAJE DEL AVATAR ---
-            if (avatar != null && indiceActual < MENSAJES_AVATAR.length) {
-                avatar.decirMensaje(MENSAJES_AVATAR[indiceActual], 30);
-            }
-
-        String estiloTooltip =
-                "<html><body style='width:250px;"
-                + "background-color:#333333;"
-                + "color:#FFFFFF;"
-                + "padding:8px;"
-                + "font-size:12px;'>";
-
-        lbImagenzquierda.setToolTipText(
-                estiloTooltip
-                + p.getTextoOpA()
-                + "</body></html>"
-        );
-
-        lbImagenDerecha.setToolTipText(
-                estiloTooltip
-                + p.getTextoOpB()
-                + "</body></html>"
-        );
-
-        try {
-
-            Estilos.imagen150x150(
-                    lbImagenzquierda,
-                    p.getRutaImgA()
-            );
-
-            Estilos.imagen150x150(
-                    lbImagenDerecha,
-                    p.getRutaImgB()
-            );
-
-        } catch (Exception e) {
-
-            System.out.println(
-                    "Error al cargar imagen: "
-                    + e.getMessage()
-            );
+        if (avatar != null && indiceActual < MENSAJES_AVATAR.length) {
+            avatar.decirMensaje(MENSAJES_AVATAR[indiceActual], 30);
         }
-
-    } else {
-
-        mostrarResultadoFinal();
+            try {
+                Estilos.multimedia(lbImagenzquierda, p.getRutaOpA()
+                );
+                Estilos.multimedia(lbImagenDerecha, p.getRutaOpB()
+                );
+            } catch (Exception e) {
+                System.out.println("Error al cargar imagen: " + e.getMessage());
+            }
+        } else {
+            mostrarResultadoFinal();
+        }
     }
-}
 
     private void sumarPunto(String carrera) {
         if (carrera.equals("Informática")) {
@@ -400,19 +370,69 @@ private void mostrarPreguntaActual() {
     }
 
     private void mostrarResultadoFinal() {
-        String ganadora = (puntosInformatica >= puntosRobotica) ? "Informática" : "Robótica";
-
-        JOptionPane.showMessageDialog(this, 
+        int totalPreguntas = listaPreguntas.size();
+        
+        if (puntosInformatica > puntosRobotica) {
+            ganadora = "Informática";
+            porcentajeGanadora = (puntosInformatica * 100) / totalPreguntas;
+        } else if (puntosRobotica > puntosInformatica) {
+            ganadora = "Robótica";
+            porcentajeGanadora = (puntosRobotica * 100) / totalPreguntas;
+        }
+        JOptionPane.showMessageDialog(
+            this,
             "¡Quiz Finalizado con Éxito!\n\n" +
             "Puntos Informática: " + puntosInformatica + "\n" +
             "Puntos Robótica: " + puntosRobotica + "\n\n" +
             "Resultado Sugerido: " + ganadora,
             "Resultados Vocacionales",
-            JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.INFORMATION_MESSAGE
+        );
         btnResultados.setVisible(true);
         lbImagenzquierda.setToolTipText(null);
         lbImagenDerecha.setToolTipText(null);
+        
+        insertarDatos();
     }
+    
+    private void insertarDatos() {
+        String insertar = "INSERT INTO tbl_registro(Nombre, Grado, Seccion, puntosInformatica, puntosRobotica, Recomendada) VALUES (?, ?, ?, ?, ?, ?)";
+
+        conexion objetoConexion = new conexion();
+
+        try (java.sql.Connection con = objetoConexion.crearConexion();
+             java.sql.PreparedStatement ps = con.prepareStatement(insertar)) {
+
+            // Asegurar que guarde de inmediato en el servidor
+            con.setAutoCommit(true);
+
+            String[] partesSeccion = seccionC.split(" - ");
+            String grado = partesSeccion[0];
+            String seccion = partesSeccion.length > 1 ? partesSeccion[1] : "";
+
+            ps.setString(1, jugadorC);
+            ps.setString(2, grado);
+            ps.setString(3, seccion);
+
+            // Asignar enteros si las columnas en MySQL son INT
+            ps.setInt(4, puntosInformatica); 
+            ps.setInt(5, puntosRobotica);
+            ps.setString(6, ganadora);
+
+            int filasAfectadas = ps.executeUpdate();
+
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(null, "Registro completado con éxito en la BD");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se insertó ningún registro.");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al registrar en la BD: " + e.getMessage());
+            e.printStackTrace(); // Revisa la consola de NetBeans para ver el error exacto si ocurre
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -453,6 +473,7 @@ private void mostrarPreguntaActual() {
         btnResultados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconosL/ir.png"))); // NOI18N
         btnResultados.setText("Ver Resultados");
         btnResultados.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 102), 2, true));
+        btnResultados.addActionListener(this::btnResultadosActionPerformed);
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -717,61 +738,78 @@ private void mostrarPreguntaActual() {
     private void lbImagenDerechaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbImagenDerechaMouseClicked
         // TODO add your handling code here:
         ((TarjetaRespuesta) jpInfor).setSeleccionado(false);
-    ((TarjetaRespuesta) jpRo).setSeleccionado(true);
+        ((TarjetaRespuesta) jpRo).setSeleccionado(true);
 
-    sumarPunto(
-            listaPreguntas.get(indiceActual).getCarreraB()
-    );
+        sumarPunto(
+                listaPreguntas.get(indiceActual).getCarreraB()
+        );
 
-    javax.swing.Timer timer =
-            new javax.swing.Timer(350, e -> {
+        javax.swing.Timer timer =
+                new javax.swing.Timer(350, e -> {
 
-                siguientePregunta();
+                    siguientePregunta();
 
-                ((TarjetaRespuesta) jpInfor)
-                        .setSeleccionado(false);
+                    ((TarjetaRespuesta) jpInfor)
+                            .setSeleccionado(false);
 
-                ((TarjetaRespuesta) jpRo)
-                        .setSeleccionado(false);
-            });
+                    ((TarjetaRespuesta) jpRo)
+                            .setSeleccionado(false);
+                });
 
-    timer.setRepeats(false);
-    timer.start();
+        timer.setRepeats(false);
+        timer.start();
     }//GEN-LAST:event_lbImagenDerechaMouseClicked
 
     private void lbImagenzquierdaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbImagenzquierdaMouseClicked
         // TODO add your handling code here:
         ((TarjetaRespuesta) jpInfor).setSeleccionado(true);
-    ((TarjetaRespuesta) jpRo).setSeleccionado(false);
+        ((TarjetaRespuesta) jpRo).setSeleccionado(false);
 
-    sumarPunto(
-            listaPreguntas.get(indiceActual).getCarreraA()
-    );
+        sumarPunto(
+                listaPreguntas.get(indiceActual).getCarreraA()
+        );
 
-    javax.swing.Timer timer =
-            new javax.swing.Timer(350, e -> {
+        javax.swing.Timer timer =
+                new javax.swing.Timer(350, e -> {
 
-                siguientePregunta();
+                    siguientePregunta();
 
-                ((TarjetaRespuesta) jpInfor)
-                        .setSeleccionado(false);
+                    ((TarjetaRespuesta) jpInfor)
+                            .setSeleccionado(false);
 
-                ((TarjetaRespuesta) jpRo)
-                        .setSeleccionado(false);
-            });
-
-    timer.setRepeats(false);
-    timer.start();
+                    ((TarjetaRespuesta) jpRo)
+                            .setSeleccionado(false);
+                });
+        timer.setRepeats(false);
+        timer.start();
        
     }//GEN-LAST:event_lbImagenzquierdaMouseClicked
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
         // TODO add your handling code here:
-        Login.Menu menu = new Login.Menu(jugadorC, seccionC);
-        menu.setVisible(true);
-        menu.setLocationRelativeTo(null);
+        if (menuC != null) {
+            menuC.setVisible(true);
+        } 
+        else {
+            Menu menu = new Menu(jugadorC, seccionC); 
+            menu.setLocationRelativeTo(null); 
+            menu.setVisible(true);
+        }
         dispose();
     }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnResultadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResultadosActionPerformed
+        // TODO add your handling code here:
+        if ("Informática".equals(ganadora)) {
+            Informatica info = new Informatica(ganadora, porcentajeGanadora);
+            info.setVisible(true);
+            this.dispose();
+        } else if ("Robótica".equals(ganadora)) {
+            Robotica rob = new Robotica(ganadora, porcentajeGanadora);
+            rob.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnResultadosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -795,7 +833,7 @@ private void mostrarPreguntaActual() {
         //</editor-fold>
         
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Quizz_Vocacional(null, null).setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new Quizz_Vocacional(null, null, null).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -393,10 +393,6 @@ public class AvatarBitPanel extends JPanel {
         drawLayer(g2, piernas, 0, legBob,
                 baseW * 0.59, baseH * 0.67, legAngle);
 
-        // 2) Monitor/cara.
-        BufferedImage cara = parpadeando ? caraParpado : caraNormal;
-        g2.drawImage(cara, 0, 0, null);
-
         // 3) Mano izquierda: pequeño saludo/flotación.
         double leftAngle = Math.sin(tiempo * 2.2) * Math.toRadians(4.0);
         double leftY = Math.sin(tiempo * 1.8) * 5.0;
@@ -418,6 +414,10 @@ public class AvatarBitPanel extends JPanel {
 
         drawLayer(g2, manoDerecha, 0, rightY,
                 baseW * 0.86, baseH * 0.49, rightAngle);
+        
+        // 2) Monitor/cara.
+        BufferedImage cara = parpadeando ? caraParpado : caraNormal;
+        g2.drawImage(cara, 0, 0, null);
     }
 
     private void drawLayer(Graphics2D g2,

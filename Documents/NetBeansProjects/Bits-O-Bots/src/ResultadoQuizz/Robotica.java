@@ -15,7 +15,9 @@ public class Robotica extends javax.swing.JFrame {
     /**
      * Creates new form Robotica
      */
-    public Robotica() {
+    public Robotica(String porcentaje, int porcentajeGanadora) {
+        BarraNivel barra = new BarraNivel();
+        barra.setPorcentaje(porcentajeGanadora);
         initComponents();
     }
 
@@ -253,7 +255,7 @@ public class Robotica extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Robotica().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new Robotica(null, 0).setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

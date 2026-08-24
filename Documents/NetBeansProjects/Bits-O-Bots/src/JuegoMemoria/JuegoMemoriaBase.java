@@ -16,9 +16,6 @@ import java.awt.Rectangle;
 
 import java.net.URL;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -221,7 +218,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
     private void configurarVentana() {
 
         setTitle(
-                "Memory Tech - Nivel "
+                "Bits o Bots - Nivel "
                 + numeroNivel
         );
 
@@ -397,785 +394,857 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
     private void construirInterfaz() {
 
-        // =================================================
-        // FONDO GENERAL
-        // =================================================
+    // =================================================
+    // FONDO GENERAL
+    // =================================================
 
-        PanelDegradado fondo
-                = new PanelDegradado(
-                        ColoresBitsOBots.FONDO_SUPERIOR,
-                        ColoresBitsOBots.FONDO_INFERIOR
-                );
+    PanelDegradado fondo
+            = new PanelDegradado(
+                    ColoresBitsOBots.FONDO_SUPERIOR,
+                    ColoresBitsOBots.FONDO_INFERIOR
+            );
 
-        fondo.setLayout(
-                new BorderLayout(
-                        14,
-                        14
-                )
-        );
+    fondo.setLayout(
+            new BorderLayout(
+                    14,
+                    14
+            )
+    );
 
-        fondo.setBorder(
-                BorderFactory.createEmptyBorder(
-                        12,
-                        20,
-                        18,
-                        20
-                )
-        );
+    fondo.setBorder(
+            BorderFactory.createEmptyBorder(
+                    12,
+                    20,
+                    18,
+                    20
+            )
+    );
 
-        setContentPane(
-                fondo
-        );
+    setContentPane(
+            fondo
+    );
 
-        // =================================================
-        // TÍTULO
-        // =================================================
+    // =================================================
+    // TÍTULO
+    // =================================================
 
-        JLabel lblTitulo
-                = new JLabel(
-                        "NIVEL "
-                        + numeroNivel
-                        + " · MEMORIA TECNOLÓGICA",
-                        SwingConstants.CENTER
-                );
+    JLabel lblTitulo
+            = new JLabel(
+                    "NIVEL "
+                    + numeroNivel
+                    + " · MEMORIA TECNOLÓGICA",
+                    SwingConstants.CENTER
+            );
 
-        lblTitulo.setFont(
-                Fuentes.cargar(
-                        "Pixel Digivolve.otf",
-                        22f
-                )
-        );
+    lblTitulo.setFont(
+            Fuentes.cargar(
+                    "Pixel Digivolve.otf",
+                    22f
+            )
+    );
 
-        lblTitulo.setForeground(
-                ColoresBitsOBots.TEXTO_PRINCIPAL
-        );
+    lblTitulo.setForeground(
+            ColoresBitsOBots.TEXTO_PRINCIPAL
+    );
 
-        PanelRedondeado panelTitulo
-                = new PanelRedondeado(
-                        50,
-                        new Color(
-                                255,
-                                255,
-                                255,
-                                235
-                        ),
-                        ColoresBitsOBots.BORDE_AZUL
-                );
+    PanelRedondeado panelTitulo
+            = new PanelRedondeado(
+                    50,
+                    new Color(
+                            255,
+                            255,
+                            255,
+                            235
+                    ),
+                    ColoresBitsOBots.BORDE_AZUL
+            );
 
-        panelTitulo.setLayout(
-                new BorderLayout()
-        );
+    panelTitulo.setLayout(
+            new BorderLayout()
+    );
 
-        panelTitulo.setBorder(
-                BorderFactory.createEmptyBorder(
-                        8,
-                        25,
-                        8,
-                        25
-                )
-        );
+    panelTitulo.setBorder(
+            BorderFactory.createEmptyBorder(
+                    8,
+                    25,
+                    8,
+                    25
+            )
+    );
 
-        panelTitulo.add(
-                lblTitulo,
-                BorderLayout.CENTER
-        );
+    panelTitulo.add(
+            lblTitulo,
+            BorderLayout.CENTER
+    );
 
-        JPanel contenedorTitulo
-                = new JPanel(
-                        new GridBagLayout()
-                );
+    JPanel contenedorTitulo
+            = new JPanel(
+                    new GridBagLayout()
+            );
 
-        contenedorTitulo.setOpaque(false);
+    contenedorTitulo.setOpaque(false);
 
-        contenedorTitulo.add(
-                panelTitulo
-        );
+    contenedorTitulo.add(
+            panelTitulo
+    );
 
-        fondo.add(
-                contenedorTitulo,
-                BorderLayout.NORTH
-        );
+    fondo.add(
+            contenedorTitulo,
+            BorderLayout.NORTH
+    );
 
-        // =================================================
-        // PANEL PRINCIPAL
-        // =================================================
+    // =================================================
+    // PANEL PRINCIPAL
+    // =================================================
 
-        PanelRedondeado panelPrincipal
-                = new PanelRedondeado(
-                        32,
-                        new Color(
-                                255,
-                                255,
-                                255,
-                                215
-                        ),
-                        ColoresBitsOBots.BORDE_SUAVE
-                );
+    PanelRedondeado panelPrincipal
+            = new PanelRedondeado(
+                    32,
+                    new Color(
+                            255,
+                            255,
+                            255,
+                            215
+                    ),
+                    ColoresBitsOBots.BORDE_SUAVE
+            );
 
-        panelPrincipal.setLayout(
-                new BorderLayout(
-                        18,
-                        18
-                )
-        );
+    panelPrincipal.setLayout(
+            new BorderLayout(
+                    18,
+                    18
+            )
+    );
 
-        panelPrincipal.setBorder(
-                BorderFactory.createEmptyBorder(
-                        18,
-                        22,
-                        20,
-                        22
-                )
-        );
+    panelPrincipal.setBorder(
+            BorderFactory.createEmptyBorder(
+                    18,
+                    22,
+                    20,
+                    22
+            )
+    );
 
-        fondo.add(
-                panelPrincipal,
-                BorderLayout.CENTER
-        );
+    fondo.add(
+            panelPrincipal,
+            BorderLayout.CENTER
+    );
 
-        // =================================================
-        // PANEL VIEJO DE BOTONES
-        // =================================================
-        /*
-         * Lo conservamos porque estaba en tu código
-         * original, aunque actualmente no se muestra.
-         */
+    // =================================================
+    // PANEL VIEJO DE BOTONES
+    // =================================================
 
-        JPanel botones
-                = new JPanel();
+    JPanel botones
+            = new JPanel();
 
-        botones.setLayout(
-                new BoxLayout(
-                        botones,
-                        BoxLayout.Y_AXIS
-                )
-        );
+    botones.setLayout(
+            new BoxLayout(
+                    botones,
+                    BoxLayout.Y_AXIS
+            )
+    );
 
-        botones.setOpaque(false);
+    botones.setOpaque(false);
 
-        BotonRedondeado btnJugar
+    BotonRedondeado btnJugar
+            = new BotonRedondeado(
+                    "JUGAR",
+                    ColoresBitsOBots.TURQUESA_OSCURO,
+                    ColoresBitsOBots.TURQUESA_HOVER
+            );
+
+    BotonRedondeado btnSalir
+            = new BotonRedondeado(
+                    "SALIR",
+                    ColoresBitsOBots.AZUL_PRINCIPAL,
+                    ColoresBitsOBots.AZUL_HOVER
+            );
+
+    btnJugar.setFont(
+            new Font(
+                    "Arial",
+                    Font.BOLD,
+                    20
+            )
+    );
+
+    btnSalir.setFont(
+            new Font(
+                    "Arial",
+                    Font.BOLD,
+                    18
+            )
+    );
+
+    btnJugar.setForeground(
+            Color.WHITE
+    );
+
+    btnSalir.setForeground(
+            Color.WHITE
+    );
+
+    Dimension tamanoJugar
+            = new Dimension(
+                    50,
+                    64
+            );
+
+    Dimension tamanoSalir
+            = new Dimension(
+                    50,
+                    56
+            );
+
+    btnJugar.setPreferredSize(tamanoJugar);
+    btnJugar.setMinimumSize(tamanoJugar);
+    btnJugar.setMaximumSize(tamanoJugar);
+
+    btnSalir.setPreferredSize(tamanoSalir);
+    btnSalir.setMinimumSize(tamanoSalir);
+    btnSalir.setMaximumSize(tamanoSalir);
+
+    btnJugar.setAlignmentX(
+            Component.CENTER_ALIGNMENT
+    );
+
+    btnSalir.setAlignmentX(
+            Component.CENTER_ALIGNMENT
+    );
+
+    botones.add(
+            Box.createVerticalGlue()
+    );
+
+    botones.add(
+            btnJugar
+    );
+
+    botones.add(
+            Box.createVerticalStrut(5)
+    );
+
+    botones.add(
+            btnSalir
+    );
+
+    botones.add(
+            Box.createVerticalGlue()
+    );
+
+    // =================================================
+    // ESTADÍSTICAS
+    // =================================================
+
+    JPanel barraEstadisticas
+            = new JPanel(
+                    new GridLayout(
+                            1,
+                            5,
+                            14,
+                            0
+                    )
+            );
+
+    barraEstadisticas.setOpaque(false);
+
+    lblMovimientos
+            = crearLabelValor(
+                    "0"
+            );
+
+    lblPuntosNivel
+            = crearLabelValor(
+                    "0 pts"
+            );
+
+    lblPuntosTotal
+            = crearLabelValor(
+                    "0 pts"
+            );
+
+    lblTiempo
+            = crearLabelValor(
+                    "00:00"
+            );
+
+    barraEstadisticas.add(
+            crearTarjetaEstadistica(
+                    "MOVIMIENTOS",
+                    lblMovimientos
+            )
+    );
+
+    barraEstadisticas.add(
+            crearTarjetaEstadistica(
+                    "NIVEL "
+                    + numeroNivel,
+                    lblPuntosNivel
+            )
+    );
+
+    barraEstadisticas.add(
+            crearTarjetaEstadistica(
+                    "TOTAL",
+                    lblPuntosTotal
+            )
+    );
+
+    barraEstadisticas.add(
+            crearTarjetaEstadistica(
+                    "TIEMPO",
+                    lblTiempo
+            )
+    );
+
+    // =================================================
+    // BOTÓN MÚSICA
+    // =================================================
+
+    BotonIconoMusica btnMusica
+            = new BotonIconoMusica();
+
+    Dimension tamanoMusica
+            = new Dimension(
+                    62,
+                    62
+            );
+
+    btnMusica.setPreferredSize(
+            tamanoMusica
+    );
+
+    btnMusica.setMinimumSize(
+            tamanoMusica
+    );
+
+    btnMusica.setMaximumSize(
+            tamanoMusica
+    );
+
+    btnMusica.addActionListener(
+            e -> {
+
+                GestorMusica
+                        .alternarSilencio();
+
+                btnMusica.repaint();
+            }
+    );
+
+    JPanel panelMusica
+            = new JPanel(
+                    new GridBagLayout()
+            );
+
+    panelMusica.setOpaque(false);
+
+    panelMusica.add(
+            btnMusica
+    );
+
+    barraEstadisticas.add(
+            panelMusica
+    );
+
+    panelPrincipal.add(
+            barraEstadisticas,
+            BorderLayout.NORTH
+    );
+
+    // =================================================
+    // TABLERO + AVATAR
+    // =================================================
+
+    JPanel contenidoCentral
+            = new JPanel(
+                    new BorderLayout(
+                            25,
+                            0
+                    )
+            );
+
+    contenidoCentral.setOpaque(false);
+
+    // =================================================
+    // TABLERO
+    // =================================================
+
+    int anchoTablero
+            = MARGEN * 2
+            + columnas * ANCHO_CARTA
+            + (columnas - 1) * ESPACIO;
+
+    int altoTablero
+            = MARGEN * 2
+            + filas * ALTO_CARTA
+            + (filas - 1) * ESPACIO;
+
+    panelCartas
+            = new JPanel(null);
+
+    panelCartas.setOpaque(false);
+
+    panelCartas.setPreferredSize(
+            new Dimension(
+                    anchoTablero,
+                    altoTablero
+            )
+    );
+
+    panelTablero
+            = panelCartas;
+
+    contenedorCartas
+            = new JPanel(
+                    new GridBagLayout()
+            );
+
+    contenedorCartas.setOpaque(false);
+
+    contenedorCartas.add(
+            panelCartas
+    );
+
+    contenidoCentral.add(
+            contenedorCartas,
+            BorderLayout.CENTER
+    );
+
+    // =================================================
+    // PANEL DERECHO
+    // =================================================
+
+    PanelRedondeado panelDerecho
+            = new PanelRedondeado(
+                    28,
+                    new Color(
+                            255,
+                            255,
+                            255,
+                            210
+                    ),
+                    new Color(
+                            ColoresBitsOBots.ROBOTICA.getRed(),
+                            ColoresBitsOBots.ROBOTICA.getGreen(),
+                            ColoresBitsOBots.ROBOTICA.getBlue(),
+                            170
+                    )
+            );
+
+    Dimension tamanoPanelDerecho
+            = new Dimension(
+                    ANCHO_PANEL_DERECHO,
+                    ALTO_PANEL_DERECHO
+            );
+
+    panelDerecho.setPreferredSize(
+            tamanoPanelDerecho
+    );
+
+    panelDerecho.setMinimumSize(
+            tamanoPanelDerecho
+    );
+
+    panelDerecho.setLayout(
+            new BoxLayout(
+                    panelDerecho,
+                    BoxLayout.Y_AXIS
+            )
+    );
+
+    panelDerecho.setBorder(
+            BorderFactory.createEmptyBorder(
+                    16,
+                    18,
+                    16,
+                    18
+            )
+    );
+
+    // =================================================
+    // BLOQUE CENTRAL DEL ASISTENTE
+    // =================================================
+    //
+    // IMPORTANTE:
+    //
+    // Burbuja + robot ahora forman UN SOLO BLOQUE.
+    // De esta manera Swing no mete un espacio gigante
+    // entre ellos.
+    // =================================================
+
+    JPanel bloqueAsistente
+            = new JPanel();
+
+    bloqueAsistente.setLayout(
+            new BoxLayout(
+                    bloqueAsistente,
+                    BoxLayout.Y_AXIS
+            )
+    );
+
+    bloqueAsistente.setOpaque(false);
+
+    bloqueAsistente.setAlignmentX(
+            Component.CENTER_ALIGNMENT
+    );
+
+    // =================================================
+    // BURBUJA
+    // =================================================
+
+    BurbujaMensaje burbujaMensaje
+            = new BurbujaMensaje(
+                    new Color(
+                            255,
+                            255,
+                            255,
+                            248
+                    ),
+                    ColoresBitsOBots.BORDE_TURQUESA
+            );
+
+    /*
+     * Una punta un poquito más corta.
+     * Hace que visualmente la burbuja
+     * quede más cerca del robot.
+     */
+    burbujaMensaje.setTamanoPunta(
+            32,
+            18
+    );
+
+    burbujaMensaje.setLayout(
+            new BorderLayout()
+    );
+
+    /*
+     * Reducimos ligeramente la altura.
+     */
+    Dimension tamanoBurbuja
+            = new Dimension(
+                    ANCHO_PANEL_DERECHO - 50,
+                    92
+            );
+
+    burbujaMensaje.setPreferredSize(
+            tamanoBurbuja
+    );
+
+    burbujaMensaje.setMinimumSize(
+            tamanoBurbuja
+    );
+
+    burbujaMensaje.setMaximumSize(
+            tamanoBurbuja
+    );
+
+    lblMensaje
+            = new JLabel(
+                    "¡Encuentra todas las parejas!",
+                    SwingConstants.CENTER
+            );
+
+    lblMensaje.setFont(
+            Fuentes.cargar(
+                    "Pixel Digivolve.otf",
+                    13f
+            )
+    );
+
+    lblMensaje.setForeground(
+            ColoresBitsOBots.TEXTO_PRINCIPAL
+    );
+
+    burbujaMensaje.add(
+            lblMensaje,
+            BorderLayout.CENTER
+    );
+
+    burbujaMensaje.setAlignmentX(
+            Component.CENTER_ALIGNMENT
+    );
+
+    // =================================================
+    // AVATAR
+    // =================================================
+
+    /*
+     * Antes esta zona era muy alta:
+     *
+     * ALTO_AVATAR + 10
+     *
+     * y además tenía VerticalGlue arriba
+     * y abajo.
+     *
+     * Eso era lo que alejaba al robot.
+     */
+    panelAvatar
+            = new JPanel(
+                    new GridBagLayout()
+            );
+
+    panelAvatar.setOpaque(false);
+
+    /*
+     * Zona más compacta.
+     */
+    Dimension tamanoPanelAvatar
+            = new Dimension(
+                    ANCHO_PANEL_DERECHO - 36,
+                    315
+            );
+
+    panelAvatar.setPreferredSize(
+            tamanoPanelAvatar
+    );
+
+    panelAvatar.setMinimumSize(
+            tamanoPanelAvatar
+    );
+
+    panelAvatar.setMaximumSize(
+            tamanoPanelAvatar
+    );
+
+    panelAvatar.setAlignmentX(
+            Component.CENTER_ALIGNMENT
+    );
+
+    avatar
+            = new AvatarPanel();
+
+    /*
+     * Lo hacemos un poco más compacto
+     * para que quede centrado dentro
+     * del panel derecho.
+     */
+    Dimension tamanoAvatar
+            = new Dimension(
+                    315,
+                    305
+            );
+
+    avatar.setPreferredSize(
+            tamanoAvatar
+    );
+
+    avatar.setMinimumSize(
+            tamanoAvatar
+    );
+
+    avatar.setMaximumSize(
+            tamanoAvatar
+    );
+
+    panelAvatar.add(
+            avatar
+    );
+
+    avatar.startAnimation();
+
+    // =================================================
+    // UNIR BURBUJA + ROBOT
+    // =================================================
+
+    bloqueAsistente.add(
+            burbujaMensaje
+    );
+
+    /*
+     * ESTE ES EL ESPACIO REAL ENTRE
+     * BURBUJA Y ROBOT.
+     *
+     * Solo 2 píxeles.
+     */
+    bloqueAsistente.add(
+            Box.createVerticalStrut(
+                    2
+            )
+    );
+
+    bloqueAsistente.add(
+            panelAvatar
+    );
+
+    // =================================================
+    // BOTÓN VOLVER
+    // =================================================
+
+    BotonRedondeado btnVolver
+            = new BotonRedondeado(
+                    "VOLVER AL MENÚ",
+                    ColoresBitsOBots.AZUL_PRINCIPAL,
+                    ColoresBitsOBots.AZUL_HOVER
+            );
+
+    btnVolver.setFont(
+            Fuentes.cargar(
+                    "Pixel Digivolve.otf",
+                    15f
+            )
+    );
+
+    btnVolver.setForeground(
+            Color.WHITE
+    );
+
+    Dimension tamanoVolver
+            = new Dimension(
+                    230,
+                    52
+            );
+
+    btnVolver.setPreferredSize(
+            tamanoVolver
+    );
+
+    btnVolver.setMinimumSize(
+            tamanoVolver
+    );
+
+    btnVolver.setMaximumSize(
+            tamanoVolver
+    );
+
+    btnVolver.setAlignmentX(
+            Component.CENTER_ALIGNMENT
+    );
+
+    btnVolver.addActionListener(
+            e -> {
+
+                abandonarPartida();
+            }
+    );
+
+    // =================================================
+    // CENTRAR BURBUJA + ROBOT
+    // =================================================
+
+    /*
+     * El primer Glue empuja el bloque
+     * hacia el centro.
+     */
+    panelDerecho.add(
+            Box.createVerticalGlue()
+    );
+
+    /*
+     * Burbuja y robot viajan juntos.
+     */
+    panelDerecho.add(
+            bloqueAsistente
+    );
+
+    /*
+     * Segundo Glue.
+     *
+     * Así el bloque completo queda centrado
+     * en el espacio disponible sobre
+     * los botones.
+     */
+    panelDerecho.add(
+            Box.createVerticalGlue()
+    );
+
+    // =================================================
+    // BOTÓN TEMPORAL DE PRUEBA
+    // =================================================
+
+    if (MODO_PRUEBA) {
+
+        BotonRedondeado btnSaltarNivel
                 = new BotonRedondeado(
-                        "JUGAR",
-                        ColoresBitsOBots.TURQUESA_OSCURO,
-                        ColoresBitsOBots.TURQUESA_HOVER
-                );
-
-        BotonRedondeado btnSalir
-                = new BotonRedondeado(
-                        "SALIR",
-                        ColoresBitsOBots.AZUL_PRINCIPAL,
-                        ColoresBitsOBots.AZUL_HOVER
-                );
-
-        btnJugar.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        20
-                )
-        );
-
-        btnSalir.setFont(
-                new Font(
-                        "Arial",
-                        Font.BOLD,
-                        18
-                )
-        );
-
-        btnJugar.setForeground(
-                Color.WHITE
-        );
-
-        btnSalir.setForeground(
-                Color.WHITE
-        );
-
-        Dimension tamanoJugar
-                = new Dimension(
-                        50,
-                        64
-                );
-
-        Dimension tamanoSalir
-                = new Dimension(
-                        50,
-                        56
-                );
-
-        btnJugar.setPreferredSize(
-                tamanoJugar
-        );
-
-        btnJugar.setMinimumSize(
-                tamanoJugar
-        );
-
-        btnJugar.setMaximumSize(
-                tamanoJugar
-        );
-
-        btnSalir.setPreferredSize(
-                tamanoSalir
-        );
-
-        btnSalir.setMinimumSize(
-                tamanoSalir
-        );
-
-        btnSalir.setMaximumSize(
-                tamanoSalir
-        );
-
-        btnJugar.setAlignmentX(
-                Component.CENTER_ALIGNMENT
-        );
-
-        btnSalir.setAlignmentX(
-                Component.CENTER_ALIGNMENT
-        );
-
-        botones.add(
-                Box.createVerticalGlue()
-        );
-
-        botones.add(
-                btnJugar
-        );
-
-        botones.add(
-                Box.createVerticalStrut(
-                        5
-                )
-        );
-
-        botones.add(
-                btnSalir
-        );
-
-        botones.add(
-                Box.createVerticalGlue()
-        );
-
-        // =================================================
-        // ESTADÍSTICAS
-        // =================================================
-
-        JPanel barraEstadisticas
-                = new JPanel(
-                        new GridLayout(
-                                1,
-                                5,
-                                14,
-                                0
-                        )
-                );
-
-        barraEstadisticas.setOpaque(false);
-
-        lblMovimientos
-                = crearLabelValor(
-                        "0"
-                );
-
-        lblPuntosNivel
-                = crearLabelValor(
-                        "0 pts"
-                );
-
-        lblPuntosTotal
-                = crearLabelValor(
-                        "0 pts"
-                );
-
-        lblTiempo
-                = crearLabelValor(
-                        "00:00"
-                );
-
-        barraEstadisticas.add(
-                crearTarjetaEstadistica(
-                        "MOVIMIENTOS",
-                        lblMovimientos
-                )
-        );
-
-        barraEstadisticas.add(
-                crearTarjetaEstadistica(
-                        "NIVEL "
-                        + numeroNivel,
-                        lblPuntosNivel
-                )
-        );
-
-        barraEstadisticas.add(
-                crearTarjetaEstadistica(
-                        "TOTAL",
-                        lblPuntosTotal
-                )
-        );
-
-        barraEstadisticas.add(
-                crearTarjetaEstadistica(
-                        "TIEMPO",
-                        lblTiempo
-                )
-        );
-
-        // =================================================
-        // BOTÓN MÚSICA
-        // =================================================
-
-        BotonIconoMusica btnMusica
-                = new BotonIconoMusica();
-
-        btnMusica.setPreferredSize(
-                new Dimension(
-                        68,
-                        68
-                )
-        );
-
-        btnMusica.addActionListener(
-                e -> {
-
-                    GestorMusica
-                            .alternarSilencio();
-
-                    btnMusica.repaint();
-                }
-        );
-
-        JPanel panelMusica
-                = new JPanel(
-                        new GridBagLayout()
-                );
-
-        panelMusica.setOpaque(false);
-
-        panelMusica.add(
-                btnMusica
-        );
-
-        barraEstadisticas.add(
-                panelMusica
-        );
-
-        panelPrincipal.add(
-                barraEstadisticas,
-                BorderLayout.NORTH
-        );
-
-        // =================================================
-        // TABLERO + AVATAR
-        // =================================================
-
-        JPanel contenidoCentral
-                = new JPanel(
-                        new BorderLayout(
-                                25,
-                                0
-                        )
-                );
-
-        contenidoCentral.setOpaque(false);
-
-        // =================================================
-        // TABLERO
-        // =================================================
-
-        int anchoTablero
-                = MARGEN * 2
-                + columnas * ANCHO_CARTA
-                + (columnas - 1) * ESPACIO;
-
-        int altoTablero
-                = MARGEN * 2
-                + filas * ALTO_CARTA
-                + (filas - 1) * ESPACIO;
-
-        panelCartas
-                = new JPanel(null);
-
-        panelCartas.setOpaque(false);
-
-        panelCartas.setPreferredSize(
-                new Dimension(
-                        anchoTablero,
-                        altoTablero
-                )
-        );
-
-        panelTablero
-                = panelCartas;
-
-        contenedorCartas
-                = new JPanel(
-                        new GridBagLayout()
-                );
-
-        contenedorCartas.setOpaque(false);
-
-        contenedorCartas.add(
-                panelCartas
-        );
-
-        contenidoCentral.add(
-                contenedorCartas,
-                BorderLayout.CENTER
-        );
-
-        // =================================================
-        // PANEL DERECHO
-        // =================================================
-
-        PanelRedondeado panelDerecho
-                = new PanelRedondeado(
-                        28,
+                        "SALTAR NIVEL",
                         new Color(
-                                255,
-                                255,
-                                255,
-                                210
+                                218,
+                                133,
+                                43
                         ),
                         new Color(
-                                ColoresBitsOBots.ROBOTICA.getRed(),
-                                ColoresBitsOBots.ROBOTICA.getGreen(),
-                                ColoresBitsOBots.ROBOTICA.getBlue(),
-                                170
+                                244,
+                                157,
+                                61
                         )
                 );
 
-        Dimension tamanoPanelDerecho
-                = new Dimension(
-                        ANCHO_PANEL_DERECHO,
-                        ALTO_PANEL_DERECHO
-                );
-
-        panelDerecho.setPreferredSize(
-                tamanoPanelDerecho
-        );
-
-        panelDerecho.setMinimumSize(
-                tamanoPanelDerecho
-        );
-
-        panelDerecho.setLayout(
-                new BoxLayout(
-                        panelDerecho,
-                        BoxLayout.Y_AXIS
-                )
-        );
-
-        panelDerecho.setBorder(
-                BorderFactory.createEmptyBorder(
-                        16,
-                        18,
-                        16,
-                        18
-                )
-        );
-
-        // =================================================
-        // BURBUJA
-        // =================================================
-
-        BurbujaMensaje burbujaMensaje
-                = new BurbujaMensaje(
-                        new Color(
-                                255,
-                                255,
-                                255,
-                                248
-                        ),
-                        ColoresBitsOBots.BORDE_TURQUESA
-                );
-
-        burbujaMensaje.setTamanoPunta(
-                35,
-                25
-        );
-
-        burbujaMensaje.setLayout(
-                new BorderLayout()
-        );
-
-        Dimension tamanoBurbuja
-                = new Dimension(
-                        ANCHO_PANEL_DERECHO - 50,
-                        100
-                );
-
-        burbujaMensaje.setPreferredSize(
-                tamanoBurbuja
-        );
-
-        burbujaMensaje.setMinimumSize(
-                tamanoBurbuja
-        );
-
-        burbujaMensaje.setMaximumSize(
-                tamanoBurbuja
-        );
-
-        /*
-         * SIN HTML.
-         *
-         * Esto ayuda a que Pixel Digivolve
-         * se respete mejor entre computadoras.
-         */
-        lblMensaje
-                = new JLabel(
-                        "¡Encuentra todas las parejas!",
-                        SwingConstants.CENTER
-                );
-
-        lblMensaje.setFont(
+        btnSaltarNivel.setFont(
                 Fuentes.cargar(
                         "Pixel Digivolve.otf",
                         13f
                 )
         );
 
-        lblMensaje.setForeground(
-                ColoresBitsOBots.TEXTO_PRINCIPAL
+        btnSaltarNivel.setForeground(
+                Color.WHITE
         );
 
-        burbujaMensaje.add(
-                lblMensaje,
-                BorderLayout.CENTER
+        Dimension tamanoSaltar
+                = new Dimension(
+                        300,
+                        50
+                );
+
+        btnSaltarNivel.setPreferredSize(
+                tamanoSaltar
         );
 
-        burbujaMensaje.setAlignmentX(
+        btnSaltarNivel.setMinimumSize(
+                tamanoSaltar
+        );
+
+        btnSaltarNivel.setMaximumSize(
+                tamanoSaltar
+        );
+
+        btnSaltarNivel.setAlignmentX(
                 Component.CENTER_ALIGNMENT
         );
 
+        btnSaltarNivel.addActionListener(
+                e -> {
+
+                    saltarNivelPrueba();
+                }
+        );
+
         panelDerecho.add(
-                burbujaMensaje
+                btnSaltarNivel
         );
 
         panelDerecho.add(
                 Box.createVerticalStrut(
-                        10
+                        12
                 )
         );
-
-        // =================================================
-        // AVATAR
-        // =================================================
-
-        panelAvatar
-                = new JPanel(
-                        new GridBagLayout()
-                );
-
-        panelAvatar.setOpaque(false);
-
-        Dimension tamanoPanelAvatar
-                = new Dimension(
-                        ANCHO_PANEL_DERECHO - 10,
-                        ALTO_AVATAR + 10
-                );
-
-        panelAvatar.setPreferredSize(
-                tamanoPanelAvatar
-        );
-
-        panelAvatar.setMinimumSize(
-                tamanoPanelAvatar
-        );
-
-        panelAvatar.setMaximumSize(
-                tamanoPanelAvatar
-        );
-
-        panelAvatar.setAlignmentX(
-                Component.CENTER_ALIGNMENT
-        );
-
-        avatar
-                = new AvatarPanel();
-
-        Dimension tamanoAvatar
-                = new Dimension(
-                        ANCHO_AVATAR,
-                        ALTO_AVATAR
-                );
-
-        avatar.setPreferredSize(
-                tamanoAvatar
-        );
-
-        avatar.setMinimumSize(
-                tamanoAvatar
-        );
-
-        avatar.setMaximumSize(
-                tamanoAvatar
-        );
-
-        panelAvatar.add(
-                avatar
-        );
-
-        avatar.startAnimation();
-
-        panelDerecho.add(
-                Box.createVerticalGlue()
-        );
-
-        panelDerecho.add(
-                panelAvatar
-        );
-
-        panelDerecho.add(
-                Box.createVerticalGlue()
-        );
-
-        // =================================================
-        // VOLVER AL MENÚ
-        // =================================================
-
-        BotonRedondeado btnVolver
-                = new BotonRedondeado(
-                        "VOLVER AL MENÚ",
-                        ColoresBitsOBots.AZUL_PRINCIPAL,
-                        ColoresBitsOBots.AZUL_HOVER
-                );
-
-        btnVolver.setFont(
-                Fuentes.cargar(
-                        "Pixel Digivolve.otf",
-                        15f
-                )
-        );
-
-        btnVolver.setForeground(
-                Color.WHITE
-        );
-
-        Dimension tamanoVolver
-                = new Dimension(
-                        230,
-                        52
-                );
-
-        btnVolver.setPreferredSize(
-                tamanoVolver
-        );
-
-        btnVolver.setMinimumSize(
-                tamanoVolver
-        );
-
-        btnVolver.setMaximumSize(
-                tamanoVolver
-        );
-
-        btnVolver.setAlignmentX(
-                Component.CENTER_ALIGNMENT
-        );
-
-        btnVolver.addActionListener(
-                e -> {
-
-                    abandonarPartida();
-                }
-        );
-
-        // =================================================
-        // BOTÓN TEMPORAL DE PRUEBA
-        // =================================================
-
-        if (MODO_PRUEBA) {
-
-            BotonRedondeado btnSaltarNivel
-                    = new BotonRedondeado(
-                            "SALTAR NIVEL",
-                            new Color(
-                                    218,
-                                    133,
-                                    43
-                            ),
-                            new Color(
-                                    244,
-                                    157,
-                                    61
-                            )
-                    );
-
-            btnSaltarNivel.setFont(
-                    Fuentes.cargar(
-                            "Pixel Digivolve.otf",
-                            13f
-                    )
-            );
-
-            btnSaltarNivel.setForeground(
-                    Color.WHITE
-            );
-
-            Dimension tamanoSaltar
-                    = new Dimension(
-                            300,
-                            50
-                    );
-
-            btnSaltarNivel.setPreferredSize(
-                    tamanoSaltar
-            );
-
-            btnSaltarNivel.setMinimumSize(
-                    tamanoSaltar
-            );
-
-            btnSaltarNivel.setMaximumSize(
-                    tamanoSaltar
-            );
-
-            btnSaltarNivel.setAlignmentX(
-                    Component.CENTER_ALIGNMENT
-            );
-
-            btnSaltarNivel.addActionListener(
-                    e -> {
-
-                        saltarNivelPrueba();
-                    }
-            );
-
-            panelDerecho.add(
-                    btnSaltarNivel
-            );
-
-            panelDerecho.add(
-                    Box.createVerticalStrut(
-                            14
-                    )
-            );
-        }
-
-        panelDerecho.add(
-                btnVolver
-        );
-
-        contenidoCentral.add(
-                panelDerecho,
-                BorderLayout.EAST
-        );
-
-        panelPrincipal.add(
-                contenidoCentral,
-                BorderLayout.CENTER
-        );
-
-        fondo.revalidate();
-        fondo.repaint();
     }
 
-    // =====================================================
-    // ENCABEZADO ALTERNATIVO
-    // =====================================================
+    // =================================================
+    // VOLVER AL MENÚ
+    // =================================================
+
+    panelDerecho.add(
+            btnVolver
+    );
+
+    // =================================================
+    // AGREGAR PANEL DERECHO
+    // =================================================
+
+    contenidoCentral.add(
+            panelDerecho,
+            BorderLayout.EAST
+    );
+
+    panelPrincipal.add(
+            contenidoCentral,
+            BorderLayout.CENTER
+    );
+
+    fondo.revalidate();
+    fondo.repaint();
+}
 
     private JPanel crearEncabezado() {
 
@@ -3303,37 +3372,110 @@ public abstract class JuegoMemoriaBase extends JFrame {
 
     private void guardarRankingGeneral() {
 
-        if (
-                progreso.isRankingGuardado()
-        ) {
+    /*
+     * Evitar guardar dos veces
+     * el mismo resultado.
+     */
+    if (progreso.isRankingGuardado()) {
+        return;
+    }
 
-            return;
-        }
+    /*
+     * =====================================================
+     * OBTENER GRADO Y SECCIÓN
+     * =====================================================
+     *
+     * progreso.getSeccion() viene normalmente así:
+     *
+     * "10 - A"
+     *
+     * Lo dividimos en:
+     *
+     * grado   = "10"
+     * seccion = "A"
+     */
+    String seccionCompleta
+            = progreso.getSeccion();
 
-        String fecha
-                = LocalDateTime
-                        .now()
-                        .format(
-                                DateTimeFormatter
-                                        .ofPattern(
-                                                "dd/MM/yyyy HH:mm"
-                                        )
+    String grado = "";
+    String seccion = "";
+
+    if (
+            seccionCompleta != null
+            && !seccionCompleta.trim().isEmpty()
+    ) {
+
+        String[] partes
+                = seccionCompleta
+                        .trim()
+                        .split(
+                                "\\s*-\\s*",
+                                2
                         );
 
-        RankingManager.guardar(
-                new RegistroRanking(
-                        progreso.getJugador(),
-                        progreso.getPuntosTotales(),
-                        progreso.getMovimientosTotales(),
-                        progreso.getSegundosTotales(),
-                        fecha
-                )
-        );
+        /*
+         * Primera parte:
+         * grado.
+         */
+        if (partes.length >= 1) {
 
-        progreso.setRankingGuardado(
-                true
-        );
+            grado
+                    = partes[0]
+                            .trim();
+        }
+
+        /*
+         * Segunda parte:
+         * sección.
+         */
+        if (partes.length >= 2) {
+
+            seccion
+                    = partes[1]
+                            .trim();
+        }
     }
+
+    /*
+     * En MySQL la columna seccion
+     * es VARCHAR(1).
+     *
+     * Por seguridad dejamos solamente
+     * el primer carácter.
+     */
+    if (seccion.length() > 1) {
+
+        seccion
+                = seccion.substring(
+                        0,
+                        1
+                );
+    }
+
+    /*
+     * =====================================================
+     * GUARDAR EN MYSQL
+     * =====================================================
+     */
+    RankingManager.guardar(
+            new RegistroRanking(
+                    progreso.getJugador(),
+                    progreso.getPuntosTotales(),
+                    progreso.getMovimientosTotales(),
+                    progreso.getSegundosTotales(),
+                    grado,
+                    seccion
+            )
+    );
+
+    /*
+     * Marcar que el resultado
+     * ya fue enviado.
+     */
+    progreso.setRankingGuardado(
+            true
+    );
+}
 
     // =====================================================
     // ABANDONAR PARTIDA

@@ -61,56 +61,56 @@ public class Menu extends javax.swing.JFrame {
          PanelCircuitos.repaint();
     }
 
-  private void configurarBienvenida() {
+    private void configurarBienvenida() {
 
-    String nombreMostrar = nombreC;
+        String nombreMostrar = nombreC;
 
-    if (nombreMostrar == null || nombreMostrar.isBlank()) {
-        nombreMostrar = "Jugador";
+        if (nombreMostrar == null || nombreMostrar.isBlank()) {
+            nombreMostrar = "Jugador";
+        }
+
+        lblBienvenida.setText(
+                "¡HOLA, "
+                + nombreMostrar.toUpperCase()
+                + "! 👋"
+        );
+
+        lblBienvenida.setFont(
+                new java.awt.Font(
+                        "Super Jello",
+                        java.awt.Font.BOLD,
+                        22
+                )
+        );
+
+        lblBienvenida.setForeground(
+                new java.awt.Color(
+                        20,
+                        95,
+                        190
+                )
+        );
+
+        lblPreguntaMenu.setText(
+                "¿Qué quieres hacer hoy?"
+        );
+
+        lblPreguntaMenu.setFont(
+                new java.awt.Font(
+                        "Stencil",
+                        java.awt.Font.BOLD,
+                        17
+                )
+        );
+
+        lblPreguntaMenu.setForeground(
+                new java.awt.Color(
+                        80,
+                        105,
+                        125
+                )
+        );
     }
-
-    lblBienvenida.setText(
-            "¡HOLA, "
-            + nombreMostrar.toUpperCase()
-            + "! 👋"
-    );
-
-    lblBienvenida.setFont(
-            new java.awt.Font(
-                    "Super Jello",
-                    java.awt.Font.BOLD,
-                    22
-            )
-    );
-
-    lblBienvenida.setForeground(
-            new java.awt.Color(
-                    20,
-                    95,
-                    190
-            )
-    );
-
-    lblPreguntaMenu.setText(
-            "¿Qué quieres hacer hoy?"
-    );
-
-    lblPreguntaMenu.setFont(
-            new java.awt.Font(
-                    "Stencil",
-                    java.awt.Font.BOLD,
-                    17
-            )
-    );
-
-    lblPreguntaMenu.setForeground(
-            new java.awt.Color(
-                    80,
-                    105,
-                    125
-            )
-    );
-}
 
     private void configurarTarjetas() {
 
@@ -143,6 +143,21 @@ public class Menu extends javax.swing.JFrame {
         panelCartas.setLayout(new BorderLayout());
         panelCartas.removeAll();
         panelCartas.add(tarjetaCartas, BorderLayout.CENTER);
+        
+        // Tarjeta de Cerrar Sesion
+        TarjetaMenu tarjetaCerrar = new TarjetaMenu(
+                "CERRAR SESIÓN",
+                "Cambia de usuario",
+                "/iconosL/gambling (1).png",
+                new Color(15, 175, 185)
+        );
+
+        tarjetaCerrar.setAccion(this::cerrarSesion);
+
+        panelCerrar.setOpaque(false);
+        panelCerrar.setLayout(new BorderLayout());
+        panelCerrar.removeAll();
+        panelCerrar.add(tarjetaCerrar, BorderLayout.CENTER);
     }
 
     private void configurarAvatar() {
@@ -168,69 +183,95 @@ public class Menu extends javax.swing.JFrame {
         panelAvatar.repaint();
     }
 
-   private void abrirQuiz() {
-    try {
-        Quizz_Vocacional quiz
-                = new Quizz_Vocacional(nombreC, seccionC);
+    private void abrirQuiz() {
+        try {
+            Quizz_Vocacional quiz
+                    = new Quizz_Vocacional(nombreC, seccionC, this);
 
-        quiz.setLocationRelativeTo(this);
-        quiz.setVisible(true);
-        dispose();
+            quiz.setLocationRelativeTo(this);
+            quiz.setVisible(true);
+            this.setVisible(false);
 
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(
-                this,
-                "No se pudo abrir el Quiz Vocacional.\n"
-                + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE
-        );
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo abrir el Quiz Vocacional.\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
 
-        logger.log(
-                java.util.logging.Level.SEVERE,
-                "Error al abrir el quiz",
-                e
-        );
+            logger.log(
+                    java.util.logging.Level.SEVERE,
+                    "Error al abrir el quiz",
+                    e
+            );
+        }
     }
-}
-   private void configurarJugador() {
+    
+    private void configurarJugador() {
 
-    PanelJugador jugador
-            = (PanelJugador) panelJugador;
+        PanelJugador jugador
+                = (PanelJugador) panelJugador;
 
-    jugador.setDatos(
-            nombreC,
-            seccionC
-    );
+        jugador.setDatos(
+                nombreC,
+                seccionC
+        );
 
-    panelJugador.setOpaque(false);
-}
+        panelJugador.setOpaque(false);
+    }
    
-   private void abrirJuegoCartas() {
-    try {
-        MenuJuego juegoCartas
-                = new MenuJuego(nombreC, seccionC);
+    private void abrirJuegoCartas() {
+        try {
+            MenuJuego juegoCartas
+                    = new MenuJuego(nombreC, seccionC);
 
-        juegoCartas.setLocationRelativeTo(this);
-        juegoCartas.setVisible(true);
-        dispose();
+            juegoCartas.setLocationRelativeTo(this);
+            juegoCartas.setVisible(true);
+            this.setVisible(false);
 
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(
-                this,
-                "No se pudo abrir el Juego de Cartas.\n"
-                + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE
-        );
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo abrir el Juego de Cartas.\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
 
-        logger.log(
-                java.util.logging.Level.SEVERE,
-                "Error al abrir el juego de cartas",
-                e
-        );
+            logger.log(
+                    java.util.logging.Level.SEVERE,
+                    "Error al abrir el juego de cartas",
+                    e
+            );
+        }
     }
-}
+    
+    private void cerrarSesion() {
+        try {
+            Login login = new Login();
+
+            login.setLocationRelativeTo(this);
+            login.setVisible(true);
+            this.setVisible(false);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo cerrar la sesión.\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            logger.log(
+                    java.util.logging.Level.SEVERE,
+                    "Error al cerrar sesión",
+                    e
+            );
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -254,6 +295,7 @@ public class Menu extends javax.swing.JFrame {
         panelJugador = new PanelJugador();
         lblBienvenida = new javax.swing.JLabel();
         lblPreguntaMenu = new javax.swing.JLabel();
+        panelCerrar = new TarjetaMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -296,11 +338,11 @@ public class Menu extends javax.swing.JFrame {
         panelQuiz.setLayout(panelQuizLayout);
         panelQuizLayout.setHorizontalGroup(
             panelQuizLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 495, Short.MAX_VALUE)
         );
         panelQuizLayout.setVerticalGroup(
             panelQuizLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 80, Short.MAX_VALUE)
+            .addGap(0, 92, Short.MAX_VALUE)
         );
 
         panelCartas.setBackground(new java.awt.Color(204, 255, 255));
@@ -340,19 +382,27 @@ public class Menu extends javax.swing.JFrame {
         lblPreguntaMenu.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPreguntaMenu.setText("!");
 
+        panelCerrar.setBackground(new java.awt.Color(204, 255, 255));
+
+        javax.swing.GroupLayout panelCerrarLayout = new javax.swing.GroupLayout(panelCerrar);
+        panelCerrar.setLayout(panelCerrarLayout);
+        panelCerrarLayout.setHorizontalGroup(
+            panelCerrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        panelCerrarLayout.setVerticalGroup(
+            panelCerrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 80, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout PanelCircuitosLayout = new javax.swing.GroupLayout(PanelCircuitos);
         PanelCircuitos.setLayout(PanelCircuitosLayout);
         PanelCircuitosLayout.setHorizontalGroup(
             PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCircuitosLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCircuitosLayout.createSequentialGroup()
-                        .addComponent(lblPreguntaMenu)
-                        .addGap(789, 789, 789))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCircuitosLayout.createSequentialGroup()
-                        .addComponent(lblBienvenida)
-                        .addGap(817, 817, 817))))
+                .addComponent(lblPreguntaMenu)
+                .addGap(789, 789, 789))
             .addGroup(PanelCircuitosLayout.createSequentialGroup()
                 .addGap(306, 306, 306)
                 .addComponent(jLabel1)
@@ -362,11 +412,12 @@ public class Menu extends javax.swing.JFrame {
                         .addComponent(jLabel5)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelCircuitosLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 691, Short.MAX_VALUE)
                         .addComponent(panelJugador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(270, 270, 270))))
             .addGroup(PanelCircuitosLayout.createSequentialGroup()
                 .addGroup(PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblBienvenida)
                     .addGroup(PanelCircuitosLayout.createSequentialGroup()
                         .addGap(386, 386, 386)
                         .addComponent(jLabel2)
@@ -376,17 +427,16 @@ public class Menu extends javax.swing.JFrame {
                         .addComponent(jLabel4))
                     .addGroup(PanelCircuitosLayout.createSequentialGroup()
                         .addGap(377, 377, 377)
-                        .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblSelecciona, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(PanelCircuitosLayout.createSequentialGroup()
-                                .addGap(241, 241, 241)
-                                .addComponent(lblSelecciona, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(PanelCircuitosLayout.createSequentialGroup()
+                                .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(163, 163, 163)
                                 .addGroup(PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(panelCartas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(panelQuiz, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                .addContainerGap(360, Short.MAX_VALUE))
+                                    .addComponent(panelQuiz, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(panelCerrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         PanelCircuitosLayout.setVerticalGroup(
             PanelCircuitosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -415,12 +465,14 @@ public class Menu extends javax.swing.JFrame {
                         .addComponent(panelQuiz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(33, 33, 33)
                         .addComponent(panelCartas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(lblSelecciona))
+                        .addGap(33, 33, 33)
+                        .addComponent(panelCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(PanelCircuitosLayout.createSequentialGroup()
                         .addGap(54, 54, 54)
                         .addComponent(panelAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(lblSelecciona)
+                .addContainerGap(117, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -474,6 +526,8 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JLabel lblSelecciona;
     private javax.swing.JPanel panelAvatar;
     private javax.swing.JPanel panelCartas;
+    private javax.swing.JPanel panelCartas1;
+    private javax.swing.JPanel panelCerrar;
     private javax.swing.JPanel panelJugador;
     private javax.swing.JPanel panelQuiz;
     // End of variables declaration//GEN-END:variables

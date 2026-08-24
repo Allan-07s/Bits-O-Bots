@@ -1,5 +1,6 @@
 package JuegoMemoria;
 
+import Login.PanelMenuCircuitos;
 import Tipografias.Fuentes;
 
 import java.awt.BorderLayout;
@@ -7,6 +8,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
@@ -25,11 +27,10 @@ public class MenuJuego extends JFrame {
 
     private BotonIconoMusica btnMusica;
 
-    /*
-     * =====================================================
-     * CONSTRUCTOR NORMAL
-     * =====================================================
-     */
+    // =====================================================
+    // CONSTRUCTOR NORMAL
+    // =====================================================
+
     public MenuJuego(
             String jugador,
             String seccion
@@ -42,11 +43,10 @@ public class MenuJuego extends JFrame {
         );
     }
 
-    /*
-     * =====================================================
-     * CONSTRUCTOR CON ACCIÓN PARA VOLVER
-     * =====================================================
-     */
+    // =====================================================
+    // CONSTRUCTOR CON ACCIÓN PARA VOLVER
+    // =====================================================
+
     public MenuJuego(
             String jugador,
             String seccion,
@@ -93,11 +93,10 @@ public class MenuJuego extends JFrame {
         );
     }
 
-    /*
-     * =====================================================
-     * CONFIGURAR VENTANA
-     * =====================================================
-     */
+    // =====================================================
+    // CONFIGURAR VENTANA
+    // =====================================================
+
     private void configurarVentana() {
 
         setTitle(
@@ -106,9 +105,6 @@ public class MenuJuego extends JFrame {
 
         setUndecorated(true);
 
-        /*
-         * Pantalla completa.
-         */
         setExtendedState(
                 JFrame.MAXIMIZED_BOTH
         );
@@ -120,27 +116,35 @@ public class MenuJuego extends JFrame {
         setResizable(true);
     }
 
-    /*
-     * =====================================================
-     * CONSTRUIR INTERFAZ
-     * =====================================================
-     */
+    // =====================================================
+    // CONSTRUIR INTERFAZ
+    // =====================================================
+
     private void construirInterfaz() {
 
+        // =================================================
+        // FONDO GENERAL CON CIRCUITOS
+        // =================================================
         /*
-         * =================================================
-         * FONDO GENERAL
-         * =================================================
+         * CAMBIO:
          *
-         * Ya no usamos el morado oscuro.
-         * Ahora usamos el mismo estilo claro
-         * del Login / Quiz.
+         * Antes:
+         * PanelDegradado
+         *
+         * Ahora:
+         * PanelMenuCircuitos
+         *
+         * Este panel ya trae:
+         * - fondo claro
+         * - circuitos
+         * - hexágonos
+         * - binarios
+         * - partículas
+         * - esquinas tecnológicas
          */
-        PanelDegradado fondo
-                = new PanelDegradado(
-                        ColoresBitsOBots.FONDO_SUPERIOR,
-                        ColoresBitsOBots.FONDO_INFERIOR
-                );
+
+        PanelMenuCircuitos fondo
+                = new PanelMenuCircuitos();
 
         fondo.setLayout(
                 new BorderLayout(
@@ -162,11 +166,10 @@ public class MenuJuego extends JFrame {
                 fondo
         );
 
-        /*
-         * =================================================
-         * BARRA SUPERIOR
-         * =================================================
-         */
+        // =================================================
+        // BARRA SUPERIOR
+        // =================================================
+
         JPanel barraSuperior
                 = new JPanel(
                         new BorderLayout()
@@ -174,9 +177,10 @@ public class MenuJuego extends JFrame {
 
         barraSuperior.setOpaque(false);
 
-        /*
-         * JUGADOR.
-         */
+        // =================================================
+        // JUGADOR
+        // =================================================
+
         JLabel lblJugador
                 = new JLabel(
                         "JUGADOR: "
@@ -190,27 +194,58 @@ public class MenuJuego extends JFrame {
                 )
         );
 
-        /*
-         * Antes era casi blanco.
-         * Ahora azul oscuro.
-         */
         lblJugador.setForeground(
                 ColoresBitsOBots.TEXTO_PRINCIPAL
         );
 
-        /*
-         * =================================================
-         * BOTÓN DE MÚSICA
-         * =================================================
-         */
+        // =================================================
+        // BOTÓN DE MÚSICA
+        // =================================================
+
+        JPanel zonaMusica
+                = new JPanel(
+                        new GridBagLayout()
+                );
+
+        zonaMusica.setOpaque(false);
+
+        Dimension tamanoZonaMusica
+                = new Dimension(
+                        68,
+                        68
+                );
+
+        zonaMusica.setPreferredSize(
+                tamanoZonaMusica
+        );
+
+        zonaMusica.setMinimumSize(
+                tamanoZonaMusica
+        );
+
+        zonaMusica.setMaximumSize(
+                tamanoZonaMusica
+        );
+
         btnMusica
                 = new BotonIconoMusica();
 
-        btnMusica.setPreferredSize(
-                new Dimension(
+        Dimension tamanoMusica
+                = new Dimension(
                         58,
                         58
-                )
+                );
+
+        btnMusica.setPreferredSize(
+                tamanoMusica
+        );
+
+        btnMusica.setMinimumSize(
+                tamanoMusica
+        );
+
+        btnMusica.setMaximumSize(
+                tamanoMusica
         );
 
         btnMusica.addActionListener(
@@ -223,13 +258,17 @@ public class MenuJuego extends JFrame {
                 }
         );
 
+        zonaMusica.add(
+                btnMusica
+        );
+
         barraSuperior.add(
                 lblJugador,
                 BorderLayout.WEST
         );
 
         barraSuperior.add(
-                btnMusica,
+                zonaMusica,
                 BorderLayout.EAST
         );
 
@@ -238,46 +277,53 @@ public class MenuJuego extends JFrame {
                 BorderLayout.NORTH
         );
 
+        // =================================================
+        // CONTENIDO PRINCIPAL
+        // =================================================
         /*
-         * =================================================
-         * TARJETA PRINCIPAL
-         * =================================================
+         * IMPORTANTE:
          *
-         * Blanca, limpia y ligeramente transparente.
+         * AQUÍ QUITAMOS COMPLETAMENTE
+         * EL PANEL BLANCO GRANDE.
+         *
+         * Antes existía:
+         *
+         * PanelRedondeado panelPrincipal = ...
+         *
+         * Ya NO existe.
+         *
+         * Todo se coloca directamente
+         * sobre el fondo de circuitos.
          */
-        PanelRedondeado panelPrincipal
-                = new PanelRedondeado(
-                        38,
-                        new Color(
-                                255,
-                                255,
-                                255,
-                                225
-                        ),
-                        ColoresBitsOBots.BORDE_SUAVE
+
+        JPanel contenidoPrincipal
+                = new JPanel(
+                        new BorderLayout(
+                                14,
+                                14
+                        )
                 );
 
-        panelPrincipal.setLayout(
-                new BorderLayout(
-                        14,
-                        14
-                )
-        );
+        contenidoPrincipal.setOpaque(false);
 
-        panelPrincipal.setBorder(
+        contenidoPrincipal.setBorder(
                 BorderFactory.createEmptyBorder(
-                        20,
+                        10,
                         70,
-                        30,
+                        20,
                         70
                 )
         );
 
-        /*
-         * =================================================
-         * LOGO
-         * =================================================
-         */
+        fondo.add(
+                contenidoPrincipal,
+                BorderLayout.CENTER
+        );
+
+        // =================================================
+        // LOGO
+        // =================================================
+
         LogoMemoria logo
                 = new LogoMemoria();
 
@@ -288,16 +334,30 @@ public class MenuJuego extends JFrame {
                 )
         );
 
-        panelPrincipal.add(
-                logo,
+        /*
+         * Lo metemos en un contenedor transparente
+         * para mantenerlo centrado.
+         */
+        JPanel contenedorLogo
+                = new JPanel(
+                        new GridBagLayout()
+                );
+
+        contenedorLogo.setOpaque(false);
+
+        contenedorLogo.add(
+                logo
+        );
+
+        contenidoPrincipal.add(
+                contenedorLogo,
                 BorderLayout.NORTH
         );
 
-        /*
-         * =================================================
-         * CENTRO
-         * =================================================
-         */
+        // =================================================
+        // CENTRO
+        // =================================================
+
         JPanel centro
                 = new JPanel(
                         new BorderLayout(
@@ -308,11 +368,10 @@ public class MenuJuego extends JFrame {
 
         centro.setOpaque(false);
 
-        /*
-         * =================================================
-         * TÍTULO
-         * =================================================
-         */
+        // =================================================
+        // TÍTULO
+        // =================================================
+
         JLabel lblTitulo
                 = new JLabel(
                         "BITS O BOTS",
@@ -330,22 +389,16 @@ public class MenuJuego extends JFrame {
                 ColoresBitsOBots.TEXTO_PRINCIPAL
         );
 
-        /*
-         * =================================================
-         * SUBTÍTULO
-         * =================================================
-         */
+        // =================================================
+        // SUBTÍTULO
+        // =================================================
+
         JLabel lblSubtitulo
                 = new JLabel(
                         "MEMORIZA COMPONENTES DE INFORMÁTICA Y ROBÓTICA",
                         SwingConstants.CENTER
                 );
 
-        /*
-         * Antes estaba en 40f y era enorme.
-         * Lo dejamos más parecido al diseño
-         * limpio del Quiz.
-         */
         lblSubtitulo.setFont(
                 Fuentes.cargar(
                         "Pixel Digivolve.otf",
@@ -357,9 +410,10 @@ public class MenuJuego extends JFrame {
                 ColoresBitsOBots.TEXTO_SECUNDARIO
         );
 
-        /*
-         * Contenedor de textos.
-         */
+        // =================================================
+        // CONTENEDOR DE TEXTOS
+        // =================================================
+
         JPanel textos
                 = new JPanel(
                         new GridLayout(
@@ -385,11 +439,10 @@ public class MenuJuego extends JFrame {
                 BorderLayout.NORTH
         );
 
-        /*
-         * =================================================
-         * PANEL DE BOTONES
-         * =================================================
-         */
+        // =================================================
+        // PANEL DE BOTONES
+        // =================================================
+
         JPanel botones
                 = new JPanel();
 
@@ -402,18 +455,10 @@ public class MenuJuego extends JFrame {
 
         botones.setOpaque(false);
 
-        /*
-         * =================================================
-         * BOTÓN JUGAR
-         * =================================================
-         *
-         * Robótica:
-         * #24D1D4
-         *
-         * Usamos una versión ligeramente
-         * más oscura para que el texto blanco
-         * se lea perfectamente.
-         */
+        // =================================================
+        // BOTÓN JUGAR
+        // =================================================
+
         BotonRedondeado btnJugar
                 = new BotonRedondeado(
                         "JUGAR",
@@ -432,9 +477,6 @@ public class MenuJuego extends JFrame {
                 Color.WHITE
         );
 
-        /*
-         * Mantenemos tus medidas.
-         */
         Dimension tamanoJugar
                 = new Dimension(
                         800,
@@ -464,16 +506,10 @@ public class MenuJuego extends JFrame {
                 }
         );
 
-        /*
-         * =================================================
-         * BOTÓN SALIR
-         * =================================================
-         *
-         * Ya no usamos rojo porque queremos
-         * mantener la misma identidad del Quiz.
-         *
-         * Utilizamos azul.
-         */
+        // =================================================
+        // BOTÓN SALIR
+        // =================================================
+
         BotonRedondeado btnSalir
                 = new BotonRedondeado(
                         "SALIR",
@@ -492,9 +528,6 @@ public class MenuJuego extends JFrame {
                 Color.WHITE
         );
 
-        /*
-         * Mantenemos tus medidas.
-         */
         Dimension tamanoSalir
                 = new Dimension(
                         800,
@@ -524,35 +557,24 @@ public class MenuJuego extends JFrame {
                 }
         );
 
-        /*
-         * =================================================
-         * ORGANIZACIÓN VERTICAL
-         * =================================================
-         */
+        // =================================================
+        // ORGANIZACIÓN VERTICAL
+        // =================================================
 
         botones.add(
                 Box.createVerticalGlue()
         );
 
-        /*
-         * JUGAR
-         */
         botones.add(
                 btnJugar
         );
 
-        /*
-         * Separación.
-         */
         botones.add(
                 Box.createVerticalStrut(
                         25
                 )
         );
 
-        /*
-         * SALIR
-         */
         botones.add(
                 btnSalir
         );
@@ -561,35 +583,20 @@ public class MenuJuego extends JFrame {
                 Box.createVerticalGlue()
         );
 
-        /*
-         * Agregamos los botones
-         * al centro.
-         */
         centro.add(
                 botones,
                 BorderLayout.CENTER
         );
 
-        panelPrincipal.add(
+        contenidoPrincipal.add(
                 centro,
                 BorderLayout.CENTER
         );
 
-        /*
-         * =================================================
-         * AGREGAR TARJETA PRINCIPAL
-         * =================================================
-         */
-        fondo.add(
-                panelPrincipal,
-                BorderLayout.CENTER
-        );
+        // =================================================
+        // PIE
+        // =================================================
 
-        /*
-         * =================================================
-         * PIE
-         * =================================================
-         */
         JLabel lblPie
                 = new JLabel(
                         "",
@@ -613,18 +620,18 @@ public class MenuJuego extends JFrame {
                 BorderLayout.SOUTH
         );
 
-        /*
-         * Refrescar.
-         */
+        // =================================================
+        // REFRESCAR
+        // =================================================
+
         fondo.revalidate();
         fondo.repaint();
     }
 
-    /*
-     * =====================================================
-     * INICIAR JUEGO
-     * =====================================================
-     */
+    // =====================================================
+    // INICIAR JUEGO
+    // =====================================================
+
     private void iniciarJuego() {
 
         ProgresoJuego progreso
@@ -636,19 +643,21 @@ public class MenuJuego extends JFrame {
 
         new Nivel1Form(
                 progreso
-        ).setVisible(true);
+        ).setVisible(
+                true
+        );
 
         dispose();
     }
 
-    /*
-     * =====================================================
-     * SALIR DEL JUEGO
-     * =====================================================
-     */
+    // =====================================================
+    // SALIR DEL JUEGO
+    // =====================================================
+
     private void salirDelJuego() {
 
-        GestorMusica.detenerFondo();
+        GestorMusica
+                .detenerFondo();
 
         dispose();
 

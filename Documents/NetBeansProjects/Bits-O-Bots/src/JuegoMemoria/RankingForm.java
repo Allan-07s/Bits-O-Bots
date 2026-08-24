@@ -22,6 +22,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+import javax.swing.Timer;
 
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -30,12 +32,30 @@ import javax.swing.table.JTableHeader;
 public class RankingForm extends JFrame {
 
     private DefaultTableModel modelo;
+    private JPanel panelPodio;
+    private JTable tabla;
 
     /*
-     * Panel donde estarán los
-     * tres primeros lugares.
+     * Timer para actualizar automáticamente.
      */
-    private JPanel panelPodio;
+    private Timer actualizadorRanking;
+
+    /*
+     * Worker que consulta MySQL.
+     */
+    private SwingWorker<List<RegistroRanking>, Void> workerRanking;
+
+    /*
+     * Evita lanzar varias consultas
+     * al mismo tiempo.
+     */
+    private boolean cargandoRanking = false;
+
+    /*
+     * Evita intentar actualizar componentes
+     * después de cerrar la ventana.
+     */
+    private boolean cerrando = false;
 
     // =====================================================
     // CONSTRUCTOR
@@ -44,13 +64,20 @@ public class RankingForm extends JFrame {
     public RankingForm() {
 
         configurarVentana();
+
         construirInterfaz();
 
+        /*
+         * Ahora cargarRanking() NO bloquea Swing.
+         * Solo crea el SwingWorker y regresa.
+         */
         cargarRanking();
+
+        iniciarActualizacionAutomatica();
     }
 
     // =====================================================
-    // CONFIGURACIÓN DE VENTANA
+    // CONFIGURAR VENTANA
     // =====================================================
 
     private void configurarVentana() {
@@ -82,17 +109,6 @@ public class RankingForm extends JFrame {
         // FONDO
         // =================================================
 
-        /*
-         * AQUÍ ESTABA EL PRIMER FONDO OSCURO.
-         *
-         * Antes:
-         *
-         * new Color(19, 27, 67)
-         * new Color(92, 49, 145)
-         *
-         * Ahora usamos el fondo claro
-         * del resto del proyecto.
-         */
         PanelDegradado fondo
                 = new PanelDegradado(
                         ColoresBitsOBots.FONDO_SUPERIOR,
@@ -130,22 +146,35 @@ public class RankingForm extends JFrame {
 
         encabezado.setOpaque(false);
 
+        // =================================================
+        // ESPACIO IZQUIERDO
+        // =================================================
+
         /*
-         * Espacio izquierdo equivalente
-         * al botón de música.
-         *
-         * Así el título permanece centrado.
+         * Mismo tamaño que la zona del botón
+         * de música para mantener el título centrado.
          */
         JPanel espacioIzquierdo
                 = new JPanel();
 
         espacioIzquierdo.setOpaque(false);
 
+        Dimension tamanoLateral
+                = new Dimension(
+                        74,
+                        74
+                );
+
         espacioIzquierdo.setPreferredSize(
-                new Dimension(
-                        65,
-                        65
-                )
+                tamanoLateral
+        );
+
+        espacioIzquierdo.setMinimumSize(
+                tamanoLateral
+        );
+
+        espacioIzquierdo.setMaximumSize(
+                tamanoLateral
         );
 
         encabezado.add(
@@ -181,11 +210,6 @@ public class RankingForm extends JFrame {
                 )
         );
 
-        /*
-         * Ya no blanco.
-         *
-         * Fondo claro = texto azul oscuro.
-         */
         titulo.setForeground(
                 ColoresBitsOBots.TEXTO_PRINCIPAL
         );
@@ -237,13 +261,41 @@ public class RankingForm extends JFrame {
         // BOTÓN DE MÚSICA
         // =================================================
 
+        /*
+         * Este panel es completamente transparente.
+         *
+         * Solo evita que BorderLayout
+         * estire el botón.
+         *
+         * Visualmente aparece únicamente
+         * el círculo.
+         */
+        JPanel zonaMusica
+                = new JPanel(
+                        new GridBagLayout()
+                );
+
+        zonaMusica.setOpaque(false);
+
+        zonaMusica.setPreferredSize(
+                tamanoLateral
+        );
+
+        zonaMusica.setMinimumSize(
+                tamanoLateral
+        );
+
+        zonaMusica.setMaximumSize(
+                tamanoLateral
+        );
+
         BotonIconoMusica btnMusica
                 = new BotonIconoMusica();
 
         Dimension tamanoMusica
                 = new Dimension(
-                        65,
-                        65
+                        62,
+                        62
                 );
 
         btnMusica.setPreferredSize(
@@ -261,14 +313,19 @@ public class RankingForm extends JFrame {
         btnMusica.addActionListener(
                 e -> {
 
-                    GestorMusica.alternarSilencio();
+                    GestorMusica
+                            .alternarSilencio();
 
                     btnMusica.repaint();
                 }
         );
 
+        zonaMusica.add(
+                btnMusica
+        );
+
         encabezado.add(
-                btnMusica,
+                zonaMusica,
                 BorderLayout.EAST
         );
 
@@ -278,7 +335,7 @@ public class RankingForm extends JFrame {
         );
 
         // =================================================
-        // TARJETA CENTRAL
+        // PANEL PRINCIPAL
         // =================================================
 
         PanelRedondeado panelPrincipal
@@ -347,10 +404,6 @@ public class RankingForm extends JFrame {
                 BorderLayout.NORTH
         );
 
-        /*
-         * Aquí se agregarán
-         * los tres primeros lugares.
-         */
         panelPodio
                 = new JPanel(
                         new GridBagLayout()
@@ -376,7 +429,7 @@ public class RankingForm extends JFrame {
         );
 
         // =================================================
-        // ZONA DE LA TABLA
+        // ZONA TABLA
         // =================================================
 
         JPanel zonaTabla
@@ -412,7 +465,7 @@ public class RankingForm extends JFrame {
         );
 
         // =================================================
-        // MODELO DE TABLA
+        // MODELO
         // =================================================
 
         modelo
@@ -420,10 +473,11 @@ public class RankingForm extends JFrame {
                         new Object[]{
                             "PUESTO",
                             "JUGADOR",
+                            "GRADO",
+                            "SECCIÓN",
                             "PUNTOS",
                             "MOV.",
-                            "TIEMPO",
-                            "FECHA"
+                            "TIEMPO"
                         },
                         0
                 ) {
@@ -442,7 +496,7 @@ public class RankingForm extends JFrame {
         // TABLA
         // =================================================
 
-        JTable tabla
+        tabla
                 = new JTable(
                         modelo
                 );
@@ -458,25 +512,14 @@ public class RankingForm extends JFrame {
                 )
         );
 
-        /*
-         * Fondo blanco.
-         */
         tabla.setBackground(
                 Color.WHITE
         );
 
-        /*
-         * Texto azul oscuro.
-         */
         tabla.setForeground(
                 ColoresBitsOBots.TEXTO_OSCURO
         );
 
-        /*
-         * Selección:
-         *
-         * Informática #B2FEFF
-         */
         tabla.setSelectionBackground(
                 ColoresBitsOBots.INFORMATICA
         );
@@ -485,9 +528,6 @@ public class RankingForm extends JFrame {
                 ColoresBitsOBots.TEXTO_OSCURO
         );
 
-        /*
-         * Líneas suaves.
-         */
         tabla.setGridColor(
                 new Color(
                         206,
@@ -496,13 +536,9 @@ public class RankingForm extends JFrame {
                 )
         );
 
-        tabla.setShowVerticalLines(
-                false
-        );
+        tabla.setShowVerticalLines(false);
 
-        tabla.setShowHorizontalLines(
-                true
-        );
+        tabla.setShowHorizontalLines(true);
 
         tabla.setIntercellSpacing(
                 new Dimension(
@@ -511,16 +547,12 @@ public class RankingForm extends JFrame {
                 )
         );
 
-        /*
-         * Si hay pocas filas,
-         * el resto también queda blanco.
-         */
         tabla.setFillsViewportHeight(
                 true
         );
 
         // =================================================
-        // ENCABEZADO DE TABLA
+        // ENCABEZADO DE LA TABLA
         // =================================================
 
         JTableHeader header
@@ -528,58 +560,93 @@ public class RankingForm extends JFrame {
 
         header.setPreferredSize(
                 new Dimension(
-                        header.getPreferredSize().width,
-                        42
+                        header
+                                .getPreferredSize()
+                                .width,
+                        50
                 )
         );
 
-        header.setFont(
-                Fuentes.cargar(
-                        "Pixel Digivolve.otf",
-                        12f
-                )
-        );
+        header.setReorderingAllowed(false);
 
-        /*
-         * Aquí sí usamos un color fuerte,
-         * pero solamente como acento pequeño.
-         */
-        header.setBackground(
-                ColoresBitsOBots.TURQUESA_OSCURO
-        );
+        header.setResizingAllowed(false);
 
-        header.setForeground(
-                Color.WHITE
-        );
+        DefaultTableCellRenderer rendererHeader
+                = new DefaultTableCellRenderer() {
 
-        header.setOpaque(
-                true
-        );
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table,
+                    Object value,
+                    boolean isSelected,
+                    boolean hasFocus,
+                    int row,
+                    int column
+            ) {
 
-        header.setReorderingAllowed(
-                false
+                JLabel label
+                        = (JLabel) super
+                                .getTableCellRendererComponent(
+                                        table,
+                                        value,
+                                        isSelected,
+                                        hasFocus,
+                                        row,
+                                        column
+                                );
+
+                label.setOpaque(true);
+
+                label.setHorizontalAlignment(
+                        SwingConstants.CENTER
+                );
+
+                label.setVerticalAlignment(
+                        SwingConstants.CENTER
+                );
+
+                label.setBackground(
+                        ColoresBitsOBots.TURQUESA_OSCURO
+                );
+
+                label.setForeground(
+                        Color.WHITE
+                );
+
+                label.setFont(
+                        Fuentes.cargar(
+                                "Pixel Digivolve.otf",
+                                13f
+                        )
+                );
+
+                label.setBorder(
+                        BorderFactory.createMatteBorder(
+                                0,
+                                0,
+                                0,
+                                1,
+                                new Color(
+                                        255,
+                                        255,
+                                        255,
+                                        90
+                                )
+                        )
+                );
+
+                return label;
+            }
+        };
+
+        header.setDefaultRenderer(
+                rendererHeader
         );
 
         // =================================================
-        // RENDERER DE LAS CELDAS
+        // RENDERER DE CELDAS
         // =================================================
 
-        /*
-         * AQUÍ ESTABA EL PRINCIPAL CULPABLE.
-         *
-         * Antes tenías:
-         *
-         * centro.setBackground(
-         *     new Color(20, 34, 78)
-         * );
-         *
-         * Eso pintaba TODA la tabla
-         * azul oscuro aunque arriba dijera
-         * tabla.setBackground(Color.WHITE).
-         *
-         * Ahora usamos filas blancas
-         * y celestes alternadas.
-         */
         DefaultTableCellRenderer centro
                 = new DefaultTableCellRenderer() {
 
@@ -594,22 +661,20 @@ public class RankingForm extends JFrame {
             ) {
 
                 Component componente
-                        = super.getTableCellRendererComponent(
-                                table,
-                                value,
-                                isSelected,
-                                hasFocus,
-                                row,
-                                column
-                        );
+                        = super
+                                .getTableCellRendererComponent(
+                                        table,
+                                        value,
+                                        isSelected,
+                                        hasFocus,
+                                        row,
+                                        column
+                                );
 
                 setHorizontalAlignment(
                         SwingConstants.CENTER
                 );
 
-                /*
-                 * Si está seleccionado.
-                 */
                 if (isSelected) {
 
                     componente.setBackground(
@@ -622,10 +687,9 @@ public class RankingForm extends JFrame {
 
                 } else {
 
-                    /*
-                     * Filas alternadas.
-                     */
-                    if (row % 2 == 0) {
+                    if (
+                            row % 2 == 0
+                    ) {
 
                         componente.setBackground(
                                 Color.WHITE
@@ -651,17 +715,14 @@ public class RankingForm extends JFrame {
             }
         };
 
-        /*
-         * Aplicar el renderer
-         * a todas las columnas.
-         */
         for (
                 int i = 0;
                 i < tabla.getColumnCount();
                 i++
         ) {
 
-            tabla.getColumnModel()
+            tabla
+                    .getColumnModel()
                     .getColumn(i)
                     .setCellRenderer(
                             centro
@@ -669,44 +730,36 @@ public class RankingForm extends JFrame {
         }
 
         // =================================================
-        // ANCHURA DE COLUMNAS
+        // ANCHOS
         // =================================================
 
         tabla.getColumnModel()
                 .getColumn(0)
-                .setPreferredWidth(
-                        75
-                );
+                .setPreferredWidth(80);
 
         tabla.getColumnModel()
                 .getColumn(1)
-                .setPreferredWidth(
-                        220
-                );
+                .setPreferredWidth(220);
 
         tabla.getColumnModel()
                 .getColumn(2)
-                .setPreferredWidth(
-                        120
-                );
+                .setPreferredWidth(100);
 
         tabla.getColumnModel()
                 .getColumn(3)
-                .setPreferredWidth(
-                        100
-                );
+                .setPreferredWidth(100);
 
         tabla.getColumnModel()
                 .getColumn(4)
-                .setPreferredWidth(
-                        110
-                );
+                .setPreferredWidth(120);
 
         tabla.getColumnModel()
                 .getColumn(5)
-                .setPreferredWidth(
-                        190
-                );
+                .setPreferredWidth(100);
+
+        tabla.getColumnModel()
+                .getColumn(6)
+                .setPreferredWidth(120);
 
         // =================================================
         // SCROLL
@@ -717,9 +770,6 @@ public class RankingForm extends JFrame {
                         tabla
                 );
 
-        /*
-         * Borde suave turquesa/celeste.
-         */
         scroll.setBorder(
                 BorderFactory.createLineBorder(
                         ColoresBitsOBots.BORDE_SUAVE,
@@ -727,19 +777,18 @@ public class RankingForm extends JFrame {
                 )
         );
 
-        /*
-         * ANTES ESTO TAMBIÉN ERA
-         * new Color(20, 34, 78).
-         *
-         * Ahora completamente claro.
-         */
-        scroll.getViewport()
+        scroll
+                .getViewport()
                 .setBackground(
                         Color.WHITE
                 );
 
         scroll.setBackground(
                 Color.WHITE
+        );
+
+        scroll.setColumnHeaderView(
+                tabla.getTableHeader()
         );
 
         zonaTabla.add(
@@ -768,13 +817,6 @@ public class RankingForm extends JFrame {
 
         botones.setOpaque(false);
 
-        // =================================================
-        // ACTUALIZAR
-        // =================================================
-
-        /*
-         * Robótica / turquesa.
-         */
         BotonRedondeado btnActualizar
                 = crearBoton(
                         "ACTUALIZAR",
@@ -782,14 +824,6 @@ public class RankingForm extends JFrame {
                         ColoresBitsOBots.TURQUESA_HOVER
                 );
 
-        // =================================================
-        // LIMPIAR
-        // =================================================
-
-        /*
-         * Dejamos rojo únicamente
-         * para una acción destructiva.
-         */
         BotonRedondeado btnLimpiar
                 = crearBoton(
                         "LIMPIAR RANKING",
@@ -805,13 +839,6 @@ public class RankingForm extends JFrame {
                         )
                 );
 
-        // =================================================
-        // VOLVER
-        // =================================================
-
-        /*
-         * Azul principal.
-         */
         BotonRedondeado btnCerrar
                 = crearBoton(
                         "VOLVER",
@@ -820,15 +847,16 @@ public class RankingForm extends JFrame {
                 );
 
         // =================================================
-        // EVENTOS
+        // ACTUALIZAR
         // =================================================
 
         btnActualizar.addActionListener(
-                e -> {
-
-                    cargarRanking();
-                }
+                e -> cargarRanking()
         );
+
+        // =================================================
+        // LIMPIAR
+        // =================================================
 
         btnLimpiar.addActionListener(
                 e -> {
@@ -848,23 +876,32 @@ public class RankingForm extends JFrame {
                             == JOptionPane.YES_OPTION
                     ) {
 
-                        RankingManager
-                                .limpiarRanking();
-
-                        cargarRanking();
+                        /*
+                         * LIMPIAR también se hace
+                         * fuera del hilo visual.
+                         */
+                        limpiarRankingAsync();
                     }
                 }
         );
 
+        // =================================================
+        // VOLVER
+        // =================================================
+
         btnCerrar.addActionListener(
                 e -> {
 
+                    /*
+                     * Cierra inmediatamente.
+                     * No espera a que termine MySQL.
+                     */
                     dispose();
                 }
         );
 
         // =================================================
-        // CENTRAR BOTONES
+        // AGREGAR BOTONES
         // =================================================
 
         botones.add(
@@ -904,16 +941,267 @@ public class RankingForm extends JFrame {
                 BorderLayout.SOUTH
         );
 
-        // =================================================
-        // REFRESCAR
-        // =================================================
-
         fondo.revalidate();
+
         fondo.repaint();
     }
 
     // =====================================================
-    // CREAR TARJETA DEL PODIO
+    // CARGAR RANKING SIN CONGELAR SWING
+    // =====================================================
+
+    private void cargarRanking() {
+
+        /*
+         * Si estamos cerrando,
+         * no hacer nada.
+         */
+        if (
+                cerrando
+        ) {
+
+            return;
+        }
+
+        /*
+         * Ya existe una consulta trabajando.
+         *
+         * No lanzamos otra.
+         */
+        if (
+                cargandoRanking
+        ) {
+
+            return;
+        }
+
+        cargandoRanking = true;
+
+        /*
+         * =================================================
+         * MYSQL SE EJECUTA AQUÍ EN SEGUNDO PLANO
+         * =================================================
+         */
+        workerRanking
+                = new SwingWorker<
+                        List<RegistroRanking>,
+                        Void
+                        >() {
+
+            @Override
+            protected List<RegistroRanking>
+                    doInBackground() {
+
+                return RankingManager
+                        .obtenerTop(
+                                30
+                        );
+            }
+
+            /*
+             * Este método vuelve al hilo visual
+             * cuando MySQL termina.
+             */
+            @Override
+            protected void done() {
+
+                cargandoRanking = false;
+
+                /*
+                 * La ventana ya fue cerrada.
+                 */
+                if (
+                        cerrando
+                        || isCancelled()
+                ) {
+
+                    return;
+                }
+
+                try {
+
+                    List<RegistroRanking> registros
+                            = get();
+
+                    actualizarInterfazRanking(
+                            registros
+                    );
+
+                } catch (Exception e) {
+
+                    /*
+                     * No congelamos ni cerramos
+                     * la aplicación por una falla
+                     * temporal de red.
+                     */
+                    System.out.println(
+                            "No se pudo actualizar visualmente el ranking:"
+                    );
+
+                    System.out.println(
+                            e.getMessage()
+                    );
+                }
+            }
+        };
+
+        workerRanking.execute();
+    }
+
+    // =====================================================
+    // ACTUALIZAR INTERFAZ
+    // =====================================================
+
+    private void actualizarInterfazRanking(
+            List<RegistroRanking> registros
+    ) {
+
+        if (
+                cerrando
+        ) {
+
+            return;
+        }
+
+        // =================================================
+        // PODIO
+        // =================================================
+
+        panelPodio.removeAll();
+
+        /*
+         * Orden visual:
+         *
+         * 2°    1°    3°
+         */
+        agregarPuestoAlPodio(
+                registros,
+                2,
+                0
+        );
+
+        agregarPuestoAlPodio(
+                registros,
+                1,
+                1
+        );
+
+        agregarPuestoAlPodio(
+                registros,
+                3,
+                2
+        );
+
+        panelPodio.revalidate();
+
+        panelPodio.repaint();
+
+        // =================================================
+        // TABLA
+        // =================================================
+
+        modelo.setRowCount(
+                0
+        );
+
+        /*
+         * Los tres primeros ya están
+         * en las tarjetas.
+         *
+         * La tabla empieza en el puesto 4.
+         */
+        for (
+                int i = 3;
+                i < registros.size();
+                i++
+        ) {
+
+            RegistroRanking registro
+                    = registros.get(
+                            i
+                    );
+
+            modelo.addRow(
+                    new Object[]{
+                        i + 1,
+                        registro.getJugador(),
+                        limpiarTexto(
+                                registro.getGrado()
+                        ),
+                        limpiarTexto(
+                                registro.getSeccion()
+                        ),
+                        registro.getPuntos(),
+                        registro.getMovimientos(),
+                        formatearTiempo(
+                                registro.getSegundos()
+                        )
+                    }
+            );
+        }
+
+        tabla.revalidate();
+
+        tabla.repaint();
+    }
+
+    // =====================================================
+    // LIMPIAR RANKING SIN CONGELAR
+    // =====================================================
+
+    private void limpiarRankingAsync() {
+
+        SwingWorker<Void, Void> worker
+                = new SwingWorker<Void, Void>() {
+
+            @Override
+            protected Void doInBackground() {
+
+                RankingManager
+                        .limpiarRanking();
+
+                return null;
+            }
+
+            @Override
+            protected void done() {
+
+                if (
+                        !cerrando
+                ) {
+
+                    cargarRanking();
+                }
+            }
+        };
+
+        worker.execute();
+    }
+
+    // =====================================================
+    // ACTUALIZACIÓN AUTOMÁTICA
+    // =====================================================
+
+    private void iniciarActualizacionAutomatica() {
+
+        /*
+         * Cada 2 segundos intenta actualizar.
+         *
+         * Si la consulta anterior todavía
+         * está trabajando, cargarRanking()
+         * simplemente ignora este intento.
+         */
+        actualizadorRanking
+                = new Timer(
+                        2000,
+                        e -> cargarRanking()
+                );
+
+        actualizadorRanking.start();
+    }
+
+    // =====================================================
+    // CREAR TARJETA PODIO
     // =====================================================
 
     private JPanel crearTarjetaPodio(
@@ -926,7 +1214,7 @@ public class RankingForm extends JFrame {
         Color colorPuesto;
 
         // =================================================
-        // 1° LUGAR
+        // 1° LUGAR - DORADO SUAVE
         // =================================================
 
         if (
@@ -934,31 +1222,28 @@ public class RankingForm extends JFrame {
         ) {
 
             /*
-             * Oro CLARO.
-             *
-             * Antes el fondo era
-             * marrón muy oscuro.
+             * DORADO MUCHO MÁS SUAVE.
              */
             fondoTarjeta
                     = new Color(
                             255,
-                            249,
-                            221,
+                            247,
+                            215,
                             248
                     );
 
             bordeTarjeta
                     = new Color(
-                            225,
-                            181,
-                            56
+                            224,
+                            190,
+                            96
                     );
 
             colorPuesto
                     = new Color(
-                            178,
-                            126,
-                            18
+                            151,
+                            111,
+                            27
                     );
 
         // =================================================
@@ -969,12 +1254,6 @@ public class RankingForm extends JFrame {
                 puesto == 2
         ) {
 
-            /*
-             * Plata/celeste CLARO.
-             *
-             * Aquí antes había otro
-             * azul oscuro.
-             */
             fondoTarjeta
                     = new Color(
                             239,
@@ -1003,9 +1282,6 @@ public class RankingForm extends JFrame {
 
         } else {
 
-            /*
-             * Bronce CLARO.
-             */
             fondoTarjeta
                     = new Color(
                             255,
@@ -1042,10 +1318,6 @@ public class RankingForm extends JFrame {
                         BoxLayout.Y_AXIS
                 )
         );
-
-        // =================================================
-        // TAMAÑO
-        // =================================================
 
         Dimension tamano;
 
@@ -1103,7 +1375,7 @@ public class RankingForm extends JFrame {
                 Fuentes.cargar(
                         "Pixel Digivolve.otf",
                         puesto == 1
-                                ? 22f
+                                ? 23f
                                 : 18f
                 )
         );
@@ -1134,17 +1406,67 @@ public class RankingForm extends JFrame {
                 )
         );
 
-        /*
-         * Antes blanco.
-         *
-         * Ahora azul oscuro porque
-         * las tarjetas son claras.
-         */
-        lblJugador.setForeground(
-                ColoresBitsOBots.TEXTO_PRINCIPAL
-        );
+        if (
+                puesto == 1
+        ) {
+
+            lblJugador.setForeground(
+                    new Color(
+                            93,
+                            76,
+                            32
+                    )
+            );
+
+        } else {
+
+            lblJugador.setForeground(
+                    ColoresBitsOBots.TEXTO_PRINCIPAL
+            );
+        }
 
         lblJugador.setAlignmentX(
+                Component.CENTER_ALIGNMENT
+        );
+
+        // =================================================
+        // GRADO Y SECCIÓN
+        // =================================================
+
+        JLabel lblGrupo
+                = new JLabel(
+                        construirGrupo(
+                                registro
+                        )
+                );
+
+        lblGrupo.setFont(
+                Fuentes.cargar(
+                        "Pixel Digivolve.otf",
+                        11f
+                )
+        );
+
+        if (
+                puesto == 1
+        ) {
+
+            lblGrupo.setForeground(
+                    new Color(
+                            124,
+                            104,
+                            55
+                    )
+            );
+
+        } else {
+
+            lblGrupo.setForeground(
+                    ColoresBitsOBots.TEXTO_SECUNDARIO
+            );
+        }
+
+        lblGrupo.setAlignmentX(
                 Component.CENTER_ALIGNMENT
         );
 
@@ -1162,7 +1484,7 @@ public class RankingForm extends JFrame {
                 Fuentes.cargar(
                         "Pixel Digivolve.otf",
                         puesto == 1
-                                ? 27f
+                                ? 28f
                                 : 22f
                 )
         );
@@ -1192,9 +1514,24 @@ public class RankingForm extends JFrame {
                 )
         );
 
-        lblMovimientos.setForeground(
-                ColoresBitsOBots.TEXTO_SECUNDARIO
-        );
+        if (
+                puesto == 1
+        ) {
+
+            lblMovimientos.setForeground(
+                    new Color(
+                            124,
+                            104,
+                            55
+                    )
+            );
+
+        } else {
+
+            lblMovimientos.setForeground(
+                    ColoresBitsOBots.TEXTO_SECUNDARIO
+            );
+        }
 
         lblMovimientos.setAlignmentX(
                 Component.CENTER_ALIGNMENT
@@ -1218,19 +1555,27 @@ public class RankingForm extends JFrame {
                 )
         );
 
-        /*
-         * Turquesa.
-         */
-        lblTiempo.setForeground(
-                ColoresBitsOBots.TURQUESA_OSCURO
-        );
+        if (
+                puesto == 1
+        ) {
+
+            lblTiempo.setForeground(
+                    colorPuesto
+            );
+
+        } else {
+
+            lblTiempo.setForeground(
+                    ColoresBitsOBots.TURQUESA_OSCURO
+            );
+        }
 
         lblTiempo.setAlignmentX(
                 Component.CENTER_ALIGNMENT
         );
 
         // =================================================
-        // ORDEN
+        // AGREGAR
         // =================================================
 
         tarjeta.add(
@@ -1243,7 +1588,7 @@ public class RankingForm extends JFrame {
 
         tarjeta.add(
                 Box.createVerticalStrut(
-                        8
+                        6
                 )
         );
 
@@ -1253,7 +1598,17 @@ public class RankingForm extends JFrame {
 
         tarjeta.add(
                 Box.createVerticalStrut(
-                        8
+                        4
+                )
+        );
+
+        tarjeta.add(
+                lblGrupo
+        );
+
+        tarjeta.add(
+                Box.createVerticalStrut(
+                        7
                 )
         );
 
@@ -1263,7 +1618,7 @@ public class RankingForm extends JFrame {
 
         tarjeta.add(
                 Box.createVerticalStrut(
-                        10
+                        8
                 )
         );
 
@@ -1273,7 +1628,7 @@ public class RankingForm extends JFrame {
 
         tarjeta.add(
                 Box.createVerticalStrut(
-                        5
+                        4
                 )
         );
 
@@ -1296,21 +1651,58 @@ public class RankingForm extends JFrame {
             int puesto
     ) {
 
-        /*
-         * AQUÍ TAMBIÉN HABÍA AZUL OSCURO.
-         *
-         * Ahora queda blanco/celeste.
-         */
+        Color fondoTarjeta;
+        Color bordeTarjeta;
+        Color colorTexto;
+
+        if (
+                puesto == 1
+        ) {
+
+            fondoTarjeta
+                    = new Color(
+                            255,
+                            249,
+                            224,
+                            245
+                    );
+
+            bordeTarjeta
+                    = new Color(
+                            224,
+                            196,
+                            118
+                    );
+
+            colorTexto
+                    = new Color(
+                            151,
+                            111,
+                            27
+                    );
+
+        } else {
+
+            fondoTarjeta
+                    = new Color(
+                            244,
+                            254,
+                            254,
+                            245
+                    );
+
+            bordeTarjeta
+                    = ColoresBitsOBots.BORDE_SUAVE;
+
+            colorTexto
+                    = ColoresBitsOBots.TEXTO_SECUNDARIO;
+        }
+
         PanelRedondeado tarjeta
                 = new PanelRedondeado(
                         28,
-                        new Color(
-                                244,
-                                254,
-                                254,
-                                245
-                        ),
-                        ColoresBitsOBots.BORDE_SUAVE
+                        fondoTarjeta,
+                        bordeTarjeta
                 );
 
         Dimension tamano;
@@ -1353,8 +1745,7 @@ public class RankingForm extends JFrame {
         JLabel texto
                 = new JLabel(
                         puesto
-                        + "° LUGAR"
-                        + "  ·  SIN REGISTRO",
+                        + "° LUGAR · SIN REGISTRO",
                         SwingConstants.CENTER
                 );
 
@@ -1366,7 +1757,7 @@ public class RankingForm extends JFrame {
         );
 
         texto.setForeground(
-                ColoresBitsOBots.TEXTO_SECUNDARIO
+                colorTexto
         );
 
         tarjeta.add(
@@ -1374,6 +1765,68 @@ public class RankingForm extends JFrame {
         );
 
         return tarjeta;
+    }
+
+    // =====================================================
+    // AGREGAR PODIO
+    // =====================================================
+
+    private void agregarPuestoAlPodio(
+            List<RegistroRanking> registros,
+            int puesto,
+            int columna
+    ) {
+
+        GridBagConstraints gbc
+                = new GridBagConstraints();
+
+        gbc.gridx = columna;
+        gbc.gridy = 0;
+
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+
+        gbc.anchor
+                = GridBagConstraints.SOUTH;
+
+        gbc.insets
+                = new Insets(
+                        5,
+                        12,
+                        5,
+                        12
+                );
+
+        int indice
+                = puesto - 1;
+
+        JPanel tarjeta;
+
+        if (
+                indice >= 0
+                && indice < registros.size()
+        ) {
+
+            tarjeta
+                    = crearTarjetaPodio(
+                            registros.get(
+                                    indice
+                            ),
+                            puesto
+                    );
+
+        } else {
+
+            tarjeta
+                    = crearTarjetaVacia(
+                            puesto
+                    );
+        }
+
+        panelPodio.add(
+                tarjeta,
+                gbc
+        );
     }
 
     // =====================================================
@@ -1426,152 +1879,66 @@ public class RankingForm extends JFrame {
     }
 
     // =====================================================
-    // CARGAR RANKING
+    // GRADO - SECCIÓN
     // =====================================================
 
-    private void cargarRanking() {
+    private String construirGrupo(
+            RegistroRanking registro
+    ) {
 
-        List<RegistroRanking> registros
-                = RankingManager.obtenerTop(
-                        30
+        String grado
+                = limpiarTexto(
+                        registro.getGrado()
                 );
 
-        // =================================================
-        // ACTUALIZAR PODIO
-        // =================================================
+        String seccion
+                = limpiarTexto(
+                        registro.getSeccion()
+                );
 
-        panelPodio.removeAll();
-
-        /*
-         * Orden visual:
-         *
-         * 2°      1°      3°
-         */
-        agregarPuestoAlPodio(
-                registros,
-                2,
-                0
-        );
-
-        agregarPuestoAlPodio(
-                registros,
-                1,
-                1
-        );
-
-        agregarPuestoAlPodio(
-                registros,
-                3,
-                2
-        );
-
-        panelPodio.revalidate();
-        panelPodio.repaint();
-
-        // =================================================
-        // ACTUALIZAR TABLA
-        // =================================================
-
-        modelo.setRowCount(
-                0
-        );
-
-        /*
-         * El índice 3 corresponde
-         * al cuarto lugar.
-         */
-        for (
-                int i = 3;
-                i < registros.size();
-                i++
+        if (
+                grado.isEmpty()
+                && seccion.isEmpty()
         ) {
 
-            RegistroRanking registro
-                    = registros.get(
-                            i
-                    );
-
-            modelo.addRow(
-                    new Object[]{
-                        i + 1,
-                        registro.getJugador(),
-                        registro.getPuntos(),
-                        registro.getMovimientos(),
-                        formatearTiempo(
-                                registro.getSegundos()
-                        ),
-                        registro.getFecha()
-                    }
-            );
+            return "";
         }
+
+        if (
+                grado.isEmpty()
+        ) {
+
+            return seccion;
+        }
+
+        if (
+                seccion.isEmpty()
+        ) {
+
+            return grado;
+        }
+
+        return grado
+                + " - "
+                + seccion;
     }
 
     // =====================================================
-    // AGREGAR PUESTO AL PODIO
+    // LIMPIAR TEXTO
     // =====================================================
 
-    private void agregarPuestoAlPodio(
-            List<RegistroRanking> registros,
-            int puesto,
-            int columna
+    private String limpiarTexto(
+            String texto
     ) {
 
-        GridBagConstraints gbc
-                = new GridBagConstraints();
-
-        gbc.gridx
-                = columna;
-
-        gbc.gridy
-                = 0;
-
-        gbc.weightx
-                = 1.0;
-
-        gbc.weighty
-                = 1.0;
-
-        gbc.anchor
-                = GridBagConstraints.SOUTH;
-
-        gbc.insets
-                = new Insets(
-                        5,
-                        12,
-                        5,
-                        12
-                );
-
-        JPanel tarjeta;
-
-        int indice
-                = puesto - 1;
-
         if (
-                indice >= 0
-                && indice < registros.size()
+                texto == null
         ) {
 
-            tarjeta
-                    = crearTarjetaPodio(
-                            registros.get(
-                                    indice
-                            ),
-                            puesto
-                    );
-
-        } else {
-
-            tarjeta
-                    = crearTarjetaVacia(
-                            puesto
-                    );
+            return "";
         }
 
-        panelPodio.add(
-                tarjeta,
-                gbc
-        );
+        return texto.trim();
     }
 
     // =====================================================
@@ -1593,5 +1960,51 @@ public class RankingForm extends JFrame {
                 minutos,
                 segundos
         );
+    }
+
+    // =====================================================
+    // CERRAR
+    // =====================================================
+
+    @Override
+    public void dispose() {
+
+        /*
+         * Desde este momento ningún worker
+         * debe intentar pintar esta ventana.
+         */
+        cerrando = true;
+
+        /*
+         * Detener consultas automáticas.
+         */
+        if (
+                actualizadorRanking != null
+        ) {
+
+            actualizadorRanking.stop();
+
+            actualizadorRanking = null;
+        }
+
+        /*
+         * Si existe una consulta trabajando,
+         * pedimos cancelarla.
+         *
+         * Aunque JDBC tarde un poquito en
+         * terminar internamente, la VENTANA
+         * no queda esperando.
+         */
+        if (
+                workerRanking != null
+                && !workerRanking.isDone()
+        ) {
+
+            workerRanking.cancel(
+                    true
+            );
+        }
+
+        super.dispose();
     }
 }

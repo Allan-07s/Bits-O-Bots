@@ -1,151 +1,334 @@
 package JuegoMemoria;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import BaseDeDatos.conexion;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public final class RankingManager {
+import javax.swing.JOptionPane;
 
-    private static final Path ARCHIVO = Paths.get(
-            System.getProperty("user.home"),
-            "GameHubRankingGeneral.txt"
-    );
+public class RankingManager {
 
     private RankingManager() {
     }
 
-    public static synchronized void guardar(
-            RegistroRanking nuevoRegistro
+    // =====================================================
+    // GUARDAR RESULTADO
+    // =====================================================
+
+    public static void guardar(
+            RegistroRanking registro
     ) {
 
-        List<RegistroRanking> registros = leerTodos();
+        String sql
+                = "INSERT INTO ranking "
+                + "(jugador, puntos, movimientos, segundos, grado, seccion) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
-        registros.add(nuevoRegistro);
-        ordenar(registros);
+        try (
+                Connection con
+                = conexion.crearConexion()
+        ) {
 
-        if (registros.size() > 100) {
-            registros = new ArrayList<>(
-                    registros.subList(0, 100)
+            if (con == null) {
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "No se pudo conectar con la base de datos.",
+                        "Error de conexión",
+                        JOptionPane.ERROR_MESSAGE
+                );
+
+                return;
+            }
+
+            con.setAutoCommit(true);
+
+            try (
+                    PreparedStatement ps
+                    = con.prepareStatement(sql)
+            ) {
+
+                ps.setString(
+                        1,
+                        registro.getJugador()
+                );
+
+                ps.setInt(
+                        2,
+                        registro.getPuntos()
+                );
+
+                ps.setInt(
+                        3,
+                        registro.getMovimientos()
+                );
+
+                ps.setInt(
+                        4,
+                        registro.getSegundos()
+                );
+
+                ps.setString(
+                        5,
+                        registro.getGrado()
+                );
+
+                ps.setString(
+                        6,
+                        registro.getSeccion()
+                );
+
+                int filasAfectadas
+                        = ps.executeUpdate();
+
+                System.out.println(
+                        "Filas insertadas en ranking: "
+                        + filasAfectadas
+                );
+            }
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error al guardar ranking:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
             );
-        }
 
-        List<String> lineas = registros
-                .stream()
-                .map(RegistroRanking::convertirEnLinea)
-                .collect(Collectors.toList());
-
-        try {
-
-            Files.write(
-                    ARCHIVO,
-                    lineas,
-                    StandardCharsets.UTF_8,
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.TRUNCATE_EXISTING
-            );
-
-        } catch (IOException ex) {
-
-            System.err.println(
-                    "No se pudo guardar el ranking: "
-                    + ex.getMessage()
-            );
+            e.printStackTrace();
         }
     }
 
-    public static synchronized List<RegistroRanking> obtenerTop(
+    // =====================================================
+    // OBTENER TOP
+    // =====================================================
+
+    public static List<RegistroRanking> obtenerTop(
             int limite
     ) {
-
-        List<RegistroRanking> registros = leerTodos();
-        ordenar(registros);
-
-        int cantidad = Math.min(
-                limite,
-                registros.size()
-        );
-
-        return new ArrayList<>(
-                registros.subList(0, cantidad)
-        );
-    }
-
-    public static synchronized void limpiarRanking() {
-
-        try {
-            Files.deleteIfExists(ARCHIVO);
-        } catch (IOException ex) {
-            System.err.println(
-                    "No se pudo limpiar el ranking: "
-                    + ex.getMessage()
-            );
-        }
-    }
-
-    public static Path getRutaArchivo() {
-        return ARCHIVO;
-    }
-
-    private static List<RegistroRanking> leerTodos() {
 
         List<RegistroRanking> registros
                 = new ArrayList<>();
 
-        if (!Files.exists(ARCHIVO)) {
-            return registros;
-        }
+        /*
+         * Por seguridad:
+         *
+         * mínimo 1
+         * máximo 100
+         */
+        int limiteSeguro
+                = Math.max(
+                        1,
+                        Math.min(
+                                limite,
+                                100
+                        )
+                );
 
-        try {
+        /*
+         * CONSULTA DIRECTA A MYSQL.
+         *
+         * Eliminamos el parámetro del LIMIT
+         * para evitar cualquier problema
+         * con distintas versiones del driver.
+         */
+        String sql
+                = "SELECT "
+                + "jugador, "
+                + "puntos, "
+                + "movimientos, "
+                + "segundos, "
+                + "grado, "
+                + "seccion "
+                + "FROM ranking "
+                + "ORDER BY "
+                + "puntos DESC, "
+                + "movimientos ASC, "
+                + "segundos ASC "
+                + "LIMIT "
+                + limiteSeguro;
 
-            List<String> lineas = Files.readAllLines(
-                    ARCHIVO,
-                    StandardCharsets.UTF_8
+        try (
+                Connection con
+                = conexion.crearConexion()
+        ) {
+
+            if (con == null) {
+
+                System.out.println(
+                        "RankingManager: conexión NULL."
+                );
+
+                return registros;
+            }
+
+            System.out.println(
+                    "RankingManager: conexión correcta."
             );
 
-            for (String linea : lineas) {
+            try (
+                    PreparedStatement ps
+                    = con.prepareStatement(sql);
 
-                RegistroRanking registro
-                        = RegistroRanking.desdeLinea(linea);
+                    ResultSet rs
+                    = ps.executeQuery()
+            ) {
 
-                if (registro != null) {
-                    registros.add(registro);
+                while (rs.next()) {
+
+                    String jugador
+                            = rs.getString(
+                                    "jugador"
+                            );
+
+                    int puntos
+                            = rs.getInt(
+                                    "puntos"
+                            );
+
+                    int movimientos
+                            = rs.getInt(
+                                    "movimientos"
+                            );
+
+                    int segundos
+                            = rs.getInt(
+                                    "segundos"
+                            );
+
+                    String grado
+                            = rs.getString(
+                                    "grado"
+                            );
+
+                    String seccion
+                            = rs.getString(
+                                    "seccion"
+                            );
+
+                    /*
+                     * Evitar null visual.
+                     */
+                    if (grado == null) {
+                        grado = "";
+                    }
+
+                    if (seccion == null) {
+                        seccion = "";
+                    }
+
+                    RegistroRanking registro
+                            = new RegistroRanking(
+                                    jugador,
+                                    puntos,
+                                    movimientos,
+                                    segundos,
+                                    grado,
+                                    seccion
+                            );
+
+                    registros.add(
+                            registro
+                    );
+
+                    /*
+                     * Esto nos permite comprobar
+                     * desde Output qué está leyendo.
+                     */
+                    System.out.println(
+                            "LEÍDO -> "
+                            + jugador
+                            + " | "
+                            + puntos
+                            + " pts | "
+                            + movimientos
+                            + " mov | "
+                            + segundos
+                            + " seg | "
+                            + grado
+                            + "-"
+                            + seccion
+                    );
                 }
             }
 
-        } catch (IOException ex) {
+        } catch (Exception e) {
 
-            System.err.println(
-                    "No se pudo leer el ranking: "
-                    + ex.getMessage()
+            System.out.println(
+                    "ERROR AL CONSULTAR ranking:"
             );
+
+            e.printStackTrace();
         }
+
+        System.out.println(
+                "TOTAL LEÍDO DESDE MYSQL: "
+                + registros.size()
+        );
 
         return registros;
     }
 
-    private static void ordenar(
-            List<RegistroRanking> registros
-    ) {
+    // =====================================================
+    // LIMPIAR RANKING
+    // =====================================================
 
-        registros.sort(
-                Comparator
-                        .comparingInt(
-                                RegistroRanking::getPuntos
-                        )
-                        .reversed()
-                        .thenComparingInt(
-                                RegistroRanking::getMovimientos
-                        )
-                        .thenComparingInt(
-                                RegistroRanking::getSegundos
-                        )
-        );
+    public static void limpiarRanking() {
+
+        String sql
+                = "DELETE FROM ranking";
+
+        try (
+                Connection con
+                = conexion.crearConexion()
+        ) {
+
+            if (con == null) {
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "No se pudo conectar con la base de datos.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+
+                return;
+            }
+
+            con.setAutoCommit(true);
+
+            try (
+                    PreparedStatement ps
+                    = con.prepareStatement(sql)
+            ) {
+
+                int eliminados
+                        = ps.executeUpdate();
+
+                System.out.println(
+                        "Registros eliminados: "
+                        + eliminados
+                );
+            }
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error al limpiar ranking:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            e.printStackTrace();
+        }
     }
 }
