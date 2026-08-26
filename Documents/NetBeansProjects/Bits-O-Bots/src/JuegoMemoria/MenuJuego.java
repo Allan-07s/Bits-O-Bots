@@ -125,23 +125,6 @@ public class MenuJuego extends JFrame {
         // =================================================
         // FONDO GENERAL CON CIRCUITOS
         // =================================================
-        /*
-         * CAMBIO:
-         *
-         * Antes:
-         * PanelDegradado
-         *
-         * Ahora:
-         * PanelMenuCircuitos
-         *
-         * Este panel ya trae:
-         * - fondo claro
-         * - circuitos
-         * - hexágonos
-         * - binarios
-         * - partículas
-         * - esquinas tecnológicas
-         */
 
         PanelMenuCircuitos fondo
                 = new PanelMenuCircuitos();
@@ -280,21 +263,6 @@ public class MenuJuego extends JFrame {
         // =================================================
         // CONTENIDO PRINCIPAL
         // =================================================
-        /*
-         * IMPORTANTE:
-         *
-         * AQUÍ QUITAMOS COMPLETAMENTE
-         * EL PANEL BLANCO GRANDE.
-         *
-         * Antes existía:
-         *
-         * PanelRedondeado panelPrincipal = ...
-         *
-         * Ya NO existe.
-         *
-         * Todo se coloca directamente
-         * sobre el fondo de circuitos.
-         */
 
         JPanel contenidoPrincipal
                 = new JPanel(
@@ -334,10 +302,6 @@ public class MenuJuego extends JFrame {
                 )
         );
 
-        /*
-         * Lo metemos en un contenedor transparente
-         * para mantenerlo centrado.
-         */
         JPanel contenedorLogo
                 = new JPanel(
                         new GridBagLayout()
@@ -507,53 +471,58 @@ public class MenuJuego extends JFrame {
         );
 
         // =================================================
-        // BOTÓN SALIR
+        // BOTÓN VOLVER AL MENÚ PRINCIPAL
         // =================================================
+        /*
+         * MISMO COLOR QUE TENÍA SALIR.
+         *
+         * NO SE CAMBIA NINGÚN COLOR.
+         */
 
-        BotonRedondeado btnSalir
+        BotonRedondeado btnVolver
                 = new BotonRedondeado(
-                        "SALIR",
+                        "VOLVER AL MENÚ PRINCIPAL",
                         ColoresBitsOBots.AZUL_PRINCIPAL,
                         ColoresBitsOBots.AZUL_HOVER
                 );
 
-        btnSalir.setFont(
+        btnVolver.setFont(
                 Fuentes.cargar(
                         "Pixel Digivolve.otf",
                         22f
                 )
         );
 
-        btnSalir.setForeground(
+        btnVolver.setForeground(
                 Color.WHITE
         );
 
-        Dimension tamanoSalir
+        Dimension tamanoVolver
                 = new Dimension(
                         800,
                         160
                 );
 
-        btnSalir.setPreferredSize(
-                tamanoSalir
+        btnVolver.setPreferredSize(
+                tamanoVolver
         );
 
-        btnSalir.setMinimumSize(
-                tamanoSalir
+        btnVolver.setMinimumSize(
+                tamanoVolver
         );
 
-        btnSalir.setMaximumSize(
-                tamanoSalir
+        btnVolver.setMaximumSize(
+                tamanoVolver
         );
 
-        btnSalir.setAlignmentX(
+        btnVolver.setAlignmentX(
                 Component.CENTER_ALIGNMENT
         );
 
-        btnSalir.addActionListener(
+        btnVolver.addActionListener(
                 e -> {
 
-                    salirDelJuego();
+                    volverAlMenuPrincipal();
                 }
         );
 
@@ -576,7 +545,7 @@ public class MenuJuego extends JFrame {
         );
 
         botones.add(
-                btnSalir
+                btnVolver
         );
 
         botones.add(
@@ -625,6 +594,7 @@ public class MenuJuego extends JFrame {
         // =================================================
 
         fondo.revalidate();
+
         fondo.repaint();
     }
 
@@ -651,10 +621,10 @@ public class MenuJuego extends JFrame {
     }
 
     // =====================================================
-    // SALIR DEL JUEGO
+    // VOLVER AL MENÚ PRINCIPAL
     // =====================================================
 
-    private void salirDelJuego() {
+    private void volverAlMenuPrincipal() {
 
         GestorMusica
                 .detenerFondo();

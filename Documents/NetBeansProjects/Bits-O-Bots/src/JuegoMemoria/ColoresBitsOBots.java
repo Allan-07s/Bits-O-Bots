@@ -61,10 +61,10 @@ public final class ColoresBitsOBots {
      */
 
     public static final Color AZUL_PRINCIPAL
-            = new Color(36, 112, 183);
+            = new Color(128, 226, 232);
 
     public static final Color AZUL_HOVER
-            = new Color(51, 139, 210);
+            = new Color(117, 218, 224);
 
     public static final Color AZUL_OSCURO
             = new Color(25, 73, 115);

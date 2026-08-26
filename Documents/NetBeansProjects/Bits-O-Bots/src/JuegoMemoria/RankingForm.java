@@ -17,7 +17,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -67,10 +66,6 @@ public class RankingForm extends JFrame {
 
         construirInterfaz();
 
-        /*
-         * Ahora cargarRanking() NO bloquea Swing.
-         * Solo crea el SwingWorker y regresa.
-         */
         cargarRanking();
 
         iniciarActualizacionAutomatica();
@@ -150,10 +145,6 @@ public class RankingForm extends JFrame {
         // ESPACIO IZQUIERDO
         // =================================================
 
-        /*
-         * Mismo tamaño que la zona del botón
-         * de música para mantener el título centrado.
-         */
         JPanel espacioIzquierdo
                 = new JPanel();
 
@@ -220,7 +211,7 @@ public class RankingForm extends JFrame {
 
         JLabel subtitulo
                 = new JLabel(
-                        "LOS MEJORES RESULTADOS DE MEMORY TECH"
+                        "LOS MEJORES RESULTADOS DE BITS O BOTS"
                 );
 
         subtitulo.setFont(
@@ -261,15 +252,6 @@ public class RankingForm extends JFrame {
         // BOTÓN DE MÚSICA
         // =================================================
 
-        /*
-         * Este panel es completamente transparente.
-         *
-         * Solo evita que BorderLayout
-         * estire el botón.
-         *
-         * Visualmente aparece únicamente
-         * el círculo.
-         */
         JPanel zonaMusica
                 = new JPanel(
                         new GridBagLayout()
@@ -817,26 +799,18 @@ public class RankingForm extends JFrame {
 
         botones.setOpaque(false);
 
+        /*
+         * AHORA SOLO QUEDAN:
+         *
+         * ACTUALIZAR
+         * VOLVER
+         */
+
         BotonRedondeado btnActualizar
                 = crearBoton(
                         "ACTUALIZAR",
                         ColoresBitsOBots.TURQUESA_OSCURO,
                         ColoresBitsOBots.TURQUESA_HOVER
-                );
-
-        BotonRedondeado btnLimpiar
-                = crearBoton(
-                        "LIMPIAR RANKING",
-                        new Color(
-                                196,
-                                76,
-                                92
-                        ),
-                        new Color(
-                                220,
-                                94,
-                                111
-                        )
                 );
 
         BotonRedondeado btnCerrar
@@ -855,49 +829,11 @@ public class RankingForm extends JFrame {
         );
 
         // =================================================
-        // LIMPIAR
-        // =================================================
-
-        btnLimpiar.addActionListener(
-                e -> {
-
-                    int respuesta
-                            = JOptionPane
-                                    .showConfirmDialog(
-                                            this,
-                                            "¿Deseas borrar todo el ranking general?",
-                                            "Confirmar",
-                                            JOptionPane.YES_NO_OPTION,
-                                            JOptionPane.WARNING_MESSAGE
-                                    );
-
-                    if (
-                            respuesta
-                            == JOptionPane.YES_OPTION
-                    ) {
-
-                        /*
-                         * LIMPIAR también se hace
-                         * fuera del hilo visual.
-                         */
-                        limpiarRankingAsync();
-                    }
-                }
-        );
-
-        // =================================================
         // VOLVER
         // =================================================
 
         btnCerrar.addActionListener(
-                e -> {
-
-                    /*
-                     * Cierra inmediatamente.
-                     * No espera a que termine MySQL.
-                     */
-                    dispose();
-                }
+                e -> dispose()
         );
 
         // =================================================
@@ -914,17 +850,7 @@ public class RankingForm extends JFrame {
 
         botones.add(
                 Box.createHorizontalStrut(
-                        18
-                )
-        );
-
-        botones.add(
-                btnLimpiar
-        );
-
-        botones.add(
-                Box.createHorizontalStrut(
-                        18
+                        24
                 )
         );
 
@@ -952,10 +878,6 @@ public class RankingForm extends JFrame {
 
     private void cargarRanking() {
 
-        /*
-         * Si estamos cerrando,
-         * no hacer nada.
-         */
         if (
                 cerrando
         ) {
@@ -963,11 +885,6 @@ public class RankingForm extends JFrame {
             return;
         }
 
-        /*
-         * Ya existe una consulta trabajando.
-         *
-         * No lanzamos otra.
-         */
         if (
                 cargandoRanking
         ) {
@@ -977,11 +894,6 @@ public class RankingForm extends JFrame {
 
         cargandoRanking = true;
 
-        /*
-         * =================================================
-         * MYSQL SE EJECUTA AQUÍ EN SEGUNDO PLANO
-         * =================================================
-         */
         workerRanking
                 = new SwingWorker<
                         List<RegistroRanking>,
@@ -998,18 +910,11 @@ public class RankingForm extends JFrame {
                         );
             }
 
-            /*
-             * Este método vuelve al hilo visual
-             * cuando MySQL termina.
-             */
             @Override
             protected void done() {
 
                 cargandoRanking = false;
 
-                /*
-                 * La ventana ya fue cerrada.
-                 */
                 if (
                         cerrando
                         || isCancelled()
@@ -1029,11 +934,6 @@ public class RankingForm extends JFrame {
 
                 } catch (Exception e) {
 
-                    /*
-                     * No congelamos ni cerramos
-                     * la aplicación por una falla
-                     * temporal de red.
-                     */
                     System.out.println(
                             "No se pudo actualizar visualmente el ranking:"
                     );
@@ -1104,12 +1004,6 @@ public class RankingForm extends JFrame {
                 0
         );
 
-        /*
-         * Los tres primeros ya están
-         * en las tarjetas.
-         *
-         * La tabla empieza en el puesto 4.
-         */
         for (
                 int i = 3;
                 i < registros.size();
@@ -1146,51 +1040,11 @@ public class RankingForm extends JFrame {
     }
 
     // =====================================================
-    // LIMPIAR RANKING SIN CONGELAR
-    // =====================================================
-
-    private void limpiarRankingAsync() {
-
-        SwingWorker<Void, Void> worker
-                = new SwingWorker<Void, Void>() {
-
-            @Override
-            protected Void doInBackground() {
-
-                RankingManager
-                        .limpiarRanking();
-
-                return null;
-            }
-
-            @Override
-            protected void done() {
-
-                if (
-                        !cerrando
-                ) {
-
-                    cargarRanking();
-                }
-            }
-        };
-
-        worker.execute();
-    }
-
-    // =====================================================
     // ACTUALIZACIÓN AUTOMÁTICA
     // =====================================================
 
     private void iniciarActualizacionAutomatica() {
 
-        /*
-         * Cada 2 segundos intenta actualizar.
-         *
-         * Si la consulta anterior todavía
-         * está trabajando, cargarRanking()
-         * simplemente ignora este intento.
-         */
         actualizadorRanking
                 = new Timer(
                         2000,
@@ -1221,9 +1075,6 @@ public class RankingForm extends JFrame {
                 puesto == 1
         ) {
 
-            /*
-             * DORADO MUCHO MÁS SUAVE.
-             */
             fondoTarjeta
                     = new Color(
                             255,
@@ -1247,12 +1098,14 @@ public class RankingForm extends JFrame {
                     );
 
         // =================================================
-        // 2° LUGAR
+        // 2° Y 3° LUGAR
         // =================================================
+        /*
+         * AHORA LOS DOS USAN
+         * EXACTAMENTE LOS MISMOS COLORES.
+         */
 
-        } else if (
-                puesto == 2
-        ) {
+        } else {
 
             fondoTarjeta
                     = new Color(
@@ -1274,34 +1127,6 @@ public class RankingForm extends JFrame {
                             83,
                             119,
                             128
-                    );
-
-        // =================================================
-        // 3° LUGAR
-        // =================================================
-
-        } else {
-
-            fondoTarjeta
-                    = new Color(
-                            255,
-                            241,
-                            230,
-                            248
-                    );
-
-            bordeTarjeta
-                    = new Color(
-                            205,
-                            131,
-                            79
-                    );
-
-            colorPuesto
-                    = new Color(
-                            169,
-                            90,
-                            46
                     );
         }
 
@@ -1333,6 +1158,10 @@ public class RankingForm extends JFrame {
 
         } else {
 
+            /*
+             * SEGUNDO Y TERCERO
+             * también conservan el mismo tamaño.
+             */
             tamano
                     = new Dimension(
                             295,
@@ -1683,19 +1512,31 @@ public class RankingForm extends JFrame {
 
         } else {
 
+            /*
+             * SEGUNDO Y TERCERO VACÍOS
+             * también quedan iguales.
+             */
             fondoTarjeta
                     = new Color(
-                            244,
-                            254,
-                            254,
-                            245
+                            239,
+                            250,
+                            251,
+                            248
                     );
 
             bordeTarjeta
-                    = ColoresBitsOBots.BORDE_SUAVE;
+                    = new Color(
+                            143,
+                            181,
+                            190
+                    );
 
             colorTexto
-                    = ColoresBitsOBots.TEXTO_SECUNDARIO;
+                    = new Color(
+                            83,
+                            119,
+                            128
+                    );
         }
 
         PanelRedondeado tarjeta
@@ -1780,11 +1621,17 @@ public class RankingForm extends JFrame {
         GridBagConstraints gbc
                 = new GridBagConstraints();
 
-        gbc.gridx = columna;
-        gbc.gridy = 0;
+        gbc.gridx
+                = columna;
 
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
+        gbc.gridy
+                = 0;
+
+        gbc.weightx
+                = 1.0;
+
+        gbc.weighty
+                = 1.0;
 
         gbc.anchor
                 = GridBagConstraints.SOUTH;
@@ -1969,15 +1816,8 @@ public class RankingForm extends JFrame {
     @Override
     public void dispose() {
 
-        /*
-         * Desde este momento ningún worker
-         * debe intentar pintar esta ventana.
-         */
         cerrando = true;
 
-        /*
-         * Detener consultas automáticas.
-         */
         if (
                 actualizadorRanking != null
         ) {
@@ -1987,14 +1827,6 @@ public class RankingForm extends JFrame {
             actualizadorRanking = null;
         }
 
-        /*
-         * Si existe una consulta trabajando,
-         * pedimos cancelarla.
-         *
-         * Aunque JDBC tarde un poquito en
-         * terminar internamente, la VENTANA
-         * no queda esperando.
-         */
         if (
                 workerRanking != null
                 && !workerRanking.isDone()

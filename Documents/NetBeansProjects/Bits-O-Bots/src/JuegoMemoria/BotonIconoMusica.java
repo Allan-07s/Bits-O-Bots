@@ -17,61 +17,48 @@ import javax.swing.JButton;
 
 public class BotonIconoMusica extends JButton {
 
-    /*
-     * Indica si el mouse está encima
-     * del botón.
-     */
     private boolean encima = false;
+    private boolean presionado = false;
+
+    // =====================================================
+    // TAMAÑO OFICIAL DEL BOTÓN
+    // =====================================================
 
     /*
-     * Indica si el botón está siendo
-     * presionado.
+     * TODOS los formularios usarán visualmente
+     * este mismo tamaño.
      */
-    private boolean presionado = false;
+    private static final int TAMANO_BOTON = 60;
+
+    /*
+     * Diámetro real del círculo.
+     */
+    private static final int DIAMETRO_CIRCULO = 52;
 
     // =====================================================
     // COLORES
     // =====================================================
 
-    /*
-     * Color normal del círculo.
-     */
     private static final Color COLOR_NORMAL
             = ColoresBitsOBots.TURQUESA_OSCURO;
 
-    /*
-     * Color cuando el mouse pasa encima.
-     */
     private static final Color COLOR_HOVER
             = ColoresBitsOBots.TURQUESA_HOVER;
 
-    /*
-     * Color mientras se presiona.
-     */
     private static final Color COLOR_PRESIONADO
             = ColoresBitsOBots.AZUL_OSCURO;
 
-    /*
-     * Borde del círculo.
-     */
     private static final Color COLOR_BORDE
             = ColoresBitsOBots.ROBOTICA;
 
-    /*
-     * Color del icono.
-     */
     private static final Color COLOR_ICONO
             = Color.WHITE;
 
-    /*
-     * Color de la X cuando
-     * la música está apagada.
-     */
     private static final Color COLOR_SILENCIADO
             = new Color(
                     255,
-                    110,
-                    125
+                    105,
+                    120
             );
 
     // =====================================================
@@ -85,15 +72,12 @@ public class BotonIconoMusica extends JButton {
         );
 
         /*
-         * Tamaño predeterminado.
-         *
-         * Si algún formulario usa 65x65,
-         * también funcionará perfectamente.
+         * Tamaño fijo oficial.
          */
         Dimension tamano
                 = new Dimension(
-                        62,
-                        62
+                        TAMANO_BOTON,
+                        TAMANO_BOTON
                 );
 
         setPreferredSize(
@@ -104,33 +88,29 @@ public class BotonIconoMusica extends JButton {
                 tamano
         );
 
+        setMaximumSize(
+                tamano
+        );
+
         /*
-         * Quitamos completamente
-         * el aspecto normal de JButton.
+         * Eliminar apariencia normal del JButton.
          */
         setFocusPainted(false);
         setBorderPainted(false);
         setContentAreaFilled(false);
         setOpaque(false);
-
-        /*
-         * Evita el rectángulo visual
-         * cuando recibe focus.
-         */
         setFocusable(false);
 
-        /*
-         * Cursor de mano.
-         */
         setCursor(
                 Cursor.getPredefinedCursor(
                         Cursor.HAND_CURSOR
                 )
         );
 
-        /*
-         * Detectar hover y presión.
-         */
+        // =================================================
+        // HOVER / PRESIÓN
+        // =================================================
+
         addMouseListener(
                 new MouseAdapter() {
 
@@ -150,7 +130,6 @@ public class BotonIconoMusica extends JButton {
             ) {
 
                 encima = false;
-
                 presionado = false;
 
                 repaint();
@@ -179,7 +158,7 @@ public class BotonIconoMusica extends JButton {
     }
 
     // =====================================================
-    // DIBUJAR BOTÓN
+    // DIBUJAR
     // =====================================================
 
     @Override
@@ -190,9 +169,6 @@ public class BotonIconoMusica extends JButton {
         Graphics2D g2
                 = (Graphics2D) g.create();
 
-        /*
-         * Dibujar todo suavemente.
-         */
         g2.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON
@@ -203,38 +179,35 @@ public class BotonIconoMusica extends JButton {
                 RenderingHints.VALUE_RENDER_QUALITY
         );
 
-        /*
-         * =================================================
-         * TAMAÑO DEL CÍRCULO
-         * =================================================
-         */
+        // =================================================
+        // CENTRO REAL DEL COMPONENTE
+        // =================================================
 
-        int margen = 4;
+        /*
+         * Aunque algún Layout haga el componente
+         * más alto o más ancho, el dibujo SIEMPRE
+         * conserva exactamente el mismo tamaño.
+         */
+        int cx
+                = getWidth() / 2;
+
+        int cy
+                = getHeight() / 2;
 
         int lado
-                = Math.min(
-                        getWidth(),
-                        getHeight()
-                )
-                - margen * 2;
+                = DIAMETRO_CIRCULO;
 
         int x
-                = (
-                        getWidth()
-                        - lado
-                ) / 2;
+                = cx
+                - lado / 2;
 
         int y
-                = (
-                        getHeight()
-                        - lado
-                ) / 2;
+                = cy
+                - lado / 2;
 
-        /*
-         * =================================================
-         * COLOR SEGÚN ESTADO
-         * =================================================
-         */
+        // =================================================
+        // COLOR SEGÚN ESTADO
+        // =================================================
 
         Color fondo;
 
@@ -254,17 +227,15 @@ public class BotonIconoMusica extends JButton {
                     = COLOR_NORMAL;
         }
 
-        /*
-         * =================================================
-         * SOMBRA SUAVE
-         * =================================================
-         */
+        // =================================================
+        // SOMBRA
+        // =================================================
 
         g2.setColor(
                 new Color(
-                        20,
-                        80,
-                        95,
+                        22,
+                        91,
+                        105,
                         45
                 )
         );
@@ -278,11 +249,9 @@ public class BotonIconoMusica extends JButton {
                 )
         );
 
-        /*
-         * =================================================
-         * CÍRCULO PRINCIPAL
-         * =================================================
-         */
+        // =================================================
+        // CÍRCULO
+        // =================================================
 
         g2.setColor(
                 fondo
@@ -297,11 +266,9 @@ public class BotonIconoMusica extends JButton {
                 )
         );
 
-        /*
-         * =================================================
-         * BORDE
-         * =================================================
-         */
+        // =================================================
+        // BORDE
+        // =================================================
 
         g2.setColor(
                 COLOR_BORDE
@@ -309,7 +276,7 @@ public class BotonIconoMusica extends JButton {
 
         g2.setStroke(
                 new BasicStroke(
-                        2.2f
+                        2.0f
                 )
         );
 
@@ -322,165 +289,119 @@ public class BotonIconoMusica extends JButton {
                 )
         );
 
-        /*
-         * =================================================
-         * CENTRO
-         * =================================================
-         */
-
-        int cx
-                = getWidth() / 2;
-
-        int cy
-                = getHeight() / 2;
-
-        /*
-         * El tamaño del icono se adapta
-         * al tamaño del botón.
-         */
-        double escala
-                = lado / 57.0;
-
-        /*
-         * Limitar la escala para evitar
-         * iconos exageradamente grandes.
-         */
-        escala
-                = Math.max(
-                        0.80,
-                        Math.min(
-                                escala,
-                                1.10
-                        )
-                );
-
-        /*
-         * =================================================
-         * CAJA DEL ALTAVOZ
-         * =================================================
-         */
+        // =================================================
+        // ALTAVOZ
+        // =================================================
 
         g2.setColor(
                 COLOR_ICONO
         );
 
-        int cajaX
-                = cx
-                - (int) (15 * escala);
-
-        int cajaY
-                = cy
-                - (int) (7 * escala);
-
-        int cajaAncho
-                = (int) (9 * escala);
-
-        int cajaAlto
-                = (int) (14 * escala);
-
+        /*
+         * Caja del altavoz.
+         *
+         * La hacemos 1-2 píxeles más ancha
+         * para que se SUPERPONGA con el cono.
+         *
+         * Esto elimina la línea rara que
+         * se podía ver en medio.
+         */
         g2.fillRoundRect(
-                cajaX,
-                cajaY,
-                cajaAncho,
-                cajaAlto,
+                cx - 15,
+                cy - 7,
+                11,
+                14,
                 3,
                 3
         );
 
         /*
-         * =================================================
-         * CONO DEL ALTAVOZ
-         * =================================================
+         * Cono del altavoz.
+         *
+         * Se mete ligeramente dentro
+         * de la caja anterior.
          */
-
         Polygon cono
                 = new Polygon();
 
         cono.addPoint(
-                cx - (int) (6 * escala),
-                cy - (int) (7 * escala)
+                cx - 7,
+                cy - 7
         );
 
         cono.addPoint(
-                cx + (int) (2 * escala),
-                cy - (int) (14 * escala)
+                cx + 2,
+                cy - 14
         );
 
         cono.addPoint(
-                cx + (int) (2 * escala),
-                cy + (int) (14 * escala)
+                cx + 2,
+                cy + 14
         );
 
         cono.addPoint(
-                cx - (int) (6 * escala),
-                cy + (int) (7 * escala)
+                cx - 7,
+                cy + 7
         );
 
         g2.fillPolygon(
                 cono
         );
 
-        /*
-         * =================================================
-         * LÍNEAS DE SONIDO / X
-         * =================================================
-         */
-
-        g2.setStroke(
-                new BasicStroke(
-                        (float) (2.4 * escala),
-                        BasicStroke.CAP_ROUND,
-                        BasicStroke.JOIN_ROUND
-                )
-        );
-
-        /*
-         * =================================================
-         * MÚSICA SILENCIADA
-         * =================================================
-         */
+        // =================================================
+        // SONIDO / SILENCIO
+        // =================================================
 
         if (
                 GestorMusica.estaSilenciado()
         ) {
 
+            // =============================================
+            // SILENCIADO
+            // =============================================
+
             g2.setColor(
                     COLOR_SILENCIADO
             );
 
-            /*
-             * X más gruesa y visible.
-             */
             g2.setStroke(
                     new BasicStroke(
-                            (float) (3.0 * escala),
+                            3.0f,
                             BasicStroke.CAP_ROUND,
                             BasicStroke.JOIN_ROUND
                     )
             );
 
             g2.drawLine(
-                    cx + (int) (7 * escala),
-                    cy - (int) (9 * escala),
-                    cx + (int) (19 * escala),
-                    cy + (int) (9 * escala)
+                    cx + 7,
+                    cy - 9,
+                    cx + 19,
+                    cy + 9
             );
 
             g2.drawLine(
-                    cx + (int) (19 * escala),
-                    cy - (int) (9 * escala),
-                    cx + (int) (7 * escala),
-                    cy + (int) (9 * escala)
+                    cx + 19,
+                    cy - 9,
+                    cx + 7,
+                    cy + 9
             );
-
-        // =================================================
-        // MÚSICA ACTIVA
-        // =================================================
 
         } else {
 
+            // =============================================
+            // MÚSICA ACTIVA
+            // =============================================
+
             g2.setColor(
                     COLOR_ICONO
+            );
+
+            g2.setStroke(
+                    new BasicStroke(
+                            2.4f,
+                            BasicStroke.CAP_ROUND,
+                            BasicStroke.JOIN_ROUND
+                    )
             );
 
             /*
@@ -488,14 +409,14 @@ public class BotonIconoMusica extends JButton {
              */
             g2.draw(
                     new QuadCurve2D.Double(
-                            cx + 5 * escala,
-                            cy - 8 * escala,
+                            cx + 5,
+                            cy - 8,
 
-                            cx + 12 * escala,
+                            cx + 12,
                             cy,
 
-                            cx + 5 * escala,
-                            cy + 8 * escala
+                            cx + 5,
+                            cy + 8
                     )
             );
 
@@ -504,14 +425,14 @@ public class BotonIconoMusica extends JButton {
              */
             g2.draw(
                     new QuadCurve2D.Double(
-                            cx + 9 * escala,
-                            cy - 13 * escala,
+                            cx + 10,
+                            cy - 13,
 
-                            cx + 20 * escala,
+                            cx + 21,
                             cy,
 
-                            cx + 9 * escala,
-                            cy + 13 * escala
+                            cx + 10,
+                            cy + 13
                     )
             );
         }
@@ -520,53 +441,43 @@ public class BotonIconoMusica extends JButton {
     }
 
     // =====================================================
-    // ÁREA CLICKEABLE CIRCULAR
+    // ÁREA CLICKEABLE
     // =====================================================
 
     @Override
     public boolean contains(
-            int x,
-            int y
+            int mouseX,
+            int mouseY
     ) {
 
-        /*
-         * Incluso el área clickeable
-         * se comporta como círculo,
-         * no como un cuadrado invisible.
-         */
+        int cx
+                = getWidth() / 2;
 
-        int margen = 4;
+        int cy
+                = getHeight() / 2;
 
         int lado
-                = Math.min(
-                        getWidth(),
-                        getHeight()
-                )
-                - margen * 2;
+                = DIAMETRO_CIRCULO;
 
-        int circuloX
-                = (
-                        getWidth()
-                        - lado
-                ) / 2;
+        int x
+                = cx
+                - lado / 2;
 
-        int circuloY
-                = (
-                        getHeight()
-                        - lado
-                ) / 2;
+        int y
+                = cy
+                - lado / 2;
 
         Ellipse2D circulo
                 = new Ellipse2D.Double(
-                        circuloX,
-                        circuloY,
+                        x,
+                        y,
                         lado,
                         lado
                 );
 
         return circulo.contains(
-                x,
-                y
+                mouseX,
+                mouseY
         );
     }
 }

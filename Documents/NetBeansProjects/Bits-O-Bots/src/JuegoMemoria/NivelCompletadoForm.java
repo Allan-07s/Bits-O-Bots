@@ -24,11 +24,28 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 public class NivelCompletadoForm extends JFrame {
 
     private final ProgresoJuego progreso;
     private final int numeroNivel;
+
+    // =====================================================
+    // EFECTO DE ESCRITURA DEL ROBOT
+    // =====================================================
+
+    private JLabel lblRobotNivel;
+    private JLabel lblExcelente;
+
+    private Timer timerEscritura;
+
+    private String textoRobotNivel;
+    private String textoRobotExcelente;
+
+    private int indiceEscritura = 0;
+    private boolean escribiendoSegundoTexto = false;
+    private int pausaEntreTextos = 0;
 
     // =====================================================
     // CONSTRUCTOR
@@ -95,9 +112,6 @@ public class NivelCompletadoForm extends JFrame {
         // TAMAÑOS
         // =================================================
 
-        /*
-         * PANEL DE PUNTOS
-         */
         int anchoPuntos
                 = limitar(
                         (int) (anchoPantalla * 0.45),
@@ -112,9 +126,6 @@ public class NivelCompletadoForm extends JFrame {
                         415
                 );
 
-        /*
-         * AVATAR MÁS GRANDE.
-         */
         int anchoRobot
                 = limitar(
                         (int) (anchoPantalla * 0.35),
@@ -129,9 +140,6 @@ public class NivelCompletadoForm extends JFrame {
                         485
                 );
 
-        /*
-         * BURBUJA
-         */
         int anchoBurbuja
                 = limitar(
                         (int) (anchoRobot * 0.76),
@@ -146,9 +154,6 @@ public class NivelCompletadoForm extends JFrame {
                         120
                 );
 
-        /*
-         * BOTÓN
-         */
         int anchoBoton
                 = limitar(
                         (int) (anchoPantalla * 0.37),
@@ -191,14 +196,6 @@ public class NivelCompletadoForm extends JFrame {
         // PARTE SUPERIOR
         // =================================================
 
-        /*
-         * AQUÍ SOLAMENTE QUEDA:
-         *
-         * ¡NIVEL X!
-         * COMPLETADO!
-         *
-         * Todo lo demás queda abajo y centrado.
-         */
         JPanel parteSuperior
                 = new JPanel(
                         new BorderLayout()
@@ -390,14 +387,6 @@ public class NivelCompletadoForm extends JFrame {
         // ZONA CENTRAL GENERAL
         // =================================================
 
-        /*
-         * ESTA ES LA CORRECCIÓN IMPORTANTE.
-         *
-         * Antes estaba NORTH y por eso panel
-         * y robot se iban demasiado arriba.
-         *
-         * Ahora GridBagLayout los CENTRA.
-         */
         JPanel centroGeneral
                 = new JPanel(
                         new GridBagLayout()
@@ -434,10 +423,6 @@ public class NivelCompletadoForm extends JFrame {
         // FILA CENTRAL
         // =================================================
 
-        /*
-         * PANEL DE PUNTOS y ROBOT
-         * viven en LA MISMA FILA.
-         */
         JPanel filaCentral
                 = new JPanel(
                         new GridBagLayout()
@@ -583,11 +568,6 @@ public class NivelCompletadoForm extends JFrame {
         gbcPuntos.weighty
                 = 1.0;
 
-        /*
-         * CENTER.
-         *
-         * Ya no NORTH.
-         */
         gbcPuntos.anchor
                 = GridBagConstraints.CENTER;
 
@@ -620,11 +600,6 @@ public class NivelCompletadoForm extends JFrame {
                 )
         );
 
-        /*
-         * Como el robot ahora es más alto que
-         * el panel de puntos, NO queremos usar
-         * toda esa altura para empujarlo arriba.
-         */
         int altoBloqueRobot
                 = altoBurbuja
                 + altoRobot;
@@ -708,11 +683,28 @@ public class NivelCompletadoForm extends JFrame {
                 )
         );
 
-        JLabel lblRobotNivel
+        /*
+         * TEXTOS COMPLETOS.
+         *
+         * No los ponemos directamente
+         * en los JLabel porque ahora
+         * aparecerán letra por letra.
+         */
+        textoRobotNivel
+                = "¡NIVEL "
+                + numeroNivel
+                + " COMPLETADO!";
+
+        textoRobotExcelente
+                = "¡EXCELENTE TRABAJO!";
+
+        // =================================================
+        // PRIMER TEXTO
+        // =================================================
+
+        lblRobotNivel
                 = new JLabel(
-                        "¡NIVEL "
-                        + numeroNivel
-                        + " COMPLETADO!"
+                        " "
                 );
 
         lblRobotNivel.setFont(
@@ -730,9 +722,13 @@ public class NivelCompletadoForm extends JFrame {
                 Component.CENTER_ALIGNMENT
         );
 
-        JLabel lblExcelente
+        // =================================================
+        // SEGUNDO TEXTO
+        // =================================================
+
+        lblExcelente
                 = new JLabel(
-                        "¡EXCELENTE TRABAJO!"
+                        " "
                 );
 
         lblExcelente.setFont(
@@ -811,16 +807,12 @@ public class NivelCompletadoForm extends JFrame {
         );
 
         // =================================================
-        // AVATAR MÁS GRANDE
+        // AVATAR
         // =================================================
 
         AvatarPanel avatar
                 = new AvatarPanel();
 
-        /*
-         * CASI TODO EL PANEL DERECHO
-         * lo aprovecha el avatar.
-         */
         int anchoAvatar
                 = anchoRobot - 2;
 
@@ -832,12 +824,6 @@ public class NivelCompletadoForm extends JFrame {
                 altoAvatar
         );
 
-        /*
-         * Lo dejamos solamente un 2% más grande.
-         *
-         * El crecimiento fuerte viene del
-         * COMPONENTE, no de deformar la escala.
-         */
         avatar.setAvatarScale(
                 1.02
         );
@@ -879,9 +865,6 @@ public class NivelCompletadoForm extends JFrame {
                 burbuja
         );
 
-        /*
-         * Prácticamente pegados.
-         */
         bloqueRobot.add(
                 Box.createVerticalStrut(
                         0
@@ -911,12 +894,6 @@ public class NivelCompletadoForm extends JFrame {
         gbcRobot.weighty
                 = 1.0;
 
-        /*
-         * CENTER TAMBIÉN.
-         *
-         * Esto es lo que hace que panel
-         * y robot se vean equilibrados.
-         */
         gbcRobot.anchor
                 = GridBagConstraints.CENTER;
 
@@ -941,9 +918,6 @@ public class NivelCompletadoForm extends JFrame {
                 filaCentral
         );
 
-        /*
-         * Distancia hacia el botón.
-         */
         bloquePrincipal.add(
                 Box.createVerticalStrut(
                         22
@@ -1057,23 +1031,9 @@ public class NivelCompletadoForm extends JFrame {
         gbcPrincipal.weighty
                 = 1.0;
 
-        /*
-         * LA CLAVE:
-         *
-         * CENTER.
-         *
-         * Ya no NORTH.
-         *
-         * Por eso el panel de puntos,
-         * burbuja, avatar y botón quedan
-         * centrados verticalmente.
-         */
         gbcPrincipal.anchor
                 = GridBagConstraints.CENTER;
 
-        /*
-         * Apenas 5px hacia abajo.
-         */
         gbcPrincipal.insets
                 = new Insets(
                         5,
@@ -1089,6 +1049,123 @@ public class NivelCompletadoForm extends JFrame {
 
         fondo.revalidate();
         fondo.repaint();
+
+        // =================================================
+        // INICIAR EFECTO DE ESCRITURA
+        // =================================================
+
+        iniciarEfectoEscritura();
+    }
+
+    // =====================================================
+    // EFECTO DE ESCRITURA
+    // =====================================================
+
+    private void iniciarEfectoEscritura() {
+
+        /*
+         * Reiniciar variables por seguridad.
+         */
+        indiceEscritura = 0;
+
+        escribiendoSegundoTexto = false;
+
+        pausaEntreTextos = 0;
+
+        lblRobotNivel.setText(
+                " "
+        );
+
+        lblExcelente.setText(
+                " "
+        );
+
+        /*
+         * Cada 55 milisegundos aparece
+         * una nueva letra.
+         *
+         * Más bajo = más rápido.
+         * Más alto = más lento.
+         */
+        timerEscritura
+                = new Timer(
+                        55,
+                        e -> {
+
+                            // =================================
+                            // PRIMERA FRASE
+                            // =================================
+
+                            if (
+                                    !escribiendoSegundoTexto
+                            ) {
+
+                                if (
+                                        indiceEscritura
+                                        < textoRobotNivel.length()
+                                ) {
+
+                                    indiceEscritura++;
+
+                                    lblRobotNivel.setText(
+                                            textoRobotNivel.substring(
+                                                    0,
+                                                    indiceEscritura
+                                            )
+                                    );
+
+                                    return;
+                                }
+
+                                /*
+                                 * Pequeñísima pausa después
+                                 * de terminar la primera línea.
+                                 */
+                                pausaEntreTextos++;
+
+                                if (
+                                        pausaEntreTextos < 6
+                                ) {
+
+                                    return;
+                                }
+
+                                escribiendoSegundoTexto = true;
+
+                                indiceEscritura = 0;
+
+                                return;
+                            }
+
+                            // =================================
+                            // SEGUNDA FRASE
+                            // =================================
+
+                            if (
+                                    indiceEscritura
+                                    < textoRobotExcelente.length()
+                            ) {
+
+                                indiceEscritura++;
+
+                                lblExcelente.setText(
+                                        textoRobotExcelente.substring(
+                                                0,
+                                                indiceEscritura
+                                        )
+                                );
+
+                            } else {
+
+                                /*
+                                 * Terminó de escribir.
+                                 */
+                                timerEscritura.stop();
+                            }
+                        }
+                );
+
+        timerEscritura.start();
     }
 
     // =====================================================
@@ -1146,6 +1223,30 @@ public class NivelCompletadoForm extends JFrame {
         }
 
         dispose();
+    }
+
+    // =====================================================
+    // CERRAR
+    // =====================================================
+
+    @Override
+    public void dispose() {
+
+        /*
+         * Si cerramos la pantalla mientras
+         * el robot todavía está escribiendo,
+         * detenemos el Timer.
+         */
+        if (
+                timerEscritura != null
+        ) {
+
+            timerEscritura.stop();
+
+            timerEscritura = null;
+        }
+
+        super.dispose();
     }
 
     // =====================================================

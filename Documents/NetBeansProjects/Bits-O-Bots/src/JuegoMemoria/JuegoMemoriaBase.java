@@ -95,7 +95,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
      *
      * false
      */
-    private static final boolean MODO_PRUEBA = true;
+    private static final boolean MODO_PRUEBA = false;
 
     // =====================================================
     // DATOS DE LAS CARTAS
@@ -432,7 +432,7 @@ public abstract class JuegoMemoriaBase extends JFrame {
             = new JLabel(
                     "NIVEL "
                     + numeroNivel
-                    + " · MEMORIA TECNOLÓGICA",
+                    + " · BITS O BOTS",
                     SwingConstants.CENTER
             );
 

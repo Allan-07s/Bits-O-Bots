@@ -231,7 +231,7 @@ public class PantallaFinal extends JFrame {
 
         JLabel lblSubtitulo
                 = new JLabel(
-                        "Completaste los tres niveles de Memory Tech"
+                        "Completaste los tres niveles de Bits o Bots"
                 );
 
         lblSubtitulo.setFont(
@@ -678,8 +678,8 @@ public class PantallaFinal extends JFrame {
         BotonRedondeado btnRanking
                 = crearBoton(
                         "VER RANKING",
-                        ColoresBitsOBots.AZUL_PRINCIPAL,
-                        ColoresBitsOBots.AZUL_HOVER
+                        ColoresBitsOBots.TURQUESA_OSCURO,
+                        ColoresBitsOBots.TURQUESA_HOVER
                 );
 
         /*
@@ -693,8 +693,8 @@ public class PantallaFinal extends JFrame {
         BotonRedondeado btnMenu
                 = crearBoton(
                         "MENÚ DEL JUEGO",
-                        ColoresBitsOBots.AZUL_PRINCIPAL,
-                        ColoresBitsOBots.AZUL_HOVER
+                        ColoresBitsOBots.TURQUESA_OSCURO,
+                        ColoresBitsOBots.TURQUESA_HOVER
                 );
 
         // =================================================
